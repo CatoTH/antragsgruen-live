@@ -2,7 +2,6 @@ package de.antragsgruen.live.rabbitmq;
 
 import de.antragsgruen.live.rabbitmq.dto.SpeechEvent;
 import de.antragsgruen.live.speech.Handler;
-import de.antragsgruen.live.websocket.Sender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -10,7 +9,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SpeechMessageReceiver {
     Logger logger = LoggerFactory.getLogger(UserMessageReceiver.class);
 

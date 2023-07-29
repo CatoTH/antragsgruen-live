@@ -55,6 +55,8 @@ public class AntragsgruenListener {
         return BindingBuilder.bind(queue).to(exchange).with(speechRoutingKey);
     }
 
+    // @TODO: Set up a dead-letter queue (https://www.baeldung.com/spring-amqp-error-handling)
+
     @Bean
     public MessageConverter converter(){
         return new Jackson2JsonMessageConverter();
