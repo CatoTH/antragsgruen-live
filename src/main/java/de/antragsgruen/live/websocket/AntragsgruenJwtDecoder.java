@@ -27,7 +27,7 @@ import java.security.spec.X509EncodedKeySpec;
 public class AntragsgruenJwtDecoder {
     Logger logger = LoggerFactory.getLogger(AntragsgruenJwtDecoder.class);
 
-    @Value("classpath:${antragsgruen.jwt.publickey}")
+    @Value("classpath:${antragsgruen.jwt.key.public}")
     private Resource publicKeyFilename;
 
     private JwtDecoder jwtDecoder;
@@ -35,7 +35,12 @@ public class AntragsgruenJwtDecoder {
     @PostConstruct
     public void loadPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
         InputStream is = this.publicKeyFilename.getInputStream();
-        String publicKeyString = StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+        String publicKeyString = StreamUtils
+                .copyToString(is, StandardCharsets.UTF_8)
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replaceAll(System.lineSeparator(), "")
+                .replace("-----END PUBLIC KEY-----", "");
+
         byte[] keyBytes = Base64.decodeBase64(publicKeyString);
         EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
