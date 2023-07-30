@@ -9,10 +9,10 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
-public class AntragsgruenListener {
+@Configuration
+public class ListenerConfiguration {
     @Value("${rabbitmq.exchange.name}")
     private String topicExchangeName;
 
