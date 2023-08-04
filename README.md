@@ -1,6 +1,23 @@
 # Real-time communication for Antragsgrün
 
-...
+
+## Authentication
+
+- The central Antragsgrün system authenticates users through traditional means (cookie-based sessions generated during username/password- or SAML-based login).
+- It creates a JWT containing information about the site, the consultation and the ID of the user and is signed using a private key (RS256). If the user has specific admin privileges (like to administer speech queues), a role is added to the JWT.
+- We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
+  - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
+  - The site and consultation association is checked when subscribing to topics - the site subdomain and consultation path has to be in the topic name and equal to information provided in the JWT.
+  - When subscribing to the speech admin topic, the SPEECH_ADMIN role is checked in the JWT.
+
+
+## RabbitMQ Setup
+
+The central Antragsgrün system publishes all its messages to one central exchange (by default: `antragsgruen-exchange`). Messages to all subdomains and consultations within a subdomain are published through that exchange, but are classified by a routing key pattern.
+
+The following routing key patterns are fixed, while its associated queues can be configured:
+- `user.[site].[consultation].[userid]`, e.g. `user.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [UserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/UserEvent.java)-DTO for deserialization.
+- `speech.[site].[consultation]`, e.g. `speech.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [SpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/SpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event.
 
 
 

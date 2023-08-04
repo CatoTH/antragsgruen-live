@@ -1,6 +1,8 @@
 package de.antragsgruen.live.rabbitmq;
 
-import de.antragsgruen.live.rabbitmq.dto.SpeechEvent;
+import de.antragsgruen.live.rabbitmq.dto.SpeechQueue;
+import de.antragsgruen.live.rabbitmq.dto.SpeechSubqueue;
+import de.antragsgruen.live.rabbitmq.dto.SpeechSubqueueItem;
 import de.antragsgruen.live.speech.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +21,20 @@ public class SpeechMessageReceiver {
     private Handler speechHandler;
 
     @RabbitListener(queues = {"${rabbitmq.queue.speech.name}"})
-    public void receiveMessage(SpeechEvent event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
+    public void receiveMessage(SpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
     {
         String[] routingKeyParts = routingKey.split("\\.");
         if (routingKeyParts.length != 3 || !"speech".equals(routingKeyParts[0])) {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
         }
 
-        logger.warn("Received user message: " + routingKey + " => " + event.getQueueName());
+        logger.warn("Received speech message: " + routingKey + " => " + event.getId());
+        for (SpeechSubqueue sub : event.getSubqueues()) {
+            logger.warn("Subqueue: " + (sub.getName() == null ? "-null-" : sub.getName()));
+            for (SpeechSubqueueItem item : sub.getItems()) {
+                logger.warn("Subqueue user: " + item.getName());
+            }
+        }
 
         speechHandler.onSpeechEvent(routingKeyParts[1], routingKeyParts[2], event);
     }
