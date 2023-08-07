@@ -1,6 +1,6 @@
 package de.antragsgruen.live.rabbitmq;
 
-import de.antragsgruen.live.rabbitmq.dto.UserEvent;
+import de.antragsgruen.live.rabbitmq.dto.MQUserEvent;
 import de.antragsgruen.live.websocket.Sender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class UserMessageReceiver {
     private Sender sender;
 
     @RabbitListener(queues = {"${rabbitmq.queue.user.name}"})
-    public void receiveMessage(UserEvent event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
+    public void receiveMessage(MQUserEvent event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
     {
         String[] routingKeyParts = routingKey.split("\\.");
         if (routingKeyParts.length != 4) {
@@ -28,6 +28,6 @@ public class UserMessageReceiver {
 
         logger.warn("Received user message: " + routingKey + " => " + event.getUsername());
 
-        sender.sendToUser(routingKeyParts[1], routingKeyParts[2], routingKeyParts[3], event.getUsername());
+        sender.sendToUser(routingKeyParts[1], routingKeyParts[2], routingKeyParts[3], Sender.USER_CHANNEL_DEFAULT, event.getUsername());
     }
 }

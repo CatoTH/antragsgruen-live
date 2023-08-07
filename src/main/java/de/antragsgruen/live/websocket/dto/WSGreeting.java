@@ -1,11 +1,11 @@
 package de.antragsgruen.live.websocket.dto;
 
-public class Greeting {
+public class WSGreeting {
     private String content;
 
-    public Greeting() {}
+    public WSGreeting() {}
 
-    public Greeting(String content) {
+    public WSGreeting(String content) {
         this.content = content;
     }
 

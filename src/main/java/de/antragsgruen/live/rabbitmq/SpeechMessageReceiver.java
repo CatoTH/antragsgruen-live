@@ -1,8 +1,8 @@
 package de.antragsgruen.live.rabbitmq;
 
-import de.antragsgruen.live.rabbitmq.dto.SpeechQueue;
-import de.antragsgruen.live.rabbitmq.dto.SpeechSubqueue;
-import de.antragsgruen.live.rabbitmq.dto.SpeechSubqueueItem;
+import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
+import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueue;
+import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueueItem;
 import de.antragsgruen.live.speech.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class SpeechMessageReceiver {
     private Handler speechHandler;
 
     @RabbitListener(queues = {"${rabbitmq.queue.speech.name}"})
-    public void receiveMessage(SpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
+    public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
     {
         String[] routingKeyParts = routingKey.split("\\.");
         if (routingKeyParts.length != 3 || !"speech".equals(routingKeyParts[0])) {
@@ -29,9 +29,9 @@ public class SpeechMessageReceiver {
         }
 
         logger.warn("Received speech message: " + routingKey + " => " + event.getId());
-        for (SpeechSubqueue sub : event.getSubqueues()) {
+        for (MQSpeechSubqueue sub : event.getSubqueues()) {
             logger.warn("Subqueue: " + (sub.getName() == null ? "-null-" : sub.getName()));
-            for (SpeechSubqueueItem item : sub.getItems()) {
+            for (MQSpeechSubqueueItem item : sub.getItems()) {
                 logger.warn("Subqueue user: " + item.getName());
             }
         }

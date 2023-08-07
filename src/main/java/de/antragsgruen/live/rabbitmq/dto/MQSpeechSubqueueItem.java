@@ -2,7 +2,7 @@ package de.antragsgruen.live.rabbitmq.dto;
 
 import java.util.Date;
 
-public class SpeechSubqueueItem {
+public class MQSpeechSubqueueItem {
     private int id;
     private String name;
     private int userId;

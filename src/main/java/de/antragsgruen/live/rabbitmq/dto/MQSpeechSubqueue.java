@@ -1,9 +1,9 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
-public class SpeechSubqueue {
+public class MQSpeechSubqueue {
     private int id;
     private String name;
-    private SpeechSubqueueItem[] items;
+    private MQSpeechSubqueueItem[] items;
 
     public int getId() {
         return id;
@@ -21,11 +21,11 @@ public class SpeechSubqueue {
         this.name = name;
     }
 
-    public SpeechSubqueueItem[] getItems() {
+    public MQSpeechSubqueueItem[] getItems() {
         return items;
     }
 
-    public void setItems(SpeechSubqueueItem[] items) {
+    public void setItems(MQSpeechSubqueueItem[] items) {
         this.items = items;
     }
 }

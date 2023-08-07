@@ -1,7 +1,7 @@
 package de.antragsgruen.live.websocket;
 
-import de.antragsgruen.live.websocket.dto.Greeting;
-import de.antragsgruen.live.websocket.dto.HelloMessage;
+import de.antragsgruen.live.websocket.dto.WSGreeting;
+import de.antragsgruen.live.websocket.dto.WSHelloMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -16,12 +16,12 @@ public class GreetingController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public Greeting greeting(HelloMessage message, Principal principal) throws Exception
+    public WSGreeting greeting(WSHelloMessage message, Principal principal) throws Exception
     {
         logger.warn("Received message: " + message.getName() + " (from " + principal.getName() + ")");
 
         Thread.sleep(1000);
-        return new Greeting("[From: " + principal.getName() + "] Hello, " + message.getName());
+        return new WSGreeting("[From: " + principal.getName() + "] Hello, " + message.getName());
     }
 }
 

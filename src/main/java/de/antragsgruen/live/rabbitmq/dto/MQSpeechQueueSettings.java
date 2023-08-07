@@ -1,6 +1,6 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
-public class SpeechQueueSettings {
+public class MQSpeechQueueSettings {
     private boolean isOpen;
     private boolean isOpenPoo;
     private boolean allowCustomNames;

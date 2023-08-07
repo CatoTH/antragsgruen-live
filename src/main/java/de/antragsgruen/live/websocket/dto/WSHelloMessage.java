@@ -1,11 +1,11 @@
 package de.antragsgruen.live.websocket.dto;
 
-public class HelloMessage {
+public class WSHelloMessage {
     private String name;
 
-    public HelloMessage() {}
+    public WSHelloMessage() {}
 
-    public HelloMessage(String name) {
+    public WSHelloMessage(String name) {
         this.name = name;
     }
 

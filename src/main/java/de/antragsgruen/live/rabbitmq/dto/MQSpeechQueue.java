@@ -1,11 +1,11 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
-public class SpeechQueue {
+public class MQSpeechQueue {
     private int id;
     private boolean isActive;
-    private SpeechQueueSettings settings;
-    private SpeechSubqueue[] subqueues;
-    private SpeechQueueActiveSlot[] slots;
+    private MQSpeechQueueSettings settings;
+    private MQSpeechSubqueue[] subqueues;
+    private MQSpeechQueueActiveSlot[] slots;
     private boolean requiresLogin;
     private String otherActiveName;
 
@@ -25,27 +25,27 @@ public class SpeechQueue {
         isActive = active;
     }
 
-    public SpeechQueueSettings getSettings() {
+    public MQSpeechQueueSettings getSettings() {
         return settings;
     }
 
-    public void setSettings(SpeechQueueSettings settings) {
+    public void setSettings(MQSpeechQueueSettings settings) {
         this.settings = settings;
     }
 
-    public SpeechSubqueue[] getSubqueues() {
+    public MQSpeechSubqueue[] getSubqueues() {
         return subqueues;
     }
 
-    public void setSubqueues(SpeechSubqueue[] subqueues) {
+    public void setSubqueues(MQSpeechSubqueue[] subqueues) {
         this.subqueues = subqueues;
     }
 
-    public SpeechQueueActiveSlot[] getSlots() {
+    public MQSpeechQueueActiveSlot[] getSlots() {
         return slots;
     }
 
-    public void setSlots(SpeechQueueActiveSlot[] slots) {
+    public void setSlots(MQSpeechQueueActiveSlot[] slots) {
         this.slots = slots;
     }
 

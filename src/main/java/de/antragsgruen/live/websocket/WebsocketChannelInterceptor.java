@@ -41,6 +41,12 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         return ChannelInterceptor.super.preSend(message, channel);
     }
 
+    public Message<?> postReceive(Message<?> message, MessageChannel channel) {
+        logger.warn("preReceive", message);
+
+        return message;
+    }
+
     private void onConnect(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException
     {
         for (String head: headerAccessor.getNativeHeader("jwt")) {
