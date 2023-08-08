@@ -1,5 +1,7 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
+import java.math.BigInteger;
+
 public class MQSpeechQueue {
     private int id;
     private boolean isActive;
@@ -8,6 +10,7 @@ public class MQSpeechQueue {
     private MQSpeechQueueActiveSlot[] slots;
     private boolean requiresLogin;
     private String otherActiveName;
+    private BigInteger currentTime;
 
     public int getId() {
         return id;
@@ -63,5 +66,13 @@ public class MQSpeechQueue {
 
     public void setOtherActiveName(String otherActiveName) {
         this.otherActiveName = otherActiveName;
+    }
+
+    public BigInteger getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(BigInteger currentTime) {
+        this.currentTime = currentTime;
     }
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 public class MQSpeechSubqueueItem {
     private int id;
     private String name;
-    private int userId;
+    private Integer userId;
     private String userToken;
     private boolean isPointOfOrder;
     private Date dateApplied;
@@ -28,11 +28,11 @@ public class MQSpeechSubqueueItem {
         this.name = name;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

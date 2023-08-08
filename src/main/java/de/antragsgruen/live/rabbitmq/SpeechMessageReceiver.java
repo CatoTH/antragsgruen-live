@@ -3,7 +3,7 @@ package de.antragsgruen.live.rabbitmq;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueue;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueueItem;
-import de.antragsgruen.live.speech.Handler;
+import de.antragsgruen.live.SpeechUserHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -18,7 +18,7 @@ public class SpeechMessageReceiver {
     Logger logger = LoggerFactory.getLogger(UserMessageReceiver.class);
 
     @Autowired
-    private Handler speechHandler;
+    private SpeechUserHandler speechUserHandler;
 
     @RabbitListener(queues = {"${rabbitmq.queue.speech.name}"})
     public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
@@ -28,14 +28,6 @@ public class SpeechMessageReceiver {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
         }
 
-        logger.warn("Received speech message: " + routingKey + " => " + event.getId());
-        for (MQSpeechSubqueue sub : event.getSubqueues()) {
-            logger.warn("Subqueue: " + (sub.getName() == null ? "-null-" : sub.getName()));
-            for (MQSpeechSubqueueItem item : sub.getItems()) {
-                logger.warn("Subqueue user: " + item.getName());
-            }
-        }
-
-        speechHandler.onSpeechEvent(routingKeyParts[1], routingKeyParts[2], event);
+        speechUserHandler.onSpeechEvent(routingKeyParts[1], routingKeyParts[2], event);
     }
 }

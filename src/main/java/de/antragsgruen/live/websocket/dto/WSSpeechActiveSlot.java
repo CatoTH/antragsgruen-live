@@ -1,19 +1,24 @@
-package de.antragsgruen.live.rabbitmq.dto;
+package de.antragsgruen.live.websocket.dto;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.util.Date;
+import java.util.HashMap;
 
-public class MQSpeechQueueActiveSlot {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class WSSpeechActiveSlot {
     private int id;
-    private int subqueueId;
-    private String subqueueName;
+    private HashMap<String, Object> subqueue;
     private String name;
-    private int userId;
-    private String userToken;
     private int position;
-
     private Date dateStarted;
     private Date dateStopped;
     private Date dateApplied;
+
+    public WSSpeechActiveSlot(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
@@ -23,20 +28,14 @@ public class MQSpeechQueueActiveSlot {
         this.id = id;
     }
 
-    public int getSubqueueId() {
-        return subqueueId;
+    public void setSubqueue(int id, String name) {
+        this.subqueue = new HashMap<>(2);
+        this.subqueue.put("id", id);
+        this.subqueue.put("name", name);
     }
 
-    public void setSubqueueId(int subqueueId) {
-        this.subqueueId = subqueueId;
-    }
-
-    public String getSubqueueName() {
-        return subqueueName;
-    }
-
-    public void setSubqueueName(String subqueueName) {
-        this.subqueueName = subqueueName;
+    public HashMap<String, Object> getSubqueue() {
+        return subqueue;
     }
 
     public String getName() {
@@ -45,22 +44,6 @@ public class MQSpeechQueueActiveSlot {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getUserToken() {
-        return userToken;
-    }
-
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
     }
 
     public int getPosition() {

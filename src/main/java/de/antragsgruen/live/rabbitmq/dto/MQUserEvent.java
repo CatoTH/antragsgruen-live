@@ -1,7 +1,7 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
 public class MQUserEvent {
-    public String username;
+    private String username;
 
     public String getUsername() {
         return username;
