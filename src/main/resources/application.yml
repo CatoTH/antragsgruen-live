@@ -1,0 +1,20 @@
+# The JWT public key's location relative to src/main/resources.
+antragsgruen:
+  jwt.key.public: public.key
+  ws.origins: http://*.antragsgruen.test
+
+# RabbitMQ configuration
+rabbitmq:
+  exchange:
+    name: ${RABBITMQ_EXCHANGE:antragsgruen-exchange}
+  queue:
+    user.name: ${RABBITMQ_QUEUE_USER:antragsgruen-user-queue}
+    speech.name: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-speech-queue}
+  routing:
+    user.key: user.*.*.*
+    speech.key: speech.*.*
+
+#logging:
+#  level:
+#    root: DEBUG
+#    de.antragsgruen.live: DEBUG

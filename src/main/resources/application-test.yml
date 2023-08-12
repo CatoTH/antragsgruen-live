@@ -1,0 +1,13 @@
+# For testing, a bundled JWT key set is used
+antragsgruen:
+  jwt.key:
+    public: jwt-test-public.key
+    private: jwt-test-private.key
+
+# RabbitMQ configuration
+rabbitmq:
+  exchange:
+    name: antragsgruen-test-exchange
+  queue:
+    user.name: antragsgruen-test-user-queue
+    speech.name: antragsgruen-test-speech-queue
