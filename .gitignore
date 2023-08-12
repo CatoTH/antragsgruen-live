@@ -4,6 +4,8 @@ target/
 !**/src/test/**/target/
 
 src/main/resources/public.key
+src/main/resources/static/stomp.umd.min.js
+node_modules/
 
 ### IntelliJ IDEA ###
 .idea

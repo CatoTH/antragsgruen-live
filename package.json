@@ -1,0 +1,18 @@
+{
+  "name": "antragsgruen-live",
+  "license": "AGPL-3.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CatoTH/antragsgruen-live"
+  },
+  "scripts": {
+    "postinstall": "cp node_modules/@stomp/stompjs/bundles/stomp.umd.min.js src/main/resources/static/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@stomp/stompjs": "^7.0.0"
+  }
+}
