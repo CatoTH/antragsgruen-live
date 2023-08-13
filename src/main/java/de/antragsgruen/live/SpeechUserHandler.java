@@ -46,6 +46,7 @@ public class SpeechUserHandler {
 
         WSSpeechActiveSlot[] wsActiveSlots = Stream
                 .of(queue.getSlots())
+                .filter(slot -> slot.getDateStarted() != null)
                 .map(this::convertActiveSlot)
                 .toArray(WSSpeechActiveSlot[]::new);
 
@@ -88,6 +89,7 @@ public class SpeechUserHandler {
         if (showNames) {
             WSSpeechSubqueueItem[] items = Stream
                     .of(subqueue.getItems())
+                    .filter(item -> item.getDateStarted() == null)
                     .map(this::convertSubqueueItem)
                     .toArray(WSSpeechSubqueueItem[]::new);
             wsSubqueue.setApplied(items);
@@ -101,7 +103,6 @@ public class SpeechUserHandler {
     private WSSpeechSubqueueItem convertSubqueueItem(MQSpeechSubqueueItem item) {
         WSSpeechSubqueueItem wsItem = new WSSpeechSubqueueItem(item.getId());
         wsItem.setName(item.getName());
-        wsItem.setPosition(item.getPosition());
         wsItem.setPointOfOrder(item.isPointOfOrder());
         wsItem.setAppliedAt(item.getDateApplied());
 

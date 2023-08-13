@@ -60,7 +60,7 @@
           "onList": false,
           "application": true,
           "id": 5,
-          "name": "[[Point of Order]] GO-Antrag (m)",
+          "name": "[[GO-Antrag]] GO-Antrag (m)",
           "userId": null,
           "userToken": "qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN",
           "isPointOfOrder": true,
@@ -105,6 +105,7 @@
     {
       "id": 6,
       "subqueueId": 1,
+      "subqueueName": "Frauen",
       "name": "Application 1",
       "userId": null,
       "userToken": null,
@@ -116,6 +117,7 @@
     {
       "id": 7,
       "subqueueId": 1,
+      "subqueueName": "Frauen",
       "name": "Application 2",
       "userId": null,
       "userToken": null,

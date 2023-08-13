@@ -1,33 +1,35 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
+import org.springframework.lang.Nullable;
+
 import java.util.Date;
 
 public class MQSpeechQueueActiveSlot {
-    private int id;
-    private int subqueueId;
+    private Integer id;
+    private @Nullable Integer subqueueId;
     private String subqueueName;
     private String name;
-    private int userId;
-    private String userToken;
-    private int position;
+    private @Nullable Integer userId;
+    private @Nullable String userToken;
+    private Integer position;
 
-    private Date dateStarted;
-    private Date dateStopped;
-    private Date dateApplied;
+    private @Nullable Date dateStarted;
+    private @Nullable Date dateStopped;
+    private @Nullable Date dateApplied;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getSubqueueId() {
+    public @Nullable Integer getSubqueueId() {
         return subqueueId;
     }
 
-    public void setSubqueueId(int subqueueId) {
+    public void setSubqueueId(@Nullable Integer subqueueId) {
         this.subqueueId = subqueueId;
     }
 
@@ -47,51 +49,51 @@ public class MQSpeechQueueActiveSlot {
         this.name = name;
     }
 
-    public int getUserId() {
+    public @Nullable Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(@Nullable Integer userId) {
         this.userId = userId;
     }
 
-    public String getUserToken() {
+    public @Nullable String getUserToken() {
         return userToken;
     }
 
-    public void setUserToken(String userToken) {
+    public void setUserToken(@Nullable String userToken) {
         this.userToken = userToken;
     }
 
-    public int getPosition() {
+    public @Nullable Integer getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
-    public Date getDateStarted() {
+    public @Nullable Date getDateStarted() {
         return dateStarted;
     }
 
-    public void setDateStarted(Date dateStarted) {
+    public void setDateStarted(@Nullable Date dateStarted) {
         this.dateStarted = dateStarted;
     }
 
-    public Date getDateStopped() {
+    public @Nullable Date getDateStopped() {
         return dateStopped;
     }
 
-    public void setDateStopped(Date dateStopped) {
+    public void setDateStopped(@Nullable Date dateStopped) {
         this.dateStopped = dateStopped;
     }
 
-    public Date getDateApplied() {
+    public @Nullable Date getDateApplied() {
         return dateApplied;
     }
 
-    public void setDateApplied(Date dateApplied) {
+    public void setDateApplied(@Nullable Date dateApplied) {
         this.dateApplied = dateApplied;
     }
 }

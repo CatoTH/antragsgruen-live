@@ -1,18 +1,24 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.Nullable;
+
 import java.util.Date;
 
 public class MQSpeechSubqueueItem {
-    private int id;
+    private Integer id;
     private String name;
-    private Integer userId;
-    private String userToken;
-    private boolean isPointOfOrder;
-    private Date dateApplied;
-    private Date dateStarted;
-    private int position;
+    private @Nullable Integer userId;
+    private @Nullable String userToken;
 
-    public int getId() {
+    @JsonProperty("isPointOfOrder")
+    private boolean isPointOfOrder;
+
+    private Date dateApplied;
+    private @Nullable Date dateStarted;
+    private @Nullable Integer position;
+
+    public Integer getId() {
         return id;
     }
 
@@ -28,19 +34,19 @@ public class MQSpeechSubqueueItem {
         this.name = name;
     }
 
-    public Integer getUserId() {
+    public @Nullable Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(@Nullable Integer userId) {
         this.userId = userId;
     }
 
-    public String getUserToken() {
+    public @Nullable String getUserToken() {
         return userToken;
     }
 
-    public void setUserToken(String userToken) {
+    public void setUserToken(@Nullable String userToken) {
         this.userToken = userToken;
     }
 
@@ -60,19 +66,19 @@ public class MQSpeechSubqueueItem {
         this.dateApplied = dateApplied;
     }
 
-    public Date getDateStarted() {
+    public @Nullable Date getDateStarted() {
         return dateStarted;
     }
 
-    public void setDateStarted(Date dateStarted) {
+    public void setDateStarted(@Nullable Date dateStarted) {
         this.dateStarted = dateStarted;
     }
 
-    public int getPosition() {
+    public @Nullable Integer getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(@Nullable Integer position) {
         this.position = position;
     }
 }

@@ -1,11 +1,24 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MQSpeechQueueSettings {
+    @JsonProperty("isOpen")
     private boolean isOpen;
+
+    @JsonProperty("isOpenPoo")
     private boolean isOpenPoo;
+
+    @JsonProperty("allowCustomNames")
     private boolean allowCustomNames;
+
+    @JsonProperty("preferNonspeaker")
     private boolean preferNonspeaker;
+
+    @JsonProperty("showNames")
     private boolean showNames;
+
+    @JsonProperty("speakingTime")
     private int speakingTime;
 
     public boolean isOpen() {

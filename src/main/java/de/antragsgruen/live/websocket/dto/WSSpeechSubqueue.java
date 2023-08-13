@@ -2,6 +2,7 @@ package de.antragsgruen.live.websocket.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import org.springframework.lang.Nullable;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class WSSpeechSubqueue {
@@ -9,7 +10,7 @@ public class WSSpeechSubqueue {
     private String name;
     private int numApplied;
     private boolean haveApplied;
-    private WSSpeechSubqueueItem[] applied;
+    private @Nullable WSSpeechSubqueueItem[] applied;
 
     public WSSpeechSubqueue(int id) {
         this.id = id;
@@ -47,11 +48,11 @@ public class WSSpeechSubqueue {
         this.haveApplied = haveApplied;
     }
 
-    public WSSpeechSubqueueItem[] getApplied() {
+    public @Nullable WSSpeechSubqueueItem[] getApplied() {
         return applied;
     }
 
-    public void setApplied(WSSpeechSubqueueItem[] applied) {
+    public void setApplied(@Nullable WSSpeechSubqueueItem[] applied) {
         this.applied = applied;
     }
 }

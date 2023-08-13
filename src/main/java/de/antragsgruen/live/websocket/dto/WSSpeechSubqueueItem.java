@@ -3,6 +3,7 @@ package de.antragsgruen.live.websocket.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import org.springframework.lang.Nullable;
 
 import java.util.Date;
 
@@ -12,7 +13,6 @@ public class WSSpeechSubqueueItem {
     private String name;
     private boolean isPointOfOrder;
     private Date appliedAt;
-    private int position;
 
     public WSSpeechSubqueueItem(int id) {
         this.id = id;
@@ -49,13 +49,5 @@ public class WSSpeechSubqueueItem {
 
     public void setAppliedAt(Date appliedAt) {
         this.appliedAt = appliedAt;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 }

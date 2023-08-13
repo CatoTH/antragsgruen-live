@@ -15,7 +15,7 @@
           "id": 8,
           "name": "Application 3",
           "is_point_of_order": false,
-          "applied_at": "2023-08-13T08:40:46+02:00"
+          "applied_at": "2023-08-13T06:40:46.000+00:00"
         }
       ]
     },
@@ -29,13 +29,13 @@
           "id": 5,
           "name": "[[GO-Antrag]] GO-Antrag (m)",
           "is_point_of_order": true,
-          "applied_at": "2023-08-13T08:17:02+02:00"
+          "applied_at": "2023-08-13T06:17:02.000+00:00"
         },
         {
           "id": 3,
           "name": "Testadmin (m)",
           "is_point_of_order": false,
-          "applied_at": "2023-08-13T08:04:14+02:00"
+          "applied_at": "2023-08-13T06:04:14.000+00:00"
         }
       ]
     },
@@ -49,7 +49,7 @@
           "id": 1,
           "name": "Test",
           "is_point_of_order": false,
-          "applied_at": "2023-08-12T22:45:15+02:00"
+          "applied_at": "2023-08-12T20:45:15.000+00:00"
         }
       ]
     }
@@ -63,9 +63,9 @@
       },
       "name": "Application 1",
       "position": 2,
-      "date_started": "2023-08-13T08:18:55+02:00",
-      "date_stopped": "2023-08-13T08:40:49+02:00",
-      "date_applied": "2023-08-13T08:17:18+02:00"
+      "date_started": "2023-08-13T06:18:55.000+00:00",
+      "date_stopped": "2023-08-13T06:40:49.000+00:00",
+      "date_applied": "2023-08-13T06:17:18.000+00:00"
     },
     {
       "id": 7,
@@ -75,9 +75,9 @@
       },
       "name": "Application 2",
       "position": 3,
-      "date_started": "2023-08-13T08:40:49+02:00",
+      "date_started": "2023-08-13T06:40:49.000+00:00",
       "date_stopped": null,
-      "date_applied": "2023-08-13T08:17:59+02:00"
+      "date_applied": "2023-08-13T06:17:59.000+00:00"
     }
   ],
   "requires_login": false,
