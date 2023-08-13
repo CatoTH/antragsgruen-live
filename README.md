@@ -25,16 +25,6 @@ The following routing key patterns are fixed, while its associated queues can be
 - `/topic/[subdomain]/[consultation]/[...]` (currently not used)
 
 
-## JWTs for tests
-
-The public / private keys used for the test cases were created using the following commands:
-```shell
-ssh-keygen -t rsa -b 4096 -m PEM -f bundle.pem
-openssl rsa -in bundle.pem -pubout -outform PEM -out jwt-test-public.key
-openssl pkcs8 -topk8 -inform PEM -outform PEM -in bundle.pem -out jwt-test-private.key -nocrypt
-```
-
-
 ## Installing, Running, Configuration
 
 Docker needs to be installed, as for now, Spring automatically starts a RabbitMQ-container and connects to it. 
@@ -42,4 +32,29 @@ Docker needs to be installed, as for now, Spring automatically starts a RabbitMQ
 ```shell
 npm install
 ./mvnw spring-boot:run
+```
+
+## Testing
+
+### Running the tests
+
+Currently there is one integration test that tests the RabbitMQ-receiver, the data mapping and the WS/STOMP-Server by connecting to the STOMP-Server using a self-signed JWT for authentication, then sends a message to RabbitMQ and tests what message gets delivered through the STOMP-Connection.
+
+The test case is located in [LiveApplicationTests.java](src/test/java/de/antragsgruen/live/LiveApplicationTests.java), some helper classes in [utils](src/test/java/de/antragsgruen/live/utils) and the test fixtures (JSON Payloads) in [resources](src/test/resources).
+
+To run the tests, call:
+```shell
+npm ci # Only needed once
+./mvnw test
+```
+
+Note that Docker needs to be installed for this, too, as the integration test makes use of RabbitMQ.
+
+### JWTs for tests
+
+The public / private keys used for the test cases were created using the following commands:
+```shell
+ssh-keygen -t rsa -b 4096 -m PEM -f bundle.pem
+openssl rsa -in bundle.pem -pubout -outform PEM -out jwt-test-public.key
+openssl pkcs8 -topk8 -inform PEM -outform PEM -in bundle.pem -out jwt-test-private.key -nocrypt
 ```
