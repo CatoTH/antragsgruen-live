@@ -17,8 +17,12 @@ The central Antragsgrün system publishes all its messages to one central exchan
 
 The following routing key patterns are fixed, while its associated queues can be configured:
 - `user.[site].[consultation].[userid]`, e.g. `user.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [UserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/UserEvent.java)-DTO for deserialization.
-- `speech.[site].[consultation]`, e.g. `speech.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [SpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/SpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event. [TODO]
+- `speech.[site].[consultation]`, e.g. `speech.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [SpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/SpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version.
 
+## Exposed Websocket STOMP Topics
+
+- `/user/[subdomain]/[consultation]/[userid]/speech`
+- `/topic/[subdomain]/[consultation]/[...]` (currently not used)
 
 
 ## JWTs for tests

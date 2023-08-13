@@ -11,3 +11,8 @@ rabbitmq:
   queue:
     user.name: antragsgruen-test-user-queue
     speech.name: antragsgruen-test-speech-queue
+
+#logging:
+#  level:
+#    root: DEBUG
+#    de.antragsgruen.live: DEBUG

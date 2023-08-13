@@ -6,7 +6,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.converter.StringMessageConverter;
+import org.springframework.lang.Nullable;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.socket.WebSocketHttpHeaders;
@@ -25,12 +26,21 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class StompTestConnection {
     final private Resource privateKeyFilename;
     final private int port;
-    final FutureTask<Object> onConnectFuture = new FutureTask<>(() -> {}, new Object());
+
+    @Nullable private Map<String, Object> receivedMessage;
+    final FutureTask<Object> onMessageReceived = new FutureTask<>(() -> {}, new Object());
+
+    @Nullable private WebSocketStompClient stompClient;
+    @Nullable private StompSession stompSession;
 
     public StompTestConnection(int port, Resource privateKeyFilename) {
         this.port = port;
@@ -84,10 +94,10 @@ public class StompTestConnection {
         return signedJwt.serialize();
     }
 
-    public FutureTask<Object> connect(String site, String consultation, int userId) {
+    public FutureTask<StompSession> connect(String site, String consultation, int userId) {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
-        WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
-        stompClient.setMessageConverter(new StringMessageConverter());
+        stompClient = new WebSocketStompClient(webSocketClient);
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
         String url = "ws://localhost:" + port + "/websocket";
 
         WebSocketHttpHeaders handshakeHeaders = new WebSocketHttpHeaders();
@@ -95,9 +105,47 @@ public class StompTestConnection {
         StompHeaders headers = new StompHeaders();
         headers.set("jwt", generateJwt(site, consultation, userId));
 
-        StompSessionHandler sessionHandler = new StompTestSessionHandler(onConnectFuture);
+        StompTestSessionHandler sessionHandler = new StompTestSessionHandler();
         stompClient.connect(url, handshakeHeaders, headers, sessionHandler);
 
-        return onConnectFuture;
+        return sessionHandler.onConnect();
+    }
+
+    public void connectAndWait(String site, String consultation, int userId) {
+        try {
+            this.stompSession = this.connect(site, consultation, userId).get(5, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException("Could not connect to STOMP within a reasonable amount of time");
+        }
+    }
+
+    public void subscribeAndWait(String topic) {
+        this.stompSession.subscribe(topic, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return Map.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                receivedMessage = (Map<String, Object>) payload;
+                onMessageReceived.run();
+            }
+        });
+        // @TODO Figure out how to wait for a receipt and trigger a onSubscribed task
+    }
+
+    public Map<String, Object> waitForMessageReceived() {
+        try {
+            this.onMessageReceived.get(5, TimeUnit.SECONDS);
+            if (this.receivedMessage == null) {
+                throw new RuntimeException("No message was received");
+            }
+            return this.receivedMessage;
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

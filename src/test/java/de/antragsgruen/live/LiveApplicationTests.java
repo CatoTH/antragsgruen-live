@@ -14,14 +14,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,26 +44,40 @@ class LiveApplicationTests {
 	}
 
 	@Test
-	public void indexShouldShowDummyMessage() throws Exception {
-		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/", String.class)).contains("Hello Antragsgrün-user");
+	public void servesUmdJsLibrary() {
+		// Hint: this test case only works after npm install / npm ci has been called
+		String uri = "http://localhost:" + port + "/stomp.umd.min.js";
+		assertThat(this.restTemplate.getForObject(uri, String.class)).contains("StompHeaders");
 	}
 
 	@Test
-	public void sendRabbitMq() throws IOException, InterruptedException, NoSuchAlgorithmException, InvalidKeySpecException {
-		StompTestConnection stompSessionTestHandler = new StompTestConnection(port, privateKeyFilename);
-		FutureTask<Object> onConnect = stompSessionTestHandler.connect("site", "con", 1);
+	public void sendAndConvertRabbitMQMessage_speech() throws IOException {
+		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
 
-		try {
-			onConnect.get(5, TimeUnit.SECONDS);
-		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
-		} catch (TimeoutException e) {
-			throw new RuntimeException("Could not connect to STOMP within a reasonable amount of time");
-		}
+		stompConnection.connectAndWait("site", "con", 1);
+		stompConnection.subscribeAndWait("/user/site/con/1/speech");
+
+		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech_in.json", "speech.site.con");
+		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech_user_out.json");
+	}
+
+	private void sendFileContentToRabbitMQ(String fileName, String routingKey) throws IOException {
+		Path path = Path.of("", "src/test/resources");
+		String jsonIn = Files.readString(path.resolve(fileName));
 
 		// Use the exact JSON that Antragsgrün sends
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Object> message = mapper.readValue("{\"username\": \"Test\"}", new TypeReference<>(){});
-		this.template.convertAndSend(exchangeName, "user.site.con.1", message);
+		Map<String, Object> message = mapper.readValue(jsonIn, new TypeReference<>(){});
+		this.template.convertAndSend(exchangeName, routingKey, message);
+	}
+
+	private void expectStompToSendFileContent(StompTestConnection session, String fileName) throws IOException
+	{
+		Path path = Path.of("", "src/test/resources");
+		String jsonIn = Files.readString(path.resolve(fileName));
+
+		Map<String, Object> received = session.waitForMessageReceived();
+
+		assertThatJson(received).isEqualTo(jsonIn);
 	}
 }

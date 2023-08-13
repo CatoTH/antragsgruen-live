@@ -82,7 +82,7 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
 
     /**
      * Supported destination patterns:
-     * - /user/[subdomain]/[consultation]/[username]/[...]
+     * - /user/[subdomain]/[consultation]/[userid]/[...]
      * - /topic/[subdomain]/[consultation]/[...]
      */
     private boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, String destination)

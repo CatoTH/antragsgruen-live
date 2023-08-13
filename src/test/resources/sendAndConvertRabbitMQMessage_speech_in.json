@@ -1,0 +1,131 @@
+{
+  "id": 1,
+  "isActive": true,
+  "settings": {
+    "isOpen": true,
+    "isOpenPoo": true,
+    "allowCustomNames": true,
+    "preferNonspeaker": false,
+    "showNames": true,
+    "speakingTime": 120
+  },
+  "subqueues": [
+    {
+      "id": 1,
+      "name": "Frauen",
+      "items": [
+        {
+          "onList": true,
+          "application": false,
+          "id": 7,
+          "name": "Application 2",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-13T08:17:59+02:00",
+          "dateStarted": "2023-08-13T08:40:49+02:00",
+          "position": 3
+        },
+        {
+          "onList": true,
+          "application": false,
+          "id": 6,
+          "name": "Application 1",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-13T08:17:18+02:00",
+          "dateStarted": "2023-08-13T08:18:55+02:00",
+          "position": 2
+        },
+        {
+          "onList": false,
+          "application": true,
+          "id": 8,
+          "name": "Application 3",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-13T08:40:46+02:00",
+          "dateStarted": null,
+          "position": -4
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Offen \/ M\u00e4nner",
+      "items": [
+        {
+          "onList": false,
+          "application": true,
+          "id": 5,
+          "name": "[[Point of Order]] GO-Antrag (m)",
+          "userId": null,
+          "userToken": "qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN",
+          "isPointOfOrder": true,
+          "dateApplied": "2023-08-13T08:17:02+02:00",
+          "dateStarted": null,
+          "position": -3
+        },
+        {
+          "onList": false,
+          "application": true,
+          "id": 3,
+          "name": "Testadmin (m)",
+          "userId": 1,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-13T08:04:14+02:00",
+          "dateStarted": null,
+          "position": -2
+        }
+      ]
+    },
+    {
+      "id": -1,
+      "name": "default",
+      "items": [
+        {
+          "onList": false,
+          "application": true,
+          "id": 1,
+          "name": "Test",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-12T22:45:15+02:00",
+          "dateStarted": null,
+          "position": -1
+        }
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "id": 6,
+      "subqueueId": 1,
+      "name": "Application 1",
+      "userId": null,
+      "userToken": null,
+      "position": 2,
+      "dateStarted": "2023-08-13T08:18:55+02:00",
+      "dateStopped": "2023-08-13T08:40:49+02:00",
+      "dateApplied": "2023-08-13T08:17:18+02:00"
+    },
+    {
+      "id": 7,
+      "subqueueId": 1,
+      "name": "Application 2",
+      "userId": null,
+      "userToken": null,
+      "position": 3,
+      "dateStarted": "2023-08-13T08:40:49+02:00",
+      "dateStopped": null,
+      "dateApplied": "2023-08-13T08:17:59+02:00"
+    }
+  ],
+  "requiresLogin": false,
+  "otherActiveName": null,
+  "currentTime": 1691908853506
+}
