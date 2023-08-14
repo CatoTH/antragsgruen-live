@@ -51,14 +51,25 @@ class LiveApplicationTests {
 	}
 
 	@Test
-	public void sendAndConvertRabbitMQMessage_speech() throws IOException {
+	public void sendAndConvertRabbitMQMessage_speech1() throws IOException {
 		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
 
-		stompConnection.connectAndWait("site", "con", 1);
-		stompConnection.subscribeAndWait("/user/site/con/1/speech");
+		stompConnection.connectAndWait("site", "con", "login-1");
+		stompConnection.subscribeAndWait("/user/site/con/login-1/speech");
 
-		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech_in.json", "speech.site.con");
-		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech_user_out.json");
+		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.site.con");
+		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_user_out.json");
+	}
+
+	@Test
+	public void sendAndConvertRabbitMQMessage_speech2() throws IOException {
+		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
+
+		stompConnection.connectAndWait("site", "con", "anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN");
+		stompConnection.subscribeAndWait("/user/site/con/anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN/speech");
+
+		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech2_in.json", "speech.site.con");
+		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech2_user_out.json");
 	}
 
 	private void sendFileContentToRabbitMQ(String fileName, String routingKey) throws IOException {

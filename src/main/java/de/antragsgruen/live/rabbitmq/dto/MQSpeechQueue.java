@@ -1,14 +1,22 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigInteger;
 
 public class MQSpeechQueue {
     private int id;
+
+    @JsonProperty("isActive")
     private boolean isActive;
+
     private MQSpeechQueueSettings settings;
     private MQSpeechSubqueue[] subqueues;
     private MQSpeechQueueActiveSlot[] slots;
+
+    @JsonProperty("requiresLogin")
     private boolean requiresLogin;
+
     private String otherActiveName;
     private BigInteger currentTime;
 

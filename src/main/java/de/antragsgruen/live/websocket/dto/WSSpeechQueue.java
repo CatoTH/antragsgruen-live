@@ -3,6 +3,7 @@ package de.antragsgruen.live.websocket.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import org.springframework.lang.Nullable;
 
 import java.math.BigInteger;
 
@@ -17,7 +18,7 @@ public class WSSpeechQueue {
     private WSSpeechActiveSlot[] slots;
     private boolean requiresLogin;
     private BigInteger currentTime;
-    private int speakingTime;
+    private @Nullable Integer speakingTime;
 
     public WSSpeechQueue(int id) {
         this.id = id;
@@ -97,11 +98,11 @@ public class WSSpeechQueue {
         this.currentTime = currentTime;
     }
 
-    public int getSpeakingTime() {
+    public @Nullable Integer getSpeakingTime() {
         return speakingTime;
     }
 
-    public void setSpeakingTime(int speakingTime) {
+    public void setSpeakingTime(@Nullable Integer speakingTime) {
         this.speakingTime = speakingTime;
     }
 }

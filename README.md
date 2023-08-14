@@ -5,6 +5,7 @@
 
 - The central Antragsgrün system authenticates users through traditional means (cookie-based sessions generated during username/password- or SAML-based login).
 - It creates a JWT containing information about the site, the consultation and the ID of the user and is signed using a private key (RS256). If the user has specific admin privileges (like to administer speech queues), a role is added to the JWT.
+- If the user is not logged in, instead of the regular user-id-pattern (`login-123`) a session-token like (`anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN`) will be set as Subject of the JWT.
 - We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
   - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
   - The site and consultation association is checked when subscribing to topics - the site subdomain and consultation path has to be in the topic name and equal to information provided in the JWT.

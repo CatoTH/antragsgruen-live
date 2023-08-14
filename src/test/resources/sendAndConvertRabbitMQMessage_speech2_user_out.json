@@ -1,0 +1,84 @@
+{
+  "id": 2,
+  "is_open": true,
+  "have_applied": true,
+  "allow_custom_names": false,
+  "is_open_poo": false,
+  "subqueues": [
+    {
+      "id": 3,
+      "name": "Frauen",
+      "num_applied": 1,
+      "have_applied": false,
+      "applied": [
+        {
+          "id": 12,
+          "name": "Speech 4",
+          "is_point_of_order": false,
+          "applied_at": "2023-08-14T16:55:48.000+00:00"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Offen \/ M\u00e4nner",
+      "num_applied": 2,
+      "have_applied": true,
+      "applied": [
+        {
+          "id": 13,
+          "name": "Testadmin",
+          "is_point_of_order": false,
+          "applied_at": "2023-08-14T16:56:17.000+00:00"
+        },
+        {
+          "id": 14,
+          "name": "GO-Antrag (m)",
+          "is_point_of_order": false,
+          "applied_at": "2023-08-14T16:58:18.000+00:00"
+        }
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "id": 9,
+      "subqueue": {
+        "id": 4,
+        "name": "Offen \/ M\u00e4nner"
+      },
+      "name": "Rede 1",
+      "position": 1,
+      "date_started": "2023-08-14T16:55:55.000+00:00",
+      "date_stopped": "2023-08-14T16:55:58.000+00:00",
+      "date_applied": "2023-08-14T16:55:36.000+00:00"
+    },
+    {
+      "id": 10,
+      "subqueue": {
+        "id": 3,
+        "name": "Frauen"
+      },
+      "name": "Speech 2",
+      "position": 3,
+      "date_started": "2023-08-14T16:55:58.000+00:00",
+      "date_stopped": "2023-08-14T16:56:06.000+00:00",
+      "date_applied": "2023-08-14T16:55:41.000+00:00"
+    },
+    {
+      "id": 11,
+      "subqueue": {
+        "id": 4,
+        "name": "Offen \/ M\u00e4nner"
+      },
+      "name": "Speech 3",
+      "position": 4,
+      "date_started": "2023-08-14T16:56:06.000+00:00",
+      "date_stopped": null,
+      "date_applied": "2023-08-14T16:55:44.000+00:00"
+    }
+  ],
+  "requires_login": false,
+  "current_time": 1692032319906,
+  "speaking_time": null
+}

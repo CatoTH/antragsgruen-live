@@ -63,7 +63,7 @@ public class StompTestConnection {
         return (RSAPrivateKey) kf.generatePrivate(keySpec);
     }
 
-    private String generateJwt(String site, String consultation, int userId) {
+    private String generateJwt(String site, String consultation, String userId) {
         RSAPrivateKey privateKey;
         try {
             privateKey = this.getJwtPrivateKey();
@@ -76,7 +76,7 @@ public class StompTestConnection {
                 .issuer("https://test.antragsgruen.de") // @TODO
                 .issueTime(now)
                 .expirationTime(new Date(now.getTime() + 1000*60*10))
-                .subject(Integer.toString(userId))
+                .subject(userId)
                 // .claim('payload', ) @TODO
                 .build();
 
@@ -94,7 +94,7 @@ public class StompTestConnection {
         return signedJwt.serialize();
     }
 
-    public FutureTask<StompSession> connect(String site, String consultation, int userId) {
+    public FutureTask<StompSession> connect(String site, String consultation, String userId) {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
         stompClient = new WebSocketStompClient(webSocketClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
@@ -111,7 +111,7 @@ public class StompTestConnection {
         return sessionHandler.onConnect();
     }
 
-    public void connectAndWait(String site, String consultation, int userId) {
+    public void connectAndWait(String site, String consultation, String userId) {
         try {
             this.stompSession = this.connect(site, consultation, userId).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {

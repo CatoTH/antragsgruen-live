@@ -1,6 +1,7 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.Nullable;
 
 public class MQSpeechQueueSettings {
     @JsonProperty("isOpen")
@@ -18,8 +19,9 @@ public class MQSpeechQueueSettings {
     @JsonProperty("showNames")
     private boolean showNames;
 
+    @Nullable
     @JsonProperty("speakingTime")
-    private int speakingTime;
+    private Integer speakingTime;
 
     public boolean isOpen() {
         return isOpen;
@@ -61,11 +63,11 @@ public class MQSpeechQueueSettings {
         this.showNames = showNames;
     }
 
-    public int getSpeakingTime() {
+    public @Nullable Integer getSpeakingTime() {
         return speakingTime;
     }
 
-    public void setSpeakingTime(int speakingTime) {
+    public void setSpeakingTime(@Nullable Integer speakingTime) {
         this.speakingTime = speakingTime;
     }
 }
