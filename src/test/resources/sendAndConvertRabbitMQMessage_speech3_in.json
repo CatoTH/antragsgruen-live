@@ -1,0 +1,139 @@
+{
+  "id": 2,
+  "isActive": true,
+  "settings": {
+    "isOpen": true,
+    "isOpenPoo": false,
+    "allowCustomNames": false,
+    "preferNonspeaker": true,
+    "showNames": false,
+    "speakingTime": null
+  },
+  "subqueues": [
+    {
+      "id": 3,
+      "name": "Frauen",
+      "items": [
+        {
+          "onList": true,
+          "application": false,
+          "id": 10,
+          "name": "Speech 2",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-14T18:55:41+02:00",
+          "dateStarted": "2023-08-14T18:55:58+02:00",
+          "position": 3
+        },
+        {
+          "onList": false,
+          "application": true,
+          "id": 12,
+          "name": "Speech 4",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-14T18:55:48+02:00",
+          "dateStarted": null,
+          "position": -4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Offen \/ M\u00e4nner",
+      "items": [
+        {
+          "onList": true,
+          "application": false,
+          "id": 11,
+          "name": "Speech 3",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-14T18:55:44+02:00",
+          "dateStarted": "2023-08-14T18:56:06+02:00",
+          "position": 4
+        },
+        {
+          "onList": true,
+          "application": false,
+          "id": 9,
+          "name": "Rede 1",
+          "userId": null,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-14T18:55:36+02:00",
+          "dateStarted": "2023-08-14T18:55:55+02:00",
+          "position": 1
+        },
+        {
+          "onList": false,
+          "application": true,
+          "id": 13,
+          "name": "Testadmin",
+          "userId": 1,
+          "userToken": null,
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-14T18:56:17+02:00",
+          "dateStarted": null,
+          "position": -5
+        },
+        {
+          "onList": false,
+          "application": true,
+          "id": 14,
+          "name": "GO-Antrag (m)",
+          "userId": null,
+          "userToken": "qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN",
+          "isPointOfOrder": false,
+          "dateApplied": "2023-08-14T18:58:18+02:00",
+          "dateStarted": null,
+          "position": -6
+        }
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "id": 9,
+      "subqueueId": 4,
+      "subqueueName": "Offen \/ M\u00e4nner",
+      "name": "Rede 1",
+      "userId": null,
+      "userToken": null,
+      "position": 1,
+      "dateStarted": "2023-08-14T18:55:55+02:00",
+      "dateStopped": "2023-08-14T18:55:58+02:00",
+      "dateApplied": "2023-08-14T18:55:36+02:00"
+    },
+    {
+      "id": 10,
+      "subqueueId": 3,
+      "subqueueName": "Frauen",
+      "name": "Speech 2",
+      "userId": null,
+      "userToken": null,
+      "position": 3,
+      "dateStarted": "2023-08-14T18:55:58+02:00",
+      "dateStopped": "2023-08-14T18:56:06+02:00",
+      "dateApplied": "2023-08-14T18:55:41+02:00"
+    },
+    {
+      "id": 11,
+      "subqueueId": 4,
+      "subqueueName": "Offen \/ M\u00e4nner",
+      "name": "Speech 3",
+      "userId": null,
+      "userToken": null,
+      "position": 4,
+      "dateStarted": "2023-08-14T18:56:06+02:00",
+      "dateStopped": null,
+      "dateApplied": "2023-08-14T18:55:44+02:00"
+    }
+  ],
+  "requiresLogin": true,
+  "otherActiveName": null,
+  "currentTime": 1692043638403
+}

@@ -40,17 +40,6 @@ class LiveApplicationTests {
 	private Resource privateKeyFilename;
 
 	@Test
-	void contextLoads() {
-	}
-
-	@Test
-	public void servesUmdJsLibrary() {
-		// Hint: this test case only works after npm install / npm ci has been called
-		String uri = "http://localhost:" + port + "/stomp.umd.min.js";
-		assertThat(this.restTemplate.getForObject(uri, String.class)).contains("StompHeaders");
-	}
-
-	@Test
 	public void sendAndConvertRabbitMQMessage_speech1() throws IOException {
 		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
 
@@ -70,6 +59,24 @@ class LiveApplicationTests {
 
 		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech2_in.json", "speech.site.con");
 		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech2_user_out.json");
+	}
+
+	@Test
+	public void sendAndConvertRabbitMQMessage_speech3() throws IOException {
+		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
+
+		stompConnection.connectAndWait("site", "con", "login-1");
+		stompConnection.subscribeAndWait("/user/site/con/login-1/speech");
+
+		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech3_in.json", "speech.site.con");
+		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech3_user_out.json");
+	}
+
+	@Test
+	public void servesUmdJsLibrary() {
+		// Hint: this test case only works after npm install / npm ci has been called
+		String uri = "http://localhost:" + port + "/stomp.umd.min.js";
+		assertThat(this.restTemplate.getForObject(uri, String.class)).contains("StompHeaders");
 	}
 
 	private void sendFileContentToRabbitMQ(String fileName, String routingKey) throws IOException {

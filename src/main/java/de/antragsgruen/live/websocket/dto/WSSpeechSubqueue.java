@@ -1,5 +1,6 @@
 package de.antragsgruen.live.websocket.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.lang.Nullable;
@@ -10,6 +11,8 @@ public class WSSpeechSubqueue {
     private String name;
     private int numApplied;
     private boolean haveApplied;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private @Nullable WSSpeechSubqueueItem[] applied;
 
     public WSSpeechSubqueue(int id) {
