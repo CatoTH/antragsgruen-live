@@ -7,55 +7,39 @@ import org.springframework.lang.Nullable;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class WSSpeechSubqueue {
-    private int id;
-    private String name;
-    private int numApplied;
-    private boolean haveApplied;
+    private final Integer id;
+    private final String name;
+    private final Integer numApplied;
+    private final boolean haveApplied;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private @Nullable WSSpeechSubqueueItem[] applied;
+    private final @Nullable WSSpeechSubqueueItem[] applied;
 
-    public WSSpeechSubqueue(int id) {
+    public WSSpeechSubqueue(Integer id, String name, Integer numApplied, boolean haveApplied, @Nullable WSSpeechSubqueueItem[] applied) {
         this.id = id;
+        this.name = name;
+        this.numApplied = numApplied;
+        this.haveApplied = haveApplied;
+        this.applied = applied;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getNumApplied() {
+    public Integer getNumApplied() {
         return numApplied;
-    }
-
-    public void setNumApplied(int numApplied) {
-        this.numApplied = numApplied;
     }
 
     public boolean isHaveApplied() {
         return haveApplied;
     }
 
-    public void setHaveApplied(boolean haveApplied) {
-        this.haveApplied = haveApplied;
-    }
-
     public @Nullable WSSpeechSubqueueItem[] getApplied() {
         return applied;
-    }
-
-    public void setApplied(@Nullable WSSpeechSubqueueItem[] applied) {
-        this.applied = applied;
     }
 }

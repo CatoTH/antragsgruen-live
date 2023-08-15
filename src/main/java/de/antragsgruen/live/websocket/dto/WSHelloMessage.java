@@ -1,19 +1,21 @@
 package de.antragsgruen.live.websocket.dto;
 
+import org.springframework.lang.Nullable;
+
 public class WSHelloMessage {
-    private String name;
+    private @Nullable String name;
 
     public WSHelloMessage() {}
 
-    public WSHelloMessage(String name) {
+    public WSHelloMessage(@Nullable String name) {
         this.name = name;
     }
 
-    public String getName() {
+    public @Nullable String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
     }
 }

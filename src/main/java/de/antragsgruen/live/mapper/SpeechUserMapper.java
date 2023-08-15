@@ -14,81 +14,84 @@ import java.util.stream.Stream;
 public class SpeechUserMapper {
     public static WSSpeechQueue convertQueue(MQSpeechQueue queue, String userId) {
         WSSpeechSubqueue[] wsSubqueues = Stream
-                .of(queue.getSubqueues())
-                .map(subqueue -> convertSubqueue(subqueue, userId, queue.getSettings().isShowNames()))
+                .of(queue.subqueues())
+                .map(subqueue -> convertSubqueue(subqueue, userId, queue.settings().showNames()))
                 .toArray(WSSpeechSubqueue[]::new);
 
         WSSpeechActiveSlot[] wsActiveSlots = Stream
-                .of(queue.getSlots())
-                .filter(slot -> slot.getDateStarted() != null)
+                .of(queue.slots())
+                .filter(slot -> slot.dateStarted() != null)
                 .map(SpeechUserMapper::convertActiveSlot)
                 .toArray(WSSpeechActiveSlot[]::new);
 
         boolean haveApplied = Stream.of(wsSubqueues).anyMatch(WSSpeechSubqueue::isHaveApplied);
 
-        WSSpeechQueue wsDto = new WSSpeechQueue(queue.getId());
-        wsDto.setOpen(queue.getSettings().isOpen());
-        wsDto.setHaveApplied(haveApplied);
-        wsDto.setAllowCustomNames(queue.getSettings().isAllowCustomNames());
-        wsDto.setOpenPoo(queue.getSettings().isOpenPoo());
-        wsDto.setSubqueues(wsSubqueues);
-        wsDto.setSlots(wsActiveSlots);
-        wsDto.setRequiresLogin(queue.isRequiresLogin());
-        wsDto.setCurrentTime(queue.getCurrentTime());
-        wsDto.setSpeakingTime(queue.getSettings().getSpeakingTime());
-
-        return wsDto;
+        return new WSSpeechQueue(
+                queue.id(),
+                queue.settings().isOpen(),
+                haveApplied,
+                queue.settings().allowCustomNames(),
+                queue.settings().isOpenPoo(),
+                wsSubqueues,
+                wsActiveSlots,
+                queue.requiresLogin(),
+                queue.currentTime(),
+                queue.settings().speakingTime()
+        );
     }
 
     private static WSSpeechSubqueue convertSubqueue(MQSpeechSubqueue subqueue, String userId, boolean showNames) {
         boolean haveApplied = false;
         int numApplied = 0;
 
-        for (MQSpeechSubqueueItem item : subqueue.getItems()) {
-            if (item.getPosition() < 0) {
+        for (MQSpeechSubqueueItem item : subqueue.items()) {
+            if (item.position() < 0) {
                 numApplied++;
-                if (UserIdMapper.isLoggedInUser(userId, item.getUserId()) || UserIdMapper.isAnonymousUser(userId, item.getUserToken())) {
+                if (UserIdMapper.isLoggedInUser(userId, item.userId()) || UserIdMapper.isAnonymousUser(userId, item.userToken())) {
                     haveApplied = true;
                 }
             }
         }
 
-        WSSpeechSubqueue wsSubqueue = new WSSpeechSubqueue(subqueue.getId());
-        wsSubqueue.setName(subqueue.getName());
-        wsSubqueue.setHaveApplied(haveApplied);
-        wsSubqueue.setNumApplied(numApplied);
+        WSSpeechSubqueueItem[] items;
         if (showNames) {
-            WSSpeechSubqueueItem[] items = Stream
-                    .of(subqueue.getItems())
-                    .filter(item -> item.getDateStarted() == null)
+            items = Stream
+                    .of(subqueue.items())
+                    .filter(item -> item.dateStarted() == null)
                     .map(SpeechUserMapper::convertSubqueueItem)
                     .toArray(WSSpeechSubqueueItem[]::new);
-            wsSubqueue.setApplied(items);
         } else {
-            wsSubqueue.setApplied(null);
+            items = null;
         }
 
-        return wsSubqueue;
+        return new WSSpeechSubqueue(
+                subqueue.id(),
+                subqueue.name(),
+                numApplied,
+                haveApplied,
+                items
+        );
     }
 
     private static WSSpeechSubqueueItem convertSubqueueItem(MQSpeechSubqueueItem item) {
-        WSSpeechSubqueueItem wsItem = new WSSpeechSubqueueItem(item.getId());
-        wsItem.setName(item.getName());
-        wsItem.setPointOfOrder(item.isPointOfOrder());
-        wsItem.setAppliedAt(item.getDateApplied());
-
-        return wsItem;
+        return new WSSpeechSubqueueItem(
+                item.id(),
+                item.name(),
+                item.isPointOfOrder(),
+                item.dateApplied()
+        );
     }
 
     private static WSSpeechActiveSlot convertActiveSlot(MQSpeechQueueActiveSlot activeSlot) {
-        WSSpeechActiveSlot wsActiveSlot = new WSSpeechActiveSlot(activeSlot.getId());
-        wsActiveSlot.setSubqueue(activeSlot.getSubqueueId(), activeSlot.getSubqueueName());
-        wsActiveSlot.setName(activeSlot.getName());
-        wsActiveSlot.setPosition(activeSlot.getPosition());
-        wsActiveSlot.setDateApplied(activeSlot.getDateApplied());
-        wsActiveSlot.setDateStarted(activeSlot.getDateStarted());
-        wsActiveSlot.setDateStopped(activeSlot.getDateStopped());
-
-        return wsActiveSlot;
+        return new WSSpeechActiveSlot(
+                activeSlot.id(),
+                activeSlot.subqueueId(),
+                activeSlot.subqueueName(),
+                activeSlot.name(),
+                activeSlot.position(),
+                activeSlot.dateStarted(),
+                activeSlot.dateStopped(),
+                activeSlot.dateApplied()
+        );
     }
 }

@@ -1,19 +1,21 @@
 package de.antragsgruen.live.websocket.dto;
 
+import org.springframework.lang.Nullable;
+
 public class WSGreeting {
-    private String content;
+    private @Nullable String content;
 
     public WSGreeting() {}
 
-    public WSGreeting(String content) {
+    public WSGreeting(@Nullable String content) {
         this.content = content;
     }
 
-    public String getContent() {
+    public @Nullable String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(@Nullable String content) {
         this.content = content;
     }
 }

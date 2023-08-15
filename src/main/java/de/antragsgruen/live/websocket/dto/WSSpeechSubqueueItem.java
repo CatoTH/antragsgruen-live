@@ -9,29 +9,24 @@ import java.util.Date;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class WSSpeechSubqueueItem {
-    private int id;
-    private String name;
-    private boolean isPointOfOrder;
-    private Date appliedAt;
+    private final Integer id;
+    private final String name;
+    private final boolean isPointOfOrder;
+    private final Date appliedAt;
 
-    public WSSpeechSubqueueItem(int id) {
+    public WSSpeechSubqueueItem(Integer id, String name, boolean isPointOfOrder, Date appliedAt) {
         this.id = id;
+        this.name = name;
+        this.isPointOfOrder = isPointOfOrder;
+        this.appliedAt = appliedAt;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @JsonProperty("is_point_of_order")
@@ -39,15 +34,7 @@ public class WSSpeechSubqueueItem {
         return isPointOfOrder;
     }
 
-    public void setPointOfOrder(boolean pointOfOrder) {
-        isPointOfOrder = pointOfOrder;
-    }
-
     public Date getAppliedAt() {
         return appliedAt;
-    }
-
-    public void setAppliedAt(Date appliedAt) {
-        this.appliedAt = appliedAt;
     }
 }

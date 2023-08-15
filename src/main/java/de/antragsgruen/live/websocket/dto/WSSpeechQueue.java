@@ -9,27 +9,32 @@ import java.math.BigInteger;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class WSSpeechQueue {
-    private int id;
-    private boolean isOpen;
-    private boolean haveApplied;
-    private boolean allowCustomNames;
-    private boolean isOpenPoo;
-    private WSSpeechSubqueue[] subqueues;
-    private WSSpeechActiveSlot[] slots;
-    private boolean requiresLogin;
-    private BigInteger currentTime;
-    private @Nullable Integer speakingTime;
+    private final Integer id;
+    private final boolean isOpen;
+    private final boolean haveApplied;
+    private final boolean allowCustomNames;
+    private final boolean isOpenPoo;
+    private final WSSpeechSubqueue[] subqueues;
+    private final WSSpeechActiveSlot[] slots;
+    private final boolean requiresLogin;
+    private final BigInteger currentTime;
+    private final @Nullable Integer speakingTime;
 
-    public WSSpeechQueue(int id) {
+    public WSSpeechQueue(Integer id, boolean isOpen, boolean haveApplied, boolean allowCustomNames, boolean isOpenPoo, WSSpeechSubqueue[] subqueues, WSSpeechActiveSlot[] slots, boolean requiresLogin, BigInteger currentTime, @Nullable Integer speakingTime) {
         this.id = id;
+        this.isOpen = isOpen;
+        this.haveApplied = haveApplied;
+        this.allowCustomNames = allowCustomNames;
+        this.isOpenPoo = isOpenPoo;
+        this.subqueues = subqueues;
+        this.slots = slots;
+        this.requiresLogin = requiresLogin;
+        this.currentTime = currentTime;
+        this.speakingTime = speakingTime;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @JsonProperty("is_open")
@@ -37,24 +42,12 @@ public class WSSpeechQueue {
         return isOpen;
     }
 
-    public void setOpen(boolean open) {
-        isOpen = open;
-    }
-
     public boolean isHaveApplied() {
         return haveApplied;
     }
 
-    public void setHaveApplied(boolean haveApplied) {
-        this.haveApplied = haveApplied;
-    }
-
     public boolean isAllowCustomNames() {
         return allowCustomNames;
-    }
-
-    public void setAllowCustomNames(boolean allowCustomNames) {
-        this.allowCustomNames = allowCustomNames;
     }
 
     @JsonProperty("is_open_poo")
@@ -62,47 +55,23 @@ public class WSSpeechQueue {
         return isOpenPoo;
     }
 
-    public void setOpenPoo(boolean openPoo) {
-        isOpenPoo = openPoo;
-    }
-
     public WSSpeechSubqueue[] getSubqueues() {
         return subqueues;
-    }
-
-    public void setSubqueues(WSSpeechSubqueue[] subqueues) {
-        this.subqueues = subqueues;
     }
 
     public WSSpeechActiveSlot[] getSlots() {
         return slots;
     }
 
-    public void setSlots(WSSpeechActiveSlot[] slots) {
-        this.slots = slots;
-    }
-
     public boolean isRequiresLogin() {
         return requiresLogin;
-    }
-
-    public void setRequiresLogin(boolean requiresLogin) {
-        this.requiresLogin = requiresLogin;
     }
 
     public BigInteger getCurrentTime() {
         return currentTime;
     }
 
-    public void setCurrentTime(BigInteger currentTime) {
-        this.currentTime = currentTime;
-    }
-
     public @Nullable Integer getSpeakingTime() {
         return speakingTime;
-    }
-
-    public void setSpeakingTime(@Nullable Integer speakingTime) {
-        this.speakingTime = speakingTime;
     }
 }
