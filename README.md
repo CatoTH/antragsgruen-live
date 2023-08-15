@@ -1,15 +1,23 @@
 # Real-time communication for Antragsgrün
 
+[Antragsgrün](https://github.com/CatoTH/antragsgruen) is mostly a traditional Content Management System, designed to run on a wide variety of hosting environments, including shared hosting providers that provide no means of using websockets or long-running processes necessary for real-time communication. Therefore, interactive components like the speaking lists and the voting system use HTTP polling by default, which works for smaller events.
+
+This Live Server is an optional component that can be deployed for larger setups and solves two issues of the traditional approach: 1) the latency of updates with which changes are propagated to web clients (which comes from the polling frequency), and 2) the load that this approach puts on the server, which tends to be an issue with larger voting sessions.
+
+Users are connecting to the Live Server via Websocket/STOMP when using an interactive part of Antragsgrün. Whenever an update to the internal state of the system happens, the main Antragsgrün system publishes a message with the new state to a message queue (RabbitMQ, at the moment), to be consumed by this Live Server. This processes the new state, transforms it to user-specific objects (which matches exactly the structure that the traditional polling HTTP endpoint would return) and actively sends it to the relevant connected users.
 
 ## Authentication
 
 - The central Antragsgrün system authenticates users through traditional means (cookie-based sessions generated during username/password- or SAML-based login).
-- It creates a JWT containing information about the site, the consultation and the ID of the user and is signed using a private key (RS256). If the user has specific admin privileges (like to administer speech queues), a role is added to the JWT.
-- If the user is not logged in, instead of the regular user-id-pattern (`login-123`) a session-token like (`anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN`) will be set as Subject of the JWT.
+- It creates a JWT, signed using a private key (RS256), containing information about:
+  - The ID of the user as Subject of the token. If the user is logged in, it has the shape of `login-123`. If not, a session-token like `anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN` will be used.
+  - If the user has specific admin privileges (like to administer speech queues), a role is added to the payload. Currently, only ROLE_SPEECH_ADMIN is supported.
+  - The site and the consultation the token is valid for, as the payload of the token.
 - We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
   - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
   - The site and consultation association is checked when subscribing to topics - the site subdomain and consultation path has to be in the topic name and equal to information provided in the JWT.
   - When subscribing to the speech admin topic, the SPEECH_ADMIN role is checked in the JWT.
+  - SECURITY DISCLAIMER: the expiry date of the token is currently only checked when connecting. As long as the session is open, no expiry mechanism is in place, so revoking a user's access only has effect once that user reconnects.
 
 
 ## RabbitMQ Setup
