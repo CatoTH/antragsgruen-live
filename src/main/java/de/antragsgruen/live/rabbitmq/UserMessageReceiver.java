@@ -26,8 +26,8 @@ public class UserMessageReceiver {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
         }
 
-        logger.warn("Received user message: " + routingKey + " => " + event.getUsername());
+        logger.warn("Received user message: " + routingKey + " => " + event.username());
 
-        sender.sendToUser(routingKeyParts[1], routingKeyParts[2], routingKeyParts[3], Sender.USER_CHANNEL_DEFAULT, event.getUsername());
+        sender.sendToUser(routingKeyParts[1], routingKeyParts[2], routingKeyParts[3], Sender.USER_CHANNEL_DEFAULT, event.username());
     }
 }
