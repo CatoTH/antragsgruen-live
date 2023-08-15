@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -103,14 +104,35 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
             return false;
         }
 
-        // @TODO Check subdomain / consultation access
         if ("topic".equals(pathParts[1]) && pathParts.length == 5) {
-            return true;
+            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]);
         }
         if ("user".equals(pathParts[1]) && pathParts.length == 6) {
-            return pathParts[4].equals(jwtToken.getName());
+            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]) &&
+                    pathParts[4].equals(jwtToken.getName());
         }
 
         return false;
+    }
+
+    private boolean jwtIsForCorrectSiteAndConsultation(JwtAuthenticationToken jwtToken, String site, String consultation)
+    {
+        Object payload = jwtToken.getTokenAttributes().get("payload");
+        if (!(payload instanceof Map<?, ?> payloadMap)) {
+            logger.warn("No payload found");
+            return false;
+        }
+
+        if (!payloadMap.containsKey("site") || payloadMap.get("site") == null || !payloadMap.get("site").equals(site)) {
+            logger.warn("Incorrect site provided: " + site, payloadMap);
+            return false;
+        }
+
+        if (!payloadMap.containsKey("consultation") || payloadMap.get("consultation") == null || !payloadMap.get("consultation").equals(consultation)) {
+            logger.warn("Incorrect consultation provided: " + consultation, payloadMap);
+            return false;
+        }
+
+        return true;
     }
 }

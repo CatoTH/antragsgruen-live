@@ -26,6 +26,7 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -41,6 +42,7 @@ public class StompTestConnection {
 
     @Nullable private WebSocketStompClient stompClient;
     @Nullable private StompSession stompSession;
+    @Nullable FutureTask<String> onError;
 
     public StompTestConnection(int port, Resource privateKeyFilename) {
         this.port = port;
@@ -71,13 +73,17 @@ public class StompTestConnection {
             throw new RuntimeException(e);
         }
 
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("site", site);
+        payload.put("consultation", consultation);
+
         Date now = new Date();
         JWTClaimsSet jwtClaims = new JWTClaimsSet.Builder()
                 .issuer("https://test.antragsgruen.de") // @TODO
                 .issueTime(now)
                 .expirationTime(new Date(now.getTime() + 1000*60*10))
                 .subject(userId)
-                // .claim('payload', ) @TODO
+                .claim("payload", payload)
                 .build();
 
         JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.RS256)
@@ -107,6 +113,7 @@ public class StompTestConnection {
 
         StompTestSessionHandler sessionHandler = new StompTestSessionHandler();
         stompClient.connect(url, handshakeHeaders, headers, sessionHandler);
+        this.onError = sessionHandler.onError();
 
         return sessionHandler.onConnect();
     }
@@ -121,7 +128,7 @@ public class StompTestConnection {
         }
     }
 
-    public void subscribeAndWait(String topic) {
+    public void subscribe(String topic) {
         this.stompSession.subscribe(topic, new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
@@ -135,6 +142,11 @@ public class StompTestConnection {
             }
         });
         // @TODO Figure out how to wait for a receipt and trigger a onSubscribed task
+    }
+
+    public FutureTask<String> subscribeAndExpectError(String topic) {
+        this.subscribe(topic);
+        return this.onError;
     }
 
     public Map<String, Object> waitForMessageReceived() {

@@ -7,10 +7,14 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.concurrent.FutureTask;
 
 public class StompTestSessionHandler implements StompSessionHandler {
     @Nullable private FutureTask<StompSession> onConnectFuture;
+    @Nullable private FutureTask<String> onErrorFuture;
+
+    @Nullable String lastStompError;
     @Nullable private StompSession stompSession;
 
     public StompTestSessionHandler() {
@@ -18,8 +22,14 @@ public class StompTestSessionHandler implements StompSessionHandler {
 
     public FutureTask<StompSession> onConnect()
     {
-         this.onConnectFuture = new FutureTask<>(() -> this.stompSession);
-         return this.onConnectFuture;
+        this.onConnectFuture = new FutureTask<>(() -> this.stompSession);
+        return this.onConnectFuture;
+    }
+
+    public FutureTask<String> onError()
+    {
+        this.onErrorFuture = new FutureTask<>(() -> this.lastStompError);
+        return this.onErrorFuture;
     }
 
     @Override
@@ -45,8 +55,13 @@ public class StompTestSessionHandler implements StompSessionHandler {
 
     @Override
     public void handleFrame(StompHeaders headers, @Nullable Object payload) {
-        System.out.println(headers);
-        System.out.println(payload);
-        System.out.println("Frame");
+        List<String> messages = headers.get("message");
+        for (String message: messages) {
+            this.lastStompError = message;
+            this.onErrorFuture.run();
+        }
+        //System.out.println(headers);
+        //            System.out.println(payload);
+        //            System.out.println("Frame");
     }
 }

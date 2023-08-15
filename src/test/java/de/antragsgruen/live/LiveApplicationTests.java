@@ -17,6 +17,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,11 +44,39 @@ class LiveApplicationTests {
 	private Resource privateKeyFilename;
 
 	@Test
+	public void tryToConnectToIncorrectTopic1() {
+		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
+
+		stompConnection.connectAndWait("site", "con", "login-1");
+		FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/site/othercon/login-1/speech");
+		try {
+			String message = onError.get(5, TimeUnit.SECONDS);
+			assertThat(message).isEqualTo("Forbidden to subscribe to this destination");
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Test
+	public void tryToConnectToIncorrectTopic2() {
+		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
+
+		stompConnection.connectAndWait("site", "con", "login-2");
+		FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/site/con/login-1/speech");
+		try {
+			String message = onError.get(5, TimeUnit.SECONDS);
+			assertThat(message).isEqualTo("Forbidden to subscribe to this destination");
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Test
 	public void sendAndConvertRabbitMQMessage_speech1() throws IOException {
 		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
 
 		stompConnection.connectAndWait("site", "con", "login-1");
-		stompConnection.subscribeAndWait("/user/site/con/login-1/speech");
+		stompConnection.subscribe("/user/site/con/login-1/speech");
 
 		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.site.con");
 		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_user_out.json");
@@ -55,7 +87,7 @@ class LiveApplicationTests {
 		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
 
 		stompConnection.connectAndWait("site", "con", "anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN");
-		stompConnection.subscribeAndWait("/user/site/con/anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN/speech");
+		stompConnection.subscribe("/user/site/con/anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN/speech");
 
 		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech2_in.json", "speech.site.con");
 		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech2_user_out.json");
@@ -66,7 +98,7 @@ class LiveApplicationTests {
 		StompTestConnection stompConnection = new StompTestConnection(port, privateKeyFilename);
 
 		stompConnection.connectAndWait("site", "con", "login-1");
-		stompConnection.subscribeAndWait("/user/site/con/login-1/speech");
+		stompConnection.subscribe("/user/site/con/login-1/speech");
 
 		sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech3_in.json", "speech.site.con");
 		expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech3_user_out.json");
