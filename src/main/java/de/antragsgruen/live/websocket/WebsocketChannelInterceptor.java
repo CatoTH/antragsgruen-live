@@ -3,6 +3,7 @@ package de.antragsgruen.live.websocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessagingException;
@@ -14,6 +15,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class WebsocketChannelInterceptor implements ChannelInterceptor {
@@ -49,7 +53,10 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
 
     private void onConnect(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException
     {
-        for (String head: headerAccessor.getNativeHeader("jwt")) {
+        List<String> jwtHeaders = headerAccessor.getNativeHeader("jwt");
+        jwtHeaders = Optional.ofNullable(jwtHeaders).orElse(new ArrayList<>());
+
+        for (String head: jwtHeaders) {
             try {
                 JwtAuthenticationToken token = this.jwtDecoder.getJwtAuthToken(head);
                 headerAccessor.setUser(token);
@@ -85,8 +92,12 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
      * - /user/[subdomain]/[consultation]/[userid]/[...]
      * - /topic/[subdomain]/[consultation]/[...]
      */
-    private boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, String destination)
+    private boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination)
     {
+        if (destination == null) {
+            return false;
+        }
+
         String[] pathParts = destination.split("/");
         if (!"".equals(pathParts[0])) {
             return false;

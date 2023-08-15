@@ -9,6 +9,7 @@ import de.antragsgruen.live.websocket.dto.WSSpeechQueue;
 import de.antragsgruen.live.websocket.dto.WSSpeechSubqueue;
 import de.antragsgruen.live.websocket.dto.WSSpeechSubqueueItem;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class SpeechUserMapper {
@@ -45,7 +46,8 @@ public class SpeechUserMapper {
         int numApplied = 0;
 
         for (MQSpeechSubqueueItem item : subqueue.items()) {
-            if (item.position() < 0) {
+            Integer position = Optional.ofNullable(item.position()).orElse(0);
+            if (position < 0) {
                 numApplied++;
                 if (UserIdMapper.isLoggedInUser(userId, item.userId()) || UserIdMapper.isAnonymousUser(userId, item.userToken())) {
                     haveApplied = true;

@@ -1,11 +1,7 @@
 package de.antragsgruen.live.rabbitmq;
 
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
-import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueue;
-import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueueItem;
 import de.antragsgruen.live.SpeechUserHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
@@ -15,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SpeechMessageReceiver {
-    Logger logger = LoggerFactory.getLogger(UserMessageReceiver.class);
-
     @Autowired
     private SpeechUserHandler speechUserHandler;
 
