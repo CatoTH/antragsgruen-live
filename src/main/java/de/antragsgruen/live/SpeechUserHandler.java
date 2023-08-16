@@ -4,21 +4,18 @@ import de.antragsgruen.live.mapper.SpeechUserMapper;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
 import de.antragsgruen.live.websocket.Sender;
 import de.antragsgruen.live.websocket.dto.WSSpeechQueue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.user.*;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class SpeechUserHandler {
-    @Autowired
-    private Sender sender;
-
-    @Autowired
-    private SimpUserRegistry userRegistry;
-
-    private final Logger logger = LoggerFactory.getLogger(SpeechUserHandler.class);
+    private @NonNull Sender sender;
+    private @NonNull SimpUserRegistry userRegistry;
 
     private String[] findRelevantUserIds(String subdomain, String consultation)
     {
@@ -38,7 +35,7 @@ public class SpeechUserHandler {
     public void onSpeechEvent(String subdomain, String consultation, MQSpeechQueue mqQueue) {
         String[] users = findRelevantUserIds(subdomain, consultation);
 
-        logger.info("Sending speech event to " + users.length + " (out of " + userRegistry.getUserCount() + ") user(s)");
+        log.info("Sending speech event to " + users.length + " (out of " + userRegistry.getUserCount() + ") user(s)");
 
         for (String userId : users) {
             WSSpeechQueue wsQueue = SpeechUserMapper.convertQueue(mqQueue, userId);

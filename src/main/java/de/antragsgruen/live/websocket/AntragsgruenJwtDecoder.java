@@ -1,9 +1,8 @@
 package de.antragsgruen.live.websocket;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -24,9 +23,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
 @Service
+@Slf4j
 public class AntragsgruenJwtDecoder {
-    Logger logger = LoggerFactory.getLogger(AntragsgruenJwtDecoder.class);
-
     @Value("classpath:${antragsgruen.jwt.key.public}")
     private Resource publicKeyFilename;
 

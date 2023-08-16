@@ -2,17 +2,18 @@ package de.antragsgruen.live.rabbitmq;
 
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
 import de.antragsgruen.live.SpeechUserHandler;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class SpeechMessageReceiver {
-    @Autowired
-    private SpeechUserHandler speechUserHandler;
+    @NonNull private SpeechUserHandler speechUserHandler;
 
     @RabbitListener(queues = {"${rabbitmq.queue.speech.name}"})
     public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)

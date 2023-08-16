@@ -25,7 +25,7 @@ public class SpeechUserMapper {
                 .map(SpeechUserMapper::convertActiveSlot)
                 .toArray(WSSpeechActiveSlot[]::new);
 
-        boolean haveApplied = Stream.of(wsSubqueues).anyMatch(WSSpeechSubqueue::isHaveApplied);
+        boolean haveApplied = Stream.of(wsSubqueues).anyMatch(WSSpeechSubqueue::haveApplied);
 
         return new WSSpeechQueue(
                 queue.id(),

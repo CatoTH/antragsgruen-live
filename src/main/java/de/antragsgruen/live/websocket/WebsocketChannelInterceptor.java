@@ -1,8 +1,8 @@
 package de.antragsgruen.live.websocket;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -21,11 +21,10 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class WebsocketChannelInterceptor implements ChannelInterceptor {
-    @Autowired
-    private AntragsgruenJwtDecoder jwtDecoder;
-
-    Logger logger = LoggerFactory.getLogger(WebsocketChannelInterceptor.class);
+    @NonNull private AntragsgruenJwtDecoder jwtDecoder;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) throws MessagingException {
@@ -47,7 +46,7 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
     }
 
     public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-        logger.warn("preReceive", message);
+        log.warn("preReceive", message);
 
         return message;
     }
@@ -61,7 +60,7 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
             try {
                 JwtAuthenticationToken token = this.jwtDecoder.getJwtAuthToken(head);
                 headerAccessor.setUser(token);
-                logger.info("Connected Websocket: " + token.getName());
+                log.info("Connected Websocket: " + token.getName());
             } catch (Exception e) {
                 throw new MessagingException("Could not authenticate JWT: " + e.getMessage());
             }
@@ -81,11 +80,11 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
 
 
         if (!canSubscribeToDestination((JwtAuthenticationToken) userPrincipal, headerAccessor.getDestination())) {
-            logger.warn("Attempted invalid subscription: " + userPrincipal.getName() + " => " + headerAccessor.getDestination());
+            log.warn("Attempted invalid subscription: " + userPrincipal.getName() + " => " + headerAccessor.getDestination());
             throw new MessagingException("Forbidden to subscribe to this destination");
         }
 
-        logger.info("Subscribed: " + userPrincipal.getName() + " => " + headerAccessor.getDestination());
+        log.info("Subscribed: " + userPrincipal.getName() + " => " + headerAccessor.getDestination());
     }
 
     /**
@@ -119,17 +118,17 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
     {
         Object payload = jwtToken.getTokenAttributes().get("payload");
         if (!(payload instanceof Map<?, ?> payloadMap)) {
-            logger.warn("No payload found");
+            log.warn("No payload found");
             return false;
         }
 
         if (!payloadMap.containsKey("site") || payloadMap.get("site") == null || !payloadMap.get("site").equals(site)) {
-            logger.warn("Incorrect site provided: " + site, payloadMap);
+            log.warn("Incorrect site provided: " + site, payloadMap);
             return false;
         }
 
         if (!payloadMap.containsKey("consultation") || payloadMap.get("consultation") == null || !payloadMap.get("consultation").equals(consultation)) {
-            logger.warn("Incorrect consultation provided: " + consultation, payloadMap);
+            log.warn("Incorrect consultation provided: " + consultation, payloadMap);
             return false;
         }
 
