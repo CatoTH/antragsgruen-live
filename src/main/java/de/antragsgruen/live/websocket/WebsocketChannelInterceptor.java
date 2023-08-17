@@ -15,15 +15,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class WebsocketChannelInterceptor implements ChannelInterceptor {
+    private static final String ROLE_SPEECH_ADMIN = "ROLE_SPEECH_ADMIN";
+
     @NonNull private AntragsgruenJwtDecoder jwtDecoder;
 
     @Override
@@ -89,7 +88,8 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
 
     /**
      * Supported destination patterns:
-     * - /user/[subdomain]/[consultation]/[userid]/[...]
+     * - /user/[subdomain]/[consultation]/[userid]/speech
+     * - /adin/[subdomain]/[consultation]/[userid]/speech
      * - /topic/[subdomain]/[consultation]/[...]
      */
     private boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination)
@@ -108,6 +108,11 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         }
         if ("user".equals(pathParts[1]) && pathParts.length == 6) {
             return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]) &&
+                    pathParts[4].equals(jwtToken.getName());
+        }
+        if ("admin".equals(pathParts[1]) && pathParts.length == 6) {
+            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]) &&
+                    jwtHasRoleForTopic(jwtToken, pathParts[5]) &&
                     pathParts[4].equals(jwtToken.getName());
         }
 
@@ -133,5 +138,34 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         }
 
         return true;
+    }
+
+    private boolean jwtHasRoleForTopic(JwtAuthenticationToken jwtToken, String topic)
+    {
+        Object payload = jwtToken.getTokenAttributes().get("payload");
+        if (!(payload instanceof Map<?, ?> payloadMap) || !payloadMap.containsKey("roles")) {
+            log.warn("No payload found");
+            return false;
+        }
+
+        Object roles = payloadMap.get("roles");
+        if (!(roles instanceof List<?> rolesArray)) {
+            log.warn("No roles found");
+            return false;
+        }
+
+        if (getNecessaryRoleForTopic(topic) == null) {
+            log.warn("No role for this topic found");
+            return false;
+        }
+
+        return rolesArray.contains(getNecessaryRoleForTopic(topic));
+    }
+
+    private @Nullable String getNecessaryRoleForTopic(String topic) {
+        if ("speech".equals(topic)) {
+            return WebsocketChannelInterceptor.ROLE_SPEECH_ADMIN;
+        }
+        return null;
     }
 }

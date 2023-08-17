@@ -31,6 +31,7 @@ The following routing key patterns are fixed, while its associated queues can be
 ## Exposed Websocket STOMP Topics
 
 - `/user/[subdomain]/[consultation]/[userid]/speech`
+- `/admin/[subdomain]/[consultation]/[userid]/speech`
 - `/topic/[subdomain]/[consultation]/[...]` (currently not used)
 
 

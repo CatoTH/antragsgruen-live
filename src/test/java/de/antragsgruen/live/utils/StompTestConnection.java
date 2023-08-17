@@ -27,6 +27,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -65,7 +66,7 @@ public class StompTestConnection {
         return (RSAPrivateKey) kf.generatePrivate(keySpec);
     }
 
-    private String generateJwt(String site, String consultation, String userId) {
+    private String generateJwt(String site, String consultation, String userId, @Nullable List<String> roles) {
         RSAPrivateKey privateKey;
         try {
             privateKey = this.getJwtPrivateKey();
@@ -76,6 +77,10 @@ public class StompTestConnection {
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("site", site);
         payload.put("consultation", consultation);
+
+        if (roles != null) {
+            payload.put("roles", roles);
+        }
 
         Date now = new Date();
         JWTClaimsSet jwtClaims = new JWTClaimsSet.Builder()
@@ -100,7 +105,7 @@ public class StompTestConnection {
         return signedJwt.serialize();
     }
 
-    public FutureTask<StompSession> connect(String site, String consultation, String userId) {
+    public FutureTask<StompSession> connect(String site, String consultation, String userId, @Nullable List<String> roles) {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
         stompClient = new WebSocketStompClient(webSocketClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
@@ -109,7 +114,7 @@ public class StompTestConnection {
         WebSocketHttpHeaders handshakeHeaders = new WebSocketHttpHeaders();
 
         StompHeaders headers = new StompHeaders();
-        headers.set("jwt", generateJwt(site, consultation, userId));
+        headers.set("jwt", generateJwt(site, consultation, userId, roles));
 
         StompTestSessionHandler sessionHandler = new StompTestSessionHandler();
         stompClient.connect(url, handshakeHeaders, headers, sessionHandler);
@@ -118,9 +123,9 @@ public class StompTestConnection {
         return sessionHandler.onConnect();
     }
 
-    public void connectAndWait(String site, String consultation, String userId) {
+    public void connectAndWait(String site, String consultation, String userId, @Nullable List<String> roles) {
         try {
-            this.stompSession = this.connect(site, consultation, userId).get(5, TimeUnit.SECONDS);
+            this.stompSession = this.connect(site, consultation, userId, roles).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
