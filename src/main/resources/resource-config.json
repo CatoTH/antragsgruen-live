@@ -1,0 +1,13 @@
+{
+  "resources": [
+    {
+      "pattern": ".*\\.js$"
+    },
+    {
+      "pattern": ".*\\.json$"
+    },
+    {
+      "pattern": ".*\\.key$"
+    }
+  ]
+}

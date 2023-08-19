@@ -1,5 +1,7 @@
 package de.antragsgruen.live.websocket;
 
+import de.antragsgruen.live.websocket.dto.*;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
+@RegisterReflectionForBinding({
+        WSGreeting.class,
+        WSHelloMessage.class,
+        WSSpeechActiveSlot.class,
+        WSSpeechQueue.class,
+        WSSpeechSubqueue.class,
+        WSSpeechSubqueueItem.class,
+})
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
     @Value("${antragsgruen.ws.origins}")
     private String wsOriginPatter;
