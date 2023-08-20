@@ -142,6 +142,7 @@ public class StompTestConnection {
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
+                System.out.println("handleFrame");
                 receivedMessage = (Map<String, Object>) payload;
                 onMessageReceived.run();
             }

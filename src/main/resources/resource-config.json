@@ -1,13 +1,13 @@
 {
   "resources": [
     {
-      "pattern": ".*\\.js$"
+      "pattern": "^index\\.html$"
     },
     {
-      "pattern": ".*\\.json$"
+      "pattern": "^stomp\\.umd\\.min\\.js$"
     },
     {
-      "pattern": ".*\\.key$"
+      "pattern": "^public\\.key$"
     }
   ]
 }

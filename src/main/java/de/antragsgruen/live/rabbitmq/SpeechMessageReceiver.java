@@ -1,5 +1,6 @@
 package de.antragsgruen.live.rabbitmq;
 
+import de.antragsgruen.live.SpeechAdminHandler;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
 import de.antragsgruen.live.SpeechUserHandler;
 import lombok.NonNull;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SpeechMessageReceiver {
     @NonNull private SpeechUserHandler speechUserHandler;
+    @NonNull private SpeechAdminHandler speechAdminHandler;
 
     @RabbitListener(queues = {"${rabbitmq.queue.speech.name}"})
     public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
@@ -24,5 +26,6 @@ public class SpeechMessageReceiver {
         }
 
         speechUserHandler.onSpeechEvent(routingKeyParts[1], routingKeyParts[2], event);
+        speechAdminHandler.onSpeechEvent(routingKeyParts[1], routingKeyParts[2], event);
     }
 }

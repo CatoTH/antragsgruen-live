@@ -28,13 +28,10 @@ class SpeechAdminTests {
     private int port;
 
     @Test
-    public void tryToConnectWithoutAdminRole() throws IOException {
+    public void tryToConnectWithoutAdminRole() {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-        List<String> roles = new ArrayList<>();
-        roles.add("WRONG_ROLE");
-
-        stompConnection.connectAndWait("site", "con", "login-1", roles);
+        stompConnection.connectAndWait("site", "con", "login-1", getRoles("WRONG_ROLE"));
         FutureTask<String> onError = stompConnection.subscribeAndExpectError("/admin/site/con/login-1/speech");
         try {
             String message = onError.get(5, TimeUnit.SECONDS);
@@ -42,5 +39,23 @@ class SpeechAdminTests {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void sendAndConvertRabbitMQMessage_speech1() throws IOException {
+        StompTestConnection stompConnection = testHelper.getStompConnection(port);
+
+        stompConnection.connectAndWait("site", "con", "login-1", getRoles("ROLE_SPEECH_ADMIN"));
+        stompConnection.subscribe("/admin/site/con/login-1/speech");
+
+        testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.site.con");
+        testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_admin_out.json");
+    }
+
+    private List<String> getRoles(String role) {
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        return roles;
     }
 }

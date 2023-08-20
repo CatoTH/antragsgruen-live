@@ -5,19 +5,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.lang.Nullable;
 
-import java.math.BigInteger;
-
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record WSSpeechQueue(
-        Integer id,
+public record WSSpeechQueueSettingsAdmin(
         boolean isOpen,
-        boolean haveApplied,
-        boolean allowCustomNames,
         boolean isOpenPoo,
-        WSSpeechSubqueue[] subqueues,
-        WSSpeechActiveSlot[] slots,
-        boolean requiresLogin,
-        BigInteger currentTime,
+        boolean allowCustomNames,
+        boolean preferNonspeaker,
+        boolean showNames,
         @Nullable Integer speakingTime
 ) {
     @Override

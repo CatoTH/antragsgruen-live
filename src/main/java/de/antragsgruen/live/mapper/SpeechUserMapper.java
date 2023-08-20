@@ -5,19 +5,19 @@ import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueueActiveSlot;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueue;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechSubqueueItem;
 import de.antragsgruen.live.websocket.dto.WSSpeechActiveSlot;
-import de.antragsgruen.live.websocket.dto.WSSpeechQueue;
-import de.antragsgruen.live.websocket.dto.WSSpeechSubqueue;
-import de.antragsgruen.live.websocket.dto.WSSpeechSubqueueItem;
+import de.antragsgruen.live.websocket.dto.WSSpeechQueueUser;
+import de.antragsgruen.live.websocket.dto.WSSpeechSubqueueUser;
+import de.antragsgruen.live.websocket.dto.WSSpeechSubqueueUserItem;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class SpeechUserMapper {
-    public static WSSpeechQueue convertQueue(MQSpeechQueue queue, String userId) {
-        WSSpeechSubqueue[] wsSubqueues = Stream
+    public static WSSpeechQueueUser convertQueue(MQSpeechQueue queue, String userId) {
+        WSSpeechSubqueueUser[] wsSubqueues = Stream
                 .of(queue.subqueues())
                 .map(subqueue -> convertSubqueue(subqueue, userId, queue.settings().showNames()))
-                .toArray(WSSpeechSubqueue[]::new);
+                .toArray(WSSpeechSubqueueUser[]::new);
 
         WSSpeechActiveSlot[] wsActiveSlots = Stream
                 .of(queue.slots())
@@ -25,9 +25,9 @@ public class SpeechUserMapper {
                 .map(SpeechUserMapper::convertActiveSlot)
                 .toArray(WSSpeechActiveSlot[]::new);
 
-        boolean haveApplied = Stream.of(wsSubqueues).anyMatch(WSSpeechSubqueue::haveApplied);
+        boolean haveApplied = Stream.of(wsSubqueues).anyMatch(WSSpeechSubqueueUser::haveApplied);
 
-        return new WSSpeechQueue(
+        return new WSSpeechQueueUser(
                 queue.id(),
                 queue.settings().isOpen(),
                 haveApplied,
@@ -41,7 +41,7 @@ public class SpeechUserMapper {
         );
     }
 
-    private static WSSpeechSubqueue convertSubqueue(MQSpeechSubqueue subqueue, String userId, boolean showNames) {
+    private static WSSpeechSubqueueUser convertSubqueue(MQSpeechSubqueue subqueue, String userId, boolean showNames) {
         boolean haveApplied = false;
         int numApplied = 0;
 
@@ -55,18 +55,18 @@ public class SpeechUserMapper {
             }
         }
 
-        WSSpeechSubqueueItem[] items;
+        WSSpeechSubqueueUserItem[] items;
         if (showNames) {
             items = Stream
                     .of(subqueue.items())
                     .filter(item -> item.dateStarted() == null)
                     .map(SpeechUserMapper::convertSubqueueItem)
-                    .toArray(WSSpeechSubqueueItem[]::new);
+                    .toArray(WSSpeechSubqueueUserItem[]::new);
         } else {
             items = null;
         }
 
-        return new WSSpeechSubqueue(
+        return new WSSpeechSubqueueUser(
                 subqueue.id(),
                 subqueue.name(),
                 numApplied,
@@ -75,8 +75,8 @@ public class SpeechUserMapper {
         );
     }
 
-    private static WSSpeechSubqueueItem convertSubqueueItem(MQSpeechSubqueueItem item) {
-        return new WSSpeechSubqueueItem(
+    private static WSSpeechSubqueueUserItem convertSubqueueItem(MQSpeechSubqueueItem item) {
+        return new WSSpeechSubqueueUserItem(
                 item.id(),
                 item.name(),
                 item.isPointOfOrder(),

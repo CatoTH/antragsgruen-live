@@ -17,9 +17,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
         WSGreeting.class,
         WSHelloMessage.class,
         WSSpeechActiveSlot.class,
-        WSSpeechQueue.class,
-        WSSpeechSubqueue.class,
-        WSSpeechSubqueueItem.class,
+        WSSpeechQueueUser.class,
+        WSSpeechSubqueueUser.class,
+        WSSpeechSubqueueUserItem.class,
 })
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
     @Value("${antragsgruen.ws.origins}")
@@ -31,7 +31,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config)
     {
-        config.enableSimpleBroker("/user", "/topic", "/queue");
+        config.enableSimpleBroker("/user", "/admin", "/topic", "/queue");
         config.setApplicationDestinationPrefixes("/app");
     }
 

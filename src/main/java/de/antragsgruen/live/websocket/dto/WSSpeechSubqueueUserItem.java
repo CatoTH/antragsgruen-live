@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.util.Date;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record WSSpeechSubqueueItem(
+public record WSSpeechSubqueueUserItem(
         @Getter Integer id,
         @Getter String name,
         @Getter boolean isPointOfOrder,

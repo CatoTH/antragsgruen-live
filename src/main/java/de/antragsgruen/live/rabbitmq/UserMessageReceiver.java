@@ -27,6 +27,6 @@ public class UserMessageReceiver {
 
         log.warn("Received user message: " + routingKey + " => " + event.username());
 
-        sender.sendToUser(routingKeyParts[1], routingKeyParts[2], routingKeyParts[3], Sender.USER_CHANNEL_DEFAULT, event.username());
+        sender.sendToUser(routingKeyParts[1], routingKeyParts[2], routingKeyParts[3], Sender.ROLE_USER, Sender.USER_CHANNEL_DEFAULT, event.username());
     }
 }

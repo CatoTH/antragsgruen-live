@@ -17,11 +17,14 @@ public class Sender {
     public static final String USER_CHANNEL_DEFAULT = "default";
     public static final String USER_CHANNEL_SPEECH = "speech";
 
-    public void sendToUser(String site, String consultation, String user, String channel, Object message)
-    {
-        String target = "/user/" + site + "/" + consultation + "/" + user + "/" + channel;
+    public static final String ROLE_USER = "user";
+    public static final String ROLE_ADMIN = "admin";
 
-        logger.debug("Sending to: " + target + " / " + message.toString());
+    public void sendToUser(String site, String consultation, String user, String role, String channel, Object message)
+    {
+        String target = "/" + role + "/" + site + "/" + consultation + "/" + user + "/" + channel;
+
+        logger.info("Sending to: " + target + " / " + message.toString());
 
         this.messagingTemplate.convertAndSend(target, message);
     }
