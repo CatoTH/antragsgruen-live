@@ -44,6 +44,22 @@ npm install
 ./mvnw spring-boot:run
 ```
 
+Hint: this is only meant for local development. On production, you want to secure the actuator endpoints, as they are not really protected in this basic setup (see [application.yml](src/main/resources/application.yml)).
+
+### Compiling for GraalVM
+
+Setup on macOS:
+```shell
+brew install --cask graalvm/tap/graalvm-jdk17
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-17.0.8+9.1/Contents/Home
+```
+
+Compiling and running:
+```shell
+./mvnw native:compile -Pnative
+./target/live
+```
+
 ## Testing
 
 ### Running spotbugs

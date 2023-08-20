@@ -14,7 +14,23 @@ rabbitmq:
     user.key: user.*.*.*
     speech.key: speech.*.*
 
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  #endpoint:
+  #  env:
+  #    show-values: always
+
 #logging:
 #  level:
 #    root: DEBUG
 #    de.antragsgruen.live: DEBUG
+
+spring.security.user:
+  name: ${ACTUATOR_USER:admin}
+  password: ${ACTUATOR_PWD:admin}
+  roles:
+    - ADMIN
