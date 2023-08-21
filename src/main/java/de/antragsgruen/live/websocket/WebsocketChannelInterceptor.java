@@ -3,7 +3,6 @@ package de.antragsgruen.live.websocket;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessagingException;
@@ -21,9 +20,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class WebsocketChannelInterceptor implements ChannelInterceptor {
-    private static final String ROLE_SPEECH_ADMIN = "ROLE_SPEECH_ADMIN";
-
     @NonNull private AntragsgruenJwtDecoder jwtDecoder;
+    @NonNull private TopicPermissionChecker topicPermissionChecker;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) throws MessagingException {
@@ -78,7 +76,7 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         }
 
 
-        if (!canSubscribeToDestination((JwtAuthenticationToken) userPrincipal, headerAccessor.getDestination())) {
+        if (!topicPermissionChecker.canSubscribeToDestination((JwtAuthenticationToken) userPrincipal, headerAccessor.getDestination())) {
             log.warn("Attempted invalid subscription: " + userPrincipal.getName() + " => " + headerAccessor.getDestination());
             throw new MessagingException("Forbidden to subscribe to this destination");
         }
@@ -86,86 +84,5 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         log.info("Subscribed: " + userPrincipal.getName() + " => " + headerAccessor.getDestination());
     }
 
-    /**
-     * Supported destination patterns:
-     * - /user/[subdomain]/[consultation]/[userid]/speech
-     * - /adin/[subdomain]/[consultation]/[userid]/speech
-     * - /topic/[subdomain]/[consultation]/[...]
-     */
-    private boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination)
-    {
-        if (destination == null) {
-            return false;
-        }
 
-        String[] pathParts = destination.split("/");
-        if (!"".equals(pathParts[0])) {
-            return false;
-        }
-
-        if ("topic".equals(pathParts[1]) && pathParts.length == 5) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]);
-        }
-        if ("user".equals(pathParts[1]) && pathParts.length == 6) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]) &&
-                    pathParts[4].equals(jwtToken.getName());
-        }
-        if ("admin".equals(pathParts[1]) && pathParts.length == 6) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]) &&
-                    jwtHasRoleForTopic(jwtToken, pathParts[5]) &&
-                    pathParts[4].equals(jwtToken.getName());
-        }
-
-        return false;
-    }
-
-    private boolean jwtIsForCorrectSiteAndConsultation(JwtAuthenticationToken jwtToken, String site, String consultation)
-    {
-        Object payload = jwtToken.getTokenAttributes().get("payload");
-        if (!(payload instanceof Map<?, ?> payloadMap)) {
-            log.warn("No payload found");
-            return false;
-        }
-
-        if (!payloadMap.containsKey("site") || payloadMap.get("site") == null || !payloadMap.get("site").equals(site)) {
-            log.warn("Incorrect site provided: " + site, payloadMap);
-            return false;
-        }
-
-        if (!payloadMap.containsKey("consultation") || payloadMap.get("consultation") == null || !payloadMap.get("consultation").equals(consultation)) {
-            log.warn("Incorrect consultation provided: " + consultation, payloadMap);
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean jwtHasRoleForTopic(JwtAuthenticationToken jwtToken, String topic)
-    {
-        Object payload = jwtToken.getTokenAttributes().get("payload");
-        if (!(payload instanceof Map<?, ?> payloadMap) || !payloadMap.containsKey("roles")) {
-            log.warn("No payload found");
-            return false;
-        }
-
-        Object roles = payloadMap.get("roles");
-        if (!(roles instanceof List<?> rolesArray)) {
-            log.warn("No roles found");
-            return false;
-        }
-
-        if (getNecessaryRoleForTopic(topic) == null) {
-            log.warn("No role for this topic found");
-            return false;
-        }
-
-        return rolesArray.contains(getNecessaryRoleForTopic(topic));
-    }
-
-    private @Nullable String getNecessaryRoleForTopic(String topic) {
-        if ("speech".equals(topic)) {
-            return WebsocketChannelInterceptor.ROLE_SPEECH_ADMIN;
-        }
-        return null;
-    }
 }
