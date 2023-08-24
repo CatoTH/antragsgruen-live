@@ -22,7 +22,7 @@ public class UserMessageReceiver {
 
     @NonNull private Sender sender;
 
-    @RabbitListener(queues = {"${rabbitmq.queue.user.name}"})
+    @RabbitListener(queues = {"${rabbitmq.queue.user}"})
     public void receiveMessage(MQUserEvent event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
         String[] routingKeyParts = routingKey.split("\\.");
         if (routingKeyParts.length != RK_PARTS_LENGTH) {

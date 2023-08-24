@@ -22,7 +22,7 @@ public class SpeechMessageReceiver {
     @NonNull private SpeechUserHandler speechUserHandler;
     @NonNull private SpeechAdminHandler speechAdminHandler;
 
-    @RabbitListener(queues = {"${rabbitmq.queue.speech.name}"})
+    @RabbitListener(queues = {"${rabbitmq.queue.speech}"})
     public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
         String[] routingKeyParts = routingKey.split("\\.");
         if (routingKeyParts.length != RK_PARTS_LENGTH || !"speech".equals(routingKeyParts[RK_PARTS_TOPIC])) {

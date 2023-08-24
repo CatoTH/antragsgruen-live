@@ -7,12 +7,15 @@ antragsgruen:
 rabbitmq:
   exchange:
     name: ${RABBITMQ_EXCHANGE:antragsgruen-exchange}
+    name_dead: ${RABBITMQ_EXCHANGE_DEAD:antragsgruen-exchange-dead}
   queue:
-    user.name: ${RABBITMQ_QUEUE_USER:antragsgruen-user-queue}
-    speech.name: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-speech-queue}
+    user: ${RABBITMQ_QUEUE_USER:antragsgruen-queue-user}
+    user_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-user-dead}
+    speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-speech}
+    speech_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-speech-dead}
   routing:
-    user.key: user.*.*.*
-    speech.key: speech.*.*
+    user: user.*.*.*
+    speech: speech.*.*
 
 # Actuator
 management:
