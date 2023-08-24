@@ -13,14 +13,25 @@ import java.util.Map;
 public class TopicPermissionChecker {
     private static final String ROLE_SPEECH_ADMIN = "ROLE_SPEECH_ADMIN";
 
+    public static final int USER_PARTS_LENGTH = 6;
+    public static final int USER_PART_ROLE = 1;
+    public static final int USER_PART_SITE = 2;
+    public static final int USER_PART_CONSULTATION = 3;
+    public static final int USER_PART_USER = 4;
+    public static final int USER_PART_MODULE = 5;
+
+    public static final int TOPIC_PARTS_LENGTH = 5;
+    public static final int TOPIC_PART_TOPIC = 1;
+    public static final int TOPIC_PART_SITE = 2;
+    public static final int TOPIC_PART_CONSULTATION = 3;
+
     /**
      * Supported destination patterns:
      * - /user/[subdomain]/[consultation]/[userid]/speech
      * - /adin/[subdomain]/[consultation]/[userid]/speech
      * - /topic/[subdomain]/[consultation]/[...]
      */
-    public boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination)
-    {
+    public boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination) {
         if (destination == null) {
             return false;
         }
@@ -30,24 +41,23 @@ public class TopicPermissionChecker {
             return false;
         }
 
-        if ("topic".equals(pathParts[1]) && pathParts.length == 5) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]);
+        if ("topic".equals(pathParts[TOPIC_PART_TOPIC]) && pathParts.length == TOPIC_PARTS_LENGTH) {
+            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[TOPIC_PART_SITE], pathParts[TOPIC_PART_CONSULTATION]);
         }
-        if (Sender.ROLE_USER.equals(pathParts[1]) && pathParts.length == 6) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]) &&
-                    pathParts[4].equals(jwtToken.getName());
+        if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION])
+                    && pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
-        if (Sender.ROLE_ADMIN.equals(pathParts[1]) && pathParts.length == 6) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[2], pathParts[3]) &&
-                    jwtHasRoleForTopic(jwtToken, pathParts[5]) &&
-                    pathParts[4].equals(jwtToken.getName());
+        if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION])
+                    && jwtHasRoleForTopic(jwtToken, pathParts[USER_PART_MODULE])
+                    && pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
 
         return false;
     }
 
-    private boolean jwtIsForCorrectSiteAndConsultation(JwtAuthenticationToken jwtToken, String site, String consultation)
-    {
+    private boolean jwtIsForCorrectSiteAndConsultation(JwtAuthenticationToken jwtToken, String site, String consultation) {
         Object payload = jwtToken.getTokenAttributes().get("payload");
         if (!(payload instanceof Map<?, ?> payloadMap)) {
             log.warn("No payload found");
@@ -67,8 +77,7 @@ public class TopicPermissionChecker {
         return true;
     }
 
-    private boolean jwtHasRoleForTopic(JwtAuthenticationToken jwtToken, String topic)
-    {
+    private boolean jwtHasRoleForTopic(JwtAuthenticationToken jwtToken, String topic) {
         Object payload = jwtToken.getTokenAttributes().get("payload");
         if (!(payload instanceof Map<?, ?> payloadMap) || !payloadMap.containsKey("roles")) {
             log.warn("No payload found");

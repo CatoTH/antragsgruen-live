@@ -5,7 +5,8 @@ import org.springframework.lang.Nullable;
 public class WSHelloMessage {
     private @Nullable String name;
 
-    public WSHelloMessage() {}
+    public WSHelloMessage() {
+    }
 
     public WSHelloMessage(@Nullable String name) {
         this.name = name;

@@ -39,8 +39,7 @@ public class ListenerConfiguration {
     }
 
     @Bean
-    Binding userBinding(@Qualifier("userQueue") Queue queue, TopicExchange exchange)
-    {
+    Binding userBinding(@Qualifier("userQueue") Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(userRoutingKey);
     }
 
@@ -50,15 +49,14 @@ public class ListenerConfiguration {
     }
 
     @Bean
-    Binding speechBinding(@Qualifier("speechQueue") Queue queue, TopicExchange exchange)
-    {
+    Binding speechBinding(@Qualifier("speechQueue") Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(speechRoutingKey);
     }
 
     // @TODO: Set up a dead-letter queue (https://www.baeldung.com/spring-amqp-error-handling)
 
     @Bean
-    public MessageConverter converter(){
+    public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
 }

@@ -15,18 +15,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class UserMessageReceiver {
+    private static final int RK_PARTS_LENGTH = 4;
+    private static final int RK_PART_SITE = 1;
+    private static final int RK_PART_CONSULTATION = 2;
+    private static final int RK_PART_USER = 3;
+
     @NonNull private Sender sender;
 
     @RabbitListener(queues = {"${rabbitmq.queue.user.name}"})
-    public void receiveMessage(MQUserEvent event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
-    {
+    public void receiveMessage(MQUserEvent event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
         String[] routingKeyParts = routingKey.split("\\.");
-        if (routingKeyParts.length != 4) {
+        if (routingKeyParts.length != RK_PARTS_LENGTH) {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
         }
 
         log.warn("Received user message: " + routingKey + " => " + event.username());
 
-        sender.sendToUser(routingKeyParts[1], routingKeyParts[2], routingKeyParts[3], Sender.ROLE_USER, Sender.USER_CHANNEL_DEFAULT, event.username());
+        sender.sendToUser(
+                routingKeyParts[RK_PART_SITE],
+                routingKeyParts[RK_PART_CONSULTATION],
+                routingKeyParts[RK_PART_USER],
+                Sender.ROLE_USER,
+                Sender.USER_CHANNEL_DEFAULT,
+                event.username()
+        );
     }
 }

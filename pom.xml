@@ -70,7 +70,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.7.2.1</version>
+				<version>4.7.3.2</version>
 				<dependencies>
 					<dependency>
 						<groupId>com.github.spotbugs</groupId>
@@ -90,6 +90,22 @@
 						-H:ResourceConfigurationFiles=src/main/resources/resource-config.json
 					</buildArgs>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.3.0</version>
+
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

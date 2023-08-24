@@ -14,11 +14,9 @@ import java.security.Principal;
 public class GreetingController {
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public WSGreeting greeting(WSHelloMessage message, Principal principal) throws Exception
-    {
+    public WSGreeting greeting(WSHelloMessage message, Principal principal) throws Exception {
         log.warn("Received message: " + message.getName() + " (from " + principal.getName() + ")");
 
-        Thread.sleep(1000);
         return new WSGreeting("[From: " + principal.getName() + "] Hello, " + message.getName());
     }
 }

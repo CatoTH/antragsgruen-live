@@ -48,8 +48,7 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         return message;
     }
 
-    private void onConnect(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException
-    {
+    private void onConnect(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException {
         List<String> jwtHeaders = headerAccessor.getNativeHeader("jwt");
         jwtHeaders = Optional.ofNullable(jwtHeaders).orElse(new ArrayList<>());
 
@@ -64,8 +63,7 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         }
     }
 
-    private void onSubscribe(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException
-    {
+    private void onSubscribe(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException {
         Principal userPrincipal = headerAccessor.getUser();
 
         if (!(userPrincipal instanceof JwtAuthenticationToken)) {
@@ -83,6 +81,4 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
 
         log.info("Subscribed: " + userPrincipal.getName() + " => " + headerAccessor.getDestination());
     }
-
-
 }

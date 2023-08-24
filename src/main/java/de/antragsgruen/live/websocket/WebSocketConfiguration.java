@@ -29,21 +29,18 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     private WebsocketChannelInterceptor interceptor;
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry config)
-    {
+    public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/user", "/admin", "/topic", "/queue");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry)
-    {
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket").setAllowedOriginPatterns(this.wsOriginPatter);
     }
 
     @Override
-    public void configureClientInboundChannel(ChannelRegistration registration)
-    {
+    public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(this.interceptor);
     }
 }

@@ -47,8 +47,7 @@ public class AntragsgruenJwtDecoder {
         this.jwtDecoder = NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
-    public JwtAuthenticationToken getJwtAuthToken(String token)
-    {
+    public JwtAuthenticationToken getJwtAuthToken(String token) {
         Jwt jwt = this.jwtDecoder.decode(token);
 
         return new JwtAuthenticationToken(jwt);

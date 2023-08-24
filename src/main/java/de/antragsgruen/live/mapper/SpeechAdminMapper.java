@@ -9,6 +9,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class SpeechAdminMapper {
+    protected SpeechAdminMapper() {
+        throw new UnsupportedOperationException();
+    }
+
     public static WSSpeechQueueAdmin convertQueue(MQSpeechQueue queue) {
         WSSpeechSubqueueAdmin[] wsSubqueues = Stream
                 .of(queue.subqueues())

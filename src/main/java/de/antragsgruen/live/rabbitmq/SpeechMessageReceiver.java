@@ -14,18 +14,22 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SpeechMessageReceiver {
+    private static final int RK_PARTS_LENGTH = 3;
+    private static final int RK_PARTS_TOPIC = 0;
+    private static final int RK_PARTS_SITE = 1;
+    private static final int RK_PARTS_CONSULTATION = 2;
+
     @NonNull private SpeechUserHandler speechUserHandler;
     @NonNull private SpeechAdminHandler speechAdminHandler;
 
     @RabbitListener(queues = {"${rabbitmq.queue.speech.name}"})
-    public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey)
-    {
+    public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
         String[] routingKeyParts = routingKey.split("\\.");
-        if (routingKeyParts.length != 3 || !"speech".equals(routingKeyParts[0])) {
+        if (routingKeyParts.length != RK_PARTS_LENGTH || !"speech".equals(routingKeyParts[RK_PARTS_TOPIC])) {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
         }
 
-        speechUserHandler.onSpeechEvent(routingKeyParts[1], routingKeyParts[2], event);
-        speechAdminHandler.onSpeechEvent(routingKeyParts[1], routingKeyParts[2], event);
+        speechUserHandler.onSpeechEvent(routingKeyParts[RK_PARTS_SITE], routingKeyParts[RK_PARTS_CONSULTATION], event);
+        speechAdminHandler.onSpeechEvent(routingKeyParts[RK_PARTS_SITE], routingKeyParts[RK_PARTS_CONSULTATION], event);
     }
 }

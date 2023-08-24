@@ -19,7 +19,16 @@ public class WSSpeechActiveSlot {
     private final @Nullable Date dateStopped;
     private final @Nullable Date dateApplied;
 
-    public WSSpeechActiveSlot(Integer id, @Nullable Integer subqueueId, String subqueueName, String name, @Nullable Integer position, @Nullable Date dateStarted, @Nullable Date dateStopped, @Nullable Date dateApplied) {
+    public WSSpeechActiveSlot(
+            Integer id,
+            @Nullable Integer subqueueId,
+            String subqueueName,
+            String name,
+            @Nullable Integer position,
+            @Nullable Date dateStarted,
+            @Nullable Date dateStopped,
+            @Nullable Date dateApplied
+    ) {
         this.id = id;
         this.name = name;
         this.position = position;

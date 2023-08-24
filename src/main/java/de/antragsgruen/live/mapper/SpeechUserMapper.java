@@ -13,6 +13,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class SpeechUserMapper {
+    protected SpeechUserMapper() {
+        throw new UnsupportedOperationException();
+    }
+
     public static WSSpeechQueueUser convertQueue(MQSpeechQueue queue, String userId) {
         WSSpeechSubqueueUser[] wsSubqueues = Stream
                 .of(queue.subqueues())
