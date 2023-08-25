@@ -8,16 +8,16 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class QueueUserConfiguration {
-    @Value("${rabbitmq.queue.user}")
+    @Value("${antragsgruen.rabbitmq.queue.user}")
     private String queueNameUser;
 
-    @Value("${rabbitmq.queue.user_dead}")
+    @Value("${antragsgruen.rabbitmq.queue.user_dead}")
     private String queueNameUserDead;
 
-    @Value("${rabbitmq.routing.user}")
+    @Value("${antragsgruen.rabbitmq.routing.user}")
     private String userRoutingKey;
 
-    @Value("${rabbitmq.exchange.name_dead}")
+    @Value("${antragsgruen.rabbitmq.exchange.name_dead}")
     private String exchangeNameDead;
 
     @Bean

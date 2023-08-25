@@ -1,0 +1,27 @@
+services:
+  live:
+    build:
+      context: ./
+      dockerfile: docker/jdk/Dockerfile
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - ACTUATOR_USER=admin
+      - ACTUATOR_PASSWORD=admin
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+  rabbitmq:
+    image: 'rabbitmq:3-management-alpine'
+    environment:
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 10s
+      retries: 3

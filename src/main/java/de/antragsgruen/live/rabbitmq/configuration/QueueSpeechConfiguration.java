@@ -8,16 +8,16 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class QueueSpeechConfiguration {
-    @Value("${rabbitmq.queue.speech}")
+    @Value("${antragsgruen.rabbitmq.queue.speech}")
     private String queueNameSpeech;
 
-    @Value("${rabbitmq.queue.speech_dead}")
+    @Value("${antragsgruen.rabbitmq.queue.speech_dead}")
     private String queueNameSpeechDead;
 
-    @Value("${rabbitmq.routing.speech}")
+    @Value("${antragsgruen.rabbitmq.routing.speech}")
     private String speechRoutingKey;
 
-    @Value("${rabbitmq.exchange.name_dead}")
+    @Value("${antragsgruen.rabbitmq.exchange.name_dead}")
     private String exchangeNameDead;
 
     @Bean

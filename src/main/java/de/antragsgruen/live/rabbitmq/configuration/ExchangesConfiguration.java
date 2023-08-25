@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ExchangesConfiguration {
-    @Value("${rabbitmq.exchange.name}")
+    @Value("${antragsgruen.rabbitmq.exchange.name}")
     private String exchangeName;
 
-    @Value("${rabbitmq.exchange.name_dead}")
+    @Value("${antragsgruen.rabbitmq.exchange.name_dead}")
     private String exchangeNameDead;
 
     @Bean

@@ -39,14 +39,45 @@ In case messages cannot be processed by this live server, they are rejected and,
 
 ## Installing, Running, Configuration
 
-Docker needs to be installed, as for now, Spring automatically starts a RabbitMQ-container and connects to it. 
+### Prerequisites
+
+Before building the app, two steps have to be manually performed:
+- Creating a public/private RSA key for the JWT signing. This app only needs the public key, located at `src/main/resources/public.key`. If you are just testing, the keys from the test suite can be used (`cp src/test/resources/jwt-test-public.key src/main/resources/public.key`).
+- Installing Stomp.JS. This can be done by calling `npm ci`. After this step, the file `src/main/resources/static/stomp.umd.min.js` should exist.
+
+### Running
+
+This app requires a RabbitMQ to be running. The app can be compiled and started using:
 
 ```shell
-npm install
 ./mvnw spring-boot:run
 ```
 
 Hint: this is only meant for local development. On production, you want to secure the actuator endpoints, as they are not really protected in this basic setup (see [application.yml](src/main/resources/application.yml)).
+
+### Configuration via Environment Variables
+
+The following aspects can be configured through environment variables, expecially valuable when deploying it via docker (compose):
+
+| Environment Variable Name | Default Value | Explanation                                 |
+| ------------------------- | ------------- | ------------------------------------------- |
+| RABBITMQ_HOST             | localhost     | RabbitMQ Hostname                           |
+| RABBITMQ_VHOST            | /             | RabbitMQ VirtualHost                        |
+| RABBITMQ_USERNAME         | guest         | RabbitMQ Management Username                |
+| RABBITMQ_PASSWORD         | guest         | RabbitMQ Management Password                |
+| ACTUATOR_USER             | admin         | Username to access the Actuator through Web |
+| ACTUATOR_PASSWORD         | admin         | Password to access the Actuator through Web |
+
+It is also possible, though hardly ever necessary, to configure the following aspects of the RabbitMQ setup:
+
+| Environment Variable Name  | Default Value                  | Explanation                                              |
+| -------------------------- | ------------------------------ | -------------------------------------------------------- |
+| RABBITMQ_EXCHANGE          | antragsgruen-exchange          | The exchange that Antragsgrün is supposed to publish to  |
+| RABBITMQ_EXCHANGE_DEAD     | antragsgruen-exchange-dead     | The exchange that failed messages are published to       |
+| RABBITMQ_QUEUE_USER        | antragsgruen-queue-user        | The queue for user-targeted messages                     |
+| RABBITMQ_QUEUE_USER_DEAD   | antragsgruen-queue-user-dead   | The dead letter queue for user-targeted messages         |
+| RABBITMQ_QUEUE_SPEECH      | antragsgruen-queue-speech      | The queue for speaking-list related messages             |
+| RABBITMQ_QUEUE_SPEECH_DEAD | antragsgruen-queue-speech-dead | The dead letter queue for speaking-list related messages |
 
 ### Compiling for GraalVM
 
@@ -60,6 +91,15 @@ Compiling and running:
 ```shell
 ./mvnw native:compile -Pnative
 ./target/live
+```
+
+### Running with Docker (JRE)
+
+A dummy docker-compose.yml is provided that builds and runs the application. Note that the steps mentioned in "Prerequisites" are still necessary, that is, installing StompJS and the public/private key pair. The docker setup is meant for setups where no Java JDK and no RabbitMQ is running, hence it runs exactly those two services.
+
+```shell
+docker-compose -f docker-compose.jdk.yaml build
+docker-compose -f docker-compose.jdk.yaml up
 ```
 
 ## Testing
