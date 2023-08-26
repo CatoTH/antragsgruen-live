@@ -9,7 +9,9 @@ spring:
 # The JWT public key's location relative to src/main/resources.
 antragsgruen:
   jwt.key.public: public.key
-  ws.origins: ${ANTRAGSGRUEN_WS_ORIGINS:http://localhost}
+  ws:
+    origins: ${ANTRAGSGRUEN_WS_ORIGINS:http://localhost}
+    heartbeat: 10000 # milliseconds. nginx proxy has a default timeout of 60s, so 10s for heartbeat should be safe.
   rabbitmq:
     exchange:
       name: ${RABBITMQ_EXCHANGE:antragsgruen-exchange}
