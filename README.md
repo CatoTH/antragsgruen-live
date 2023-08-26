@@ -95,11 +95,11 @@ Compiling and running:
 
 ### Running with Docker (JRE)
 
-A dummy docker-compose.yml is provided that builds and runs the application. Note that the steps mentioned in "Prerequisites" are still necessary, that is, installing StompJS and the public/private key pair. The docker setup is meant for setups where no Java JDK and no RabbitMQ is running, hence it runs exactly those two services.
+A dummy docker-compose.yml is provided that builds and runs the application. Note that the the file `src/main/resources/public.key` mentioned in "Prerequisites" still needs to be created before building the docker images.
 
 ```shell
-docker-compose -f docker-compose.jdk.yaml build
-docker-compose -f docker-compose.jdk.yaml up
+docker-compose -f docker-compose.jdk.yml build
+docker-compose -f docker-compose.jdk.yml up
 ```
 
 ## Testing
