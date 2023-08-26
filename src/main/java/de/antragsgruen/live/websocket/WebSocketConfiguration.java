@@ -23,7 +23,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 })
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
     @Value("${antragsgruen.ws.origins}")
-    private String wsOriginPatter;
+    private String wsOriginPatterns;
 
     @Autowired
     private WebsocketChannelInterceptor interceptor;
@@ -36,7 +36,9 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket").setAllowedOriginPatterns(this.wsOriginPatter);
+        String[] patterns = this.wsOriginPatterns.split(",");
+        registry.addEndpoint("/websocket")
+                .setAllowedOriginPatterns(patterns);
     }
 
     @Override

@@ -59,14 +59,15 @@ Hint: this is only meant for local development. On production, you want to secur
 
 The following aspects can be configured through environment variables, expecially valuable when deploying it via docker (compose):
 
-| Environment Variable Name | Default Value | Explanation                                 |
-| ------------------------- | ------------- | ------------------------------------------- |
-| RABBITMQ_HOST             | localhost     | RabbitMQ Hostname                           |
-| RABBITMQ_VHOST            | /             | RabbitMQ VirtualHost                        |
-| RABBITMQ_USERNAME         | guest         | RabbitMQ Management Username                |
-| RABBITMQ_PASSWORD         | guest         | RabbitMQ Management Password                |
-| ACTUATOR_USER             | admin         | Username to access the Actuator through Web |
-| ACTUATOR_PASSWORD         | admin         | Password to access the Actuator through Web |
+| Environment Variable Name | Default Value    | Explanation                                                  |
+| ------------------------- | ---------------- | ------------------------------------------------------------ |
+| ANTRAGSGRUEN_WS_ORIGINS   | http://localhost | Web origin to accept web requests from, e.g. http://*.antragsgruen.de. Multiple comma-separated patterns can be provided. |
+| RABBITMQ_HOST             | localhost        | RabbitMQ Hostname                                            |
+| RABBITMQ_VHOST            | /                | RabbitMQ VirtualHost                                         |
+| RABBITMQ_USERNAME         | guest            | RabbitMQ Management Username                                 |
+| RABBITMQ_PASSWORD         | guest            | RabbitMQ Management Password                                 |
+| ACTUATOR_USER             | admin            | Username to access the Actuator through Web                  |
+| ACTUATOR_PASSWORD         | admin            | Password to access the Actuator through Web                  |
 
 It is also possible, though hardly ever necessary, to configure the following aspects of the RabbitMQ setup:
 
@@ -98,8 +99,8 @@ Compiling and running:
 A dummy docker-compose.yml is provided that builds and runs the application. Note that the the file `src/main/resources/public.key` mentioned in "Prerequisites" still needs to be created before building the docker images.
 
 ```shell
-docker-compose -f docker-compose.jdk.yml build
-docker-compose -f docker-compose.jdk.yml up
+docker compose -f docker-compose.jdk.yml build
+docker compose -f docker-compose.jdk.yml up
 ```
 
 ## Testing

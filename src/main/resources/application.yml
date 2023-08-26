@@ -9,7 +9,7 @@ spring:
 # The JWT public key's location relative to src/main/resources.
 antragsgruen:
   jwt.key.public: public.key
-  ws.origins: http://*.antragsgruen.test
+  ws.origins: ${ANTRAGSGRUEN_WS_ORIGINS:http://localhost}
   rabbitmq:
     exchange:
       name: ${RABBITMQ_EXCHANGE:antragsgruen-exchange}
