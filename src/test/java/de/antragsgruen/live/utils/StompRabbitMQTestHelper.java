@@ -25,7 +25,7 @@ public class StompRabbitMQTestHelper {
     @Autowired
     private RabbitTemplate template;
 
-    @Value("${rabbitmq.exchange.name}")
+    @Value("${antragsgruen.rabbitmq.exchange.name}")
     private String exchangeName;
 
     @Value("classpath:${antragsgruen.jwt.key.private}")

@@ -3,17 +3,15 @@ antragsgruen:
   jwt.key:
     public: jwt-test-public.key
     private: jwt-test-private.key
-
-# RabbitMQ configuration
-rabbitmq:
-  exchange:
-    name: ${RABBITMQ_EXCHANGE:antragsgruen-test-exchange}
-    name_dead: ${RABBITMQ_EXCHANGE_DEAD:antragsgruen-test-exchange-dead}
-  queue:
-    user: ${RABBITMQ_QUEUE_USER:antragsgruen-queue-test-user}
-    user_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-user-dead}
-    speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech}
-    speech_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech-dead}
+  rabbitmq:
+    exchange:
+      name: ${RABBITMQ_EXCHANGE:antragsgruen-test-exchange}
+      name_dead: ${RABBITMQ_EXCHANGE_DEAD:antragsgruen-test-exchange-dead}
+    queue:
+      user: ${RABBITMQ_QUEUE_USER:antragsgruen-queue-test-user}
+      user_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-user-dead}
+      speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech}
+      speech_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech-dead}
 
 #logging:
 #  level:
