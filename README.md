@@ -2,8 +2,10 @@
 
 [Antragsgrün](https://github.com/CatoTH/antragsgruen) is mostly a traditional Content Management System, designed to run on a wide variety of hosting environments, including shared hosting providers that provide no means of using websockets or long-running processes necessary for real-time communication. Therefore, interactive components like the speaking lists and the voting system use HTTP polling by default, which works for smaller events.
 
+<img src="docs/Communication-flow.png" alt="1) PHP Provides signed JWT + WS URI to User. 2) User subscribes to topics via STOMP. 3) PHP sends generic events to RabbitMQ. 4) Live server retrieves generic events from RabbitMQ. 5) Live server sends user-specific events to user" width="350" align="right">
 This Live Server is an optional component that can be deployed for larger setups and solves two issues of the traditional approach: 1) the latency of updates with which changes are propagated to web clients (which comes from the polling frequency), and 2) the load that this approach puts on the server, which tends to be an issue with larger voting sessions.
-
+<br>
+<br>
 Users are connecting to the Live Server via Websocket/STOMP when using an interactive part of Antragsgrün. Whenever an update to the internal state of the system happens, the main Antragsgrün system publishes a message with the new state to a message queue (RabbitMQ, at the moment), to be consumed by this Live Server. This processes the new state, transforms it to user-specific objects (which matches exactly the structure that the traditional polling HTTP endpoint would return) and actively sends it to the relevant connected users.
 
 ## Authentication
