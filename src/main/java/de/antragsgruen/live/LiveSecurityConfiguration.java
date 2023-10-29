@@ -8,11 +8,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-public class SecurityConfiguration {
+public class LiveSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers("/stomp.umd.min.js").permitAll()

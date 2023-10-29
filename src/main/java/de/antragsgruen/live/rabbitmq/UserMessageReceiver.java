@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserMessageReceiver {
+final public class UserMessageReceiver {
     private static final int RK_PARTS_LENGTH = 4;
     private static final int RK_PART_SITE = 1;
     private static final int RK_PART_CONSULTATION = 2;

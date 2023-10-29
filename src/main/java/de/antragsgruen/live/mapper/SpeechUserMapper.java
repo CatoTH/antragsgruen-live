@@ -12,8 +12,8 @@ import de.antragsgruen.live.websocket.dto.WSSpeechSubqueueUserItem;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class SpeechUserMapper {
-    protected SpeechUserMapper() {
+final public class SpeechUserMapper {
+    public SpeechUserMapper() {
         throw new UnsupportedOperationException();
     }
 

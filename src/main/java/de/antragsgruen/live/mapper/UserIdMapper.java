@@ -2,8 +2,8 @@ package de.antragsgruen.live.mapper;
 
 import org.springframework.lang.Nullable;
 
-public class UserIdMapper {
-    protected UserIdMapper() {
+final public class UserIdMapper {
+    public UserIdMapper() {
         throw new UnsupportedOperationException();
     }
 

@@ -3,7 +3,7 @@ package de.antragsgruen.live;
 import de.antragsgruen.live.websocket.TopicPermissionChecker;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 
-public abstract class HandlerBase {
+public abstract class LiveHandlerBase {
     protected String[] findRelevantUserIds(SimpUserRegistry userRegistry, String subdomain, String consultation, String role, String module) {
         // 1) First find all subscriptions with a destination matching /[role]/[site]/[consultation]/[userid]/[module]
               // e.g. /user/site/consultation/login-1/speech

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SpeechMessageReceiver {
+final public class SpeechMessageReceiver {
     private static final int RK_PARTS_LENGTH = 3;
     private static final int RK_PARTS_TOPIC = 0;
     private static final int RK_PARTS_SITE = 1;

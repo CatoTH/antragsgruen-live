@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SpeechUserHandler extends HandlerBase {
+final public class SpeechUserHandler extends LiveHandlerBase {
     private @NonNull Sender sender;
     private @NonNull SimpUserRegistry userRegistry;
 

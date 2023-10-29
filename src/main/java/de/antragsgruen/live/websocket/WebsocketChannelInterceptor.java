@@ -19,7 +19,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class WebsocketChannelInterceptor implements ChannelInterceptor {
+final public class WebsocketChannelInterceptor implements ChannelInterceptor {
     @NonNull private AntragsgruenJwtDecoder jwtDecoder;
     @NonNull private TopicPermissionChecker topicPermissionChecker;
 
