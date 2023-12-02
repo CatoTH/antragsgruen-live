@@ -2,7 +2,7 @@
 
 ## Developer build (incl. JDK and sources)
 
-FROM eclipse-temurin:17-jdk AS build
+FROM eclipse-temurin:21-jdk AS build
 VOLUME /tmp
 
 RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
@@ -27,7 +27,7 @@ ENTRYPOINT ["/srv/run.sh"]
 
 ## Runtime build
 
-FROM eclipse-temurin:17-jre AS runtime
+FROM eclipse-temurin:21-jre AS runtime
 
 COPY --from=build /srv/app.jar /srv/app.jar
 COPY docker/jdk/run.sh /srv/run.sh

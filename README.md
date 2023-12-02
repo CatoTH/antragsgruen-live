@@ -86,8 +86,8 @@ It is also possible, though hardly ever necessary, to configure the following as
 
 Setup on macOS:
 ```shell
-brew install --cask graalvm/tap/graalvm-jdk17
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-17/Contents/Home
+brew install --cask graalvm/tap/graalvm-jdk21
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-21/Contents/Home
 ```
 
 Compiling and running:
