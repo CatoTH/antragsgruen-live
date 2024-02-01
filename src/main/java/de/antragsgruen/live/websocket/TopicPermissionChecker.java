@@ -28,7 +28,7 @@ public class TopicPermissionChecker {
     /**
      * Supported destination patterns:
      * - /user/[subdomain]/[consultation]/[userid]/speech
-     * - /adin/[subdomain]/[consultation]/[userid]/speech
+     * - /admin/[subdomain]/[consultation]/[userid]/speech
      * - /topic/[subdomain]/[consultation]/[...]
      */
     public boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination) {
