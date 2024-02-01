@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-final public class SpeechAdminMapper {
-    public SpeechAdminMapper() {
+public final class SpeechAdminMapper {
+    private SpeechAdminMapper() {
         throw new UnsupportedOperationException();
     }
 
