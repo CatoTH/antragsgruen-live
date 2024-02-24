@@ -84,8 +84,6 @@ It is also possible, though hardly ever necessary, to configure the following as
 
 ### Compiling for GraalVM
 
-**Note**: GraalVM compilation is currently broken because of [Spring Security Bug Report #14362](https://github.com/spring-projects/spring-security/issues/14362). This should be fixed with Spring Boot 3.2.3 or the workaround described there. 
-
 Setup on macOS:
 ```shell
 brew install --cask graalvm/tap/graalvm-jdk21
