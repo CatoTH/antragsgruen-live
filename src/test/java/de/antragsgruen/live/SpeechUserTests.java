@@ -29,7 +29,7 @@ class SpeechUserTests {
 	public void sendAndConvertRabbitMQMessage_speech1() throws IOException {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("site", "con", "login-1", null);
+		stompConnection.connectAndWait("test", "site", "con", "login-1", null);
 		stompConnection.subscribe("/user/site/con/login-1/speech");
 
 		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.site.con");
@@ -40,7 +40,7 @@ class SpeechUserTests {
 	public void sendAndConvertRabbitMQMessage_speech2() throws IOException {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("site", "con", "anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN", null);
+		stompConnection.connectAndWait("test", "site", "con", "anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN", null);
 		stompConnection.subscribe("/user/site/con/anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN/speech");
 
 		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech2_in.json", "speech.site.con");
@@ -51,7 +51,7 @@ class SpeechUserTests {
 	public void sendAndConvertRabbitMQMessage_speech3() throws IOException {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("site", "con", "login-1", null);
+		stompConnection.connectAndWait("test", "site", "con", "login-1", null);
 		stompConnection.subscribe("/user/site/con/login-1/speech");
 
 		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech3_in.json", "speech.site.con");
@@ -62,7 +62,7 @@ class SpeechUserTests {
 	public void tryToConnectToIncorrectTopic1() {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("site", "con", "login-1", null);
+		stompConnection.connectAndWait("test", "site", "con", "login-1", null);
 		FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/site/othercon/login-1/speech");
 		try {
 			String message = onError.get(5, TimeUnit.SECONDS);
@@ -76,7 +76,7 @@ class SpeechUserTests {
 	public void tryToConnectToIncorrectTopic2() {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("site", "con", "login-2", null);
+		stompConnection.connectAndWait("test", "site", "con", "login-2", null);
 		FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/site/con/login-1/speech");
 		try {
 			String message = onError.get(5, TimeUnit.SECONDS);
