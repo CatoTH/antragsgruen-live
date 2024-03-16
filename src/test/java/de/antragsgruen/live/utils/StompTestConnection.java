@@ -134,6 +134,11 @@ public class StompTestConnection {
         }
     }
 
+    public FutureTask<String> connectAndExpectError(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
+        this.connect(installation, site, consultation, userId, roles);
+        return this.onError;
+    }
+
     public void subscribe(String topic) {
         this.stompSession.subscribe(topic, new StompFrameHandler() {
             @Override

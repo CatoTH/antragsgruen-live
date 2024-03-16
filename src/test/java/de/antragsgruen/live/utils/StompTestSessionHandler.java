@@ -46,6 +46,8 @@ public class StompTestSessionHandler implements StompSessionHandler {
     @Override
     public void handleTransportError(StompSession session, Throwable exception) {
         System.out.println("Transport error: " + exception.getMessage());
+        this.lastStompError = exception.getMessage();
+        this.onErrorFuture.run();
     }
 
     @Override
