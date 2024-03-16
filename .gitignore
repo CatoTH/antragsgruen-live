@@ -12,3 +12,4 @@ node_modules/
 *.iws
 *.iml
 *.ipr
+.DS_Store
