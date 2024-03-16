@@ -10,7 +10,7 @@
     "postinstall": "cp node_modules/@stomp/stompjs/bundles/stomp.umd.min.js src/main/resources/static/"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0"
