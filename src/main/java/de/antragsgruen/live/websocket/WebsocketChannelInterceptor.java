@@ -45,7 +45,7 @@ public final class WebsocketChannelInterceptor implements ChannelInterceptor {
     }
 
     public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-        log.warn("preReceive", message);
+        log.warn("postReceive", message);
 
         return message;
     }

@@ -12,12 +12,13 @@ Users are connecting to the Live Server via Websocket/STOMP when using an intera
 
 - The central Antragsgrün system authenticates users through traditional means (cookie-based sessions generated during username/password- or SAML-based login).
 - It creates a JWT, signed using a private key (RS256), containing information about:
+  - The installation ID, as the Issuer of the token.  
   - The ID of the user as Subject of the token. If the user is logged in, it has the shape of `login-123`. If not, a session-token like `anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN` will be used.
   - If the user has specific admin privileges (like to administer speech queues), a role is added to the payload. Currently, only ROLE_SPEECH_ADMIN is supported.
-  - The site and the consultation the token is valid for, as the payload of the token.
+  - The site and consultation the token is valid for, as the payload of the token.
 - We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
   - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
-  - The site and consultation association is checked when subscribing to topics - the site subdomain and consultation path has to be in the topic name and equal to information provided in the JWT.
+  - The installation, site and consultation association is checked when subscribing to topics - the installation, site subdomain and consultation path has to be in the topic name and equal to information provided in the JWT.
   - When subscribing to the speech admin topic, the SPEECH_ADMIN role is checked in the JWT.
   - SECURITY DISCLAIMER: the expiry date of the token is currently only checked when connecting. As long as the session is open, no expiry mechanism is in place, so revoking a user's access only has effect once that user reconnects.
 
@@ -66,6 +67,14 @@ This app requires a RabbitMQ to be running. The app can be compiled and started 
 Hint: this is only meant for local development. On production, you want to secure the actuator endpoints, as they are not really protected in this basic setup (see [application.yml](src/main/resources/application.yml)).
 
 ### Configuration via Environment Variables
+
+One or multiple installations can be configured through environment variables. Each installation needs to have an ID and a public key. Mind that the numbering needs to be consecutive, starting with zero.
+
+| Environment Variable Name               | Explanation                                                  |
+| --------------------------------------- | ------------------------------------------------------------ |
+| ANTRAGSGRUEN_INSTALLATIONS_0_ID         | Unique ID of the Antragsgrün installation                    |
+| ANTRAGSGRUEN_INSTALLATIONS_0_PUBLIC_KEY | Public RSA Key. Refer to the [README in the Central System](https://github.com/CatoTH/antragsgruen?tab=readme-ov-file#jwt-key-signing) on how to generate one. |
+| ...                                     | ...                                                          |
 
 The following aspects can be configured through environment variables, especially valuable when deploying it via docker (compose):
 

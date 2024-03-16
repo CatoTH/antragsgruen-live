@@ -1,5 +1,6 @@
 package de.antragsgruen.live.rabbitmq;
 
+import de.antragsgruen.live.multisite.ConsultationScope;
 import de.antragsgruen.live.rabbitmq.dto.MQUserEvent;
 import de.antragsgruen.live.websocket.Sender;
 import lombok.NonNull;
@@ -15,10 +16,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public final class UserMessageReceiver {
-    private static final int RK_PARTS_LENGTH = 4;
-    private static final int RK_PART_SITE = 1;
-    private static final int RK_PART_CONSULTATION = 2;
-    private static final int RK_PART_USER = 3;
+    private static final int RK_PARTS_LENGTH = 5;
+    private static final int RK_PART_INSTALLATION = 1;
+    private static final int RK_PART_SITE = 2;
+    private static final int RK_PART_CONSULTATION = 3;
+    private static final int RK_PART_USER = 4;
 
     @NonNull private Sender sender;
 
@@ -29,15 +31,14 @@ public final class UserMessageReceiver {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
         }
 
+        ConsultationScope scope = new ConsultationScope(
+                routingKeyParts[RK_PART_INSTALLATION],
+                routingKeyParts[RK_PART_SITE],
+                routingKeyParts[RK_PART_CONSULTATION]
+        );
+
         log.warn("Received user message: " + routingKey + " => " + event.username());
 
-        sender.sendToUser(
-                routingKeyParts[RK_PART_SITE],
-                routingKeyParts[RK_PART_CONSULTATION],
-                routingKeyParts[RK_PART_USER],
-                Sender.ROLE_USER,
-                Sender.USER_CHANNEL_DEFAULT,
-                event.username()
-        );
+        sender.sendToUser(scope, routingKeyParts[RK_PART_USER], Sender.ROLE_USER, Sender.USER_CHANNEL_DEFAULT, event.username());
     }
 }

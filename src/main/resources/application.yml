@@ -21,8 +21,8 @@ antragsgruen:
       speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-speech}
       speech_dead: ${RABBITMQ_QUEUE_SPEECH_DEAD:antragsgruen-queue-speech-dead}
     routing:
-      user: user.*.*.*
-      speech: speech.*.*
+      user: user.*.*.*.*
+      speech: speech.*.*.*
 
 # Actuator
 management:

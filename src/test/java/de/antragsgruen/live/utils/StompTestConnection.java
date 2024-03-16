@@ -66,7 +66,7 @@ public class StompTestConnection {
         return (RSAPrivateKey) kf.generatePrivate(keySpec);
     }
 
-    private String generateJwt(String site, String consultation, String userId, @Nullable List<String> roles) {
+    private String generateJwt(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
         RSAPrivateKey privateKey;
         try {
             privateKey = this.getJwtPrivateKey();
@@ -84,7 +84,7 @@ public class StompTestConnection {
 
         Date now = new Date();
         JWTClaimsSet jwtClaims = new JWTClaimsSet.Builder()
-                .issuer("https://test.antragsgruen.de") // @TODO
+                .issuer(installation)
                 .issueTime(now)
                 .expirationTime(new Date(now.getTime() + 1000*60*10))
                 .subject(userId)
@@ -114,7 +114,7 @@ public class StompTestConnection {
         WebSocketHttpHeaders handshakeHeaders = new WebSocketHttpHeaders();
 
         StompHeaders headers = new StompHeaders();
-        headers.set("jwt", generateJwt(site, consultation, userId, roles));
+        headers.set("jwt", generateJwt(installation, site, consultation, userId, roles));
         headers.set("installation", installation);
 
         StompTestSessionHandler sessionHandler = new StompTestSessionHandler();

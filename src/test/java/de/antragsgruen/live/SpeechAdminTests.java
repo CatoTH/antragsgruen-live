@@ -31,8 +31,8 @@ class SpeechAdminTests {
     public void tryToConnectWithoutAdminRole() {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-        stompConnection.connectAndWait("test", "site", "con", "login-1", getRoles("WRONG_ROLE"));
-        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/admin/site/con/login-1/speech");
+        stompConnection.connectAndWait("installation", "site", "con", "login-1", getRoles("WRONG_ROLE"));
+        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/admin/installation/site/con/login-1/speech");
         try {
             String message = onError.get(5, TimeUnit.SECONDS);
             assertThat(message).isEqualTo("Forbidden to subscribe to this destination");
@@ -45,10 +45,10 @@ class SpeechAdminTests {
     public void sendAndConvertRabbitMQMessage_speech1() throws IOException {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-        stompConnection.connectAndWait("test", "site", "con", "login-1", getRoles("ROLE_SPEECH_ADMIN"));
-        stompConnection.subscribe("/admin/site/con/login-1/speech");
+        stompConnection.connectAndWait("installation", "site", "con", "login-1", getRoles("ROLE_SPEECH_ADMIN"));
+        stompConnection.subscribe("/admin/installation/site/con/login-1/speech");
 
-        testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.site.con");
+        testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.installation.site.con");
         testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_admin_out.json");
     }
 

@@ -23,10 +23,10 @@ class SpeechUserTests {
 	public void sendAndConvertRabbitMQMessage_speech1() throws IOException {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("test", "site", "con", "login-1", null);
-		stompConnection.subscribe("/user/site/con/login-1/speech");
+		stompConnection.connectAndWait("installation", "site", "con", "login-1", null);
+		stompConnection.subscribe("/user/installation/site/con/login-1/speech");
 
-		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.site.con");
+		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.installation.site.con");
 		testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_user_out.json");
 	}
 
@@ -34,10 +34,10 @@ class SpeechUserTests {
 	public void sendAndConvertRabbitMQMessage_speech2() throws IOException {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("test", "site", "con", "anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN", null);
-		stompConnection.subscribe("/user/site/con/anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN/speech");
+		stompConnection.connectAndWait("installation", "site", "con", "anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN", null);
+		stompConnection.subscribe("/user/installation/site/con/anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN/speech");
 
-		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech2_in.json", "speech.site.con");
+		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech2_in.json", "speech.installation.site.con");
 		testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech2_user_out.json");
 	}
 
@@ -45,10 +45,10 @@ class SpeechUserTests {
 	public void sendAndConvertRabbitMQMessage_speech3() throws IOException {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
-		stompConnection.connectAndWait("test", "site", "con", "login-1", null);
-		stompConnection.subscribe("/user/site/con/login-1/speech");
+		stompConnection.connectAndWait("installation", "site", "con", "login-1", null);
+		stompConnection.subscribe("/user/installation/site/con/login-1/speech");
 
-		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech3_in.json", "speech.site.con");
+		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech3_in.json", "speech.installation.site.con");
 		testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech3_user_out.json");
 	}
 }
