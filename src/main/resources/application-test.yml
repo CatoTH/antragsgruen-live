@@ -1,7 +1,6 @@
 # For testing, a bundled JWT key set is used
 antragsgruen:
   jwt.key:
-    public: jwt-test-public.key
     private: jwt-test-private.key
   rabbitmq:
     exchange:
@@ -12,6 +11,11 @@ antragsgruen:
       user_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-user-dead}
       speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech}
       speech_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech-dead}
+  installations:
+    -
+      id: installation
+      public-key: MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEArGCspSkkS4juW8XfmCVbkv+CRd2MUmEPJIqwWZd33E27FIRMDOqHp44hyxFTQoUy/pCUgVSgAtfuj1Cz1Vzj3dQWKjbWPKIzjiU7tZ/rok+PjJQsYV7m3wCizOk/2UNTnn9v/6aXmLZTetEEEFxHvVDF63/KJLu0abwW4PjATSNC4lAO0oGgPXbwkovIUkP3Vdj+kAhN72UC+lYafhAWY8gwpEPA0cdBBIl15JQZ/9gdoWbsmOMv8/6hv/kMHKWtJ52HHnMLshXEOKU7H0gunyh7MiJ0THeuJnlrQAYVyl4Lho2sS4ZWIKaDWmKDujyMfSI6CujBy9koR4KuXMp+PHemOWmMSAiirCZXf7t5r98fuPmSrZLp6A8L0612LEIjcrLQWqECn/NZ9823/0lMDBiJdyJBcNBe/QUSXEc2bTf/1vScbCBKcNTmlJykgZv00B0et01rscpThWcN4xneceUNXVla1X53bYXBG/8ZgiBzq7KqsTo285RuTG+lC82UPtove+R7wh4zHR4/gc8kvsHDkiAgCJr0FjQZyGcrDpEA2w8dTgHOkIOeGTh8r9AHJKdStyKQJy524RDtvopa7v8iibOM7FMCfUiJCKcGk0thdFqQ5tMEqk6KAVT57eYCBGYphpXqzsfUDRVVxR4pdw3UzeS6rfB6FE903c8lOncCAwEAAQ==
+
 
 #logging:
 #  level:

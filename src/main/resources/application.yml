@@ -8,7 +8,6 @@ spring:
 
 # The JWT public key's location relative to src/main/resources.
 antragsgruen:
-  jwt.key.public: public.key
   ws:
     origins: ${ANTRAGSGRUEN_WS_ORIGINS:http://localhost}
     heartbeat: 10000 # milliseconds. nginx proxy has a default timeout of 60s, so 10s for heartbeat should be safe.
@@ -22,8 +21,8 @@ antragsgruen:
       speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-speech}
       speech_dead: ${RABBITMQ_QUEUE_SPEECH_DEAD:antragsgruen-queue-speech-dead}
     routing:
-      user: user.*.*.*
-      speech: speech.*.*
+      user: user.*.*.*.*
+      speech: speech.*.*.*
 
 # Actuator
 management:

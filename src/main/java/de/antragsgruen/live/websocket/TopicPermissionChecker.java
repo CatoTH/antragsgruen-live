@@ -1,5 +1,6 @@
 package de.antragsgruen.live.websocket;
 
+import de.antragsgruen.live.multisite.ConsultationScope;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -13,23 +14,25 @@ import java.util.Map;
 public class TopicPermissionChecker {
     private static final String ROLE_SPEECH_ADMIN = "ROLE_SPEECH_ADMIN";
 
-    public static final int USER_PARTS_LENGTH = 6;
+    public static final int USER_PARTS_LENGTH = 7;
     public static final int USER_PART_ROLE = 1;
-    public static final int USER_PART_SITE = 2;
-    public static final int USER_PART_CONSULTATION = 3;
-    public static final int USER_PART_USER = 4;
-    public static final int USER_PART_MODULE = 5;
+    public static final int USER_PART_INSTALLATION = 2;
+    public static final int USER_PART_SITE = 3;
+    public static final int USER_PART_CONSULTATION = 4;
+    public static final int USER_PART_USER = 5;
+    public static final int USER_PART_MODULE = 6;
 
-    public static final int TOPIC_PARTS_LENGTH = 5;
+    public static final int TOPIC_PARTS_LENGTH = 6;
     public static final int TOPIC_PART_TOPIC = 1;
-    public static final int TOPIC_PART_SITE = 2;
-    public static final int TOPIC_PART_CONSULTATION = 3;
+    public static final int TOPIC_PART_INSTALLATION = 2;
+    public static final int TOPIC_PART_SITE = 3;
+    public static final int TOPIC_PART_CONSULTATION = 4;
 
     /**
      * Supported destination patterns:
-     * - /user/[subdomain]/[consultation]/[userid]/speech
-     * - /admin/[subdomain]/[consultation]/[userid]/speech
-     * - /topic/[subdomain]/[consultation]/[...]
+     * - /user/[installation]/[subdomain]/[consultation]/[userid]/speech
+     * - /admin/[installation]/[subdomain]/[consultation]/[userid]/speech
+     * - /topic/[installation]/[subdomain]/[consultation]/[...]
      */
     public boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination) {
         if (destination == null) {
@@ -41,36 +44,46 @@ public class TopicPermissionChecker {
             return false;
         }
 
+        ConsultationScope scope = null;
+        boolean additionalPermissionsPassed = true;
+
         if ("topic".equals(pathParts[TOPIC_PART_TOPIC]) && pathParts.length == TOPIC_PARTS_LENGTH) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[TOPIC_PART_SITE], pathParts[TOPIC_PART_CONSULTATION]);
+            scope = new ConsultationScope(pathParts[TOPIC_PART_INSTALLATION], pathParts[TOPIC_PART_SITE], pathParts[TOPIC_PART_CONSULTATION]);
         }
         if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION])
-                    && pathParts[USER_PART_USER].equals(jwtToken.getName());
+            scope = new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
+            additionalPermissionsPassed = pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
         if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
-            return jwtIsForCorrectSiteAndConsultation(jwtToken, pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION])
-                    && jwtHasRoleForTopic(jwtToken, pathParts[USER_PART_MODULE])
+            scope = new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
+            additionalPermissionsPassed = jwtHasRoleForTopic(jwtToken, pathParts[USER_PART_MODULE])
                     && pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
 
-        return false;
+        return (scope != null && jwtIsForCorrectConsultation(jwtToken, scope) && additionalPermissionsPassed);
     }
 
-    private boolean jwtIsForCorrectSiteAndConsultation(JwtAuthenticationToken jwtToken, String site, String consultation) {
+    private boolean jwtIsForCorrectConsultation(JwtAuthenticationToken jwtToken, ConsultationScope scope) {
         Object payload = jwtToken.getTokenAttributes().get("payload");
         if (!(payload instanceof Map<?, ?> payloadMap)) {
             log.warn("No payload found");
             return false;
         }
 
-        if (!payloadMap.containsKey("site") || payloadMap.get("site") == null || !payloadMap.get("site").equals(site)) {
-            log.warn("Incorrect site provided: " + site, payloadMap);
+        String issuer = jwtToken.getToken().getClaim("iss");
+        if (issuer == null || issuer.isEmpty() || !issuer.equals(scope.installation())) {
+            log.warn("Incorrect installation provided: " + scope.installation(), payloadMap);
             return false;
         }
 
-        if (!payloadMap.containsKey("consultation") || payloadMap.get("consultation") == null || !payloadMap.get("consultation").equals(consultation)) {
-            log.warn("Incorrect consultation provided: " + consultation, payloadMap);
+        if (!payloadMap.containsKey("site") || payloadMap.get("site") == null || !payloadMap.get("site").equals(scope.site())) {
+            log.warn("Incorrect site provided: " + scope.site(), payloadMap);
+            return false;
+        }
+
+        if (!payloadMap.containsKey("consultation") || payloadMap.get("consultation") == null
+                || !payloadMap.get("consultation").equals(scope.consultation())) {
+            log.warn("Incorrect consultation provided: " + scope.consultation(), payloadMap);
             return false;
         }
 

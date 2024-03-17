@@ -5,9 +5,6 @@
     },
     {
       "pattern": "^stomp\\.umd\\.min\\.js$"
-    },
-    {
-      "pattern": "^public\\.key$"
     }
   ]
 }

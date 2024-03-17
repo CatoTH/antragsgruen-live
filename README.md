@@ -12,31 +12,40 @@ Users are connecting to the Live Server via Websocket/STOMP when using an intera
 
 - The central Antragsgrün system authenticates users through traditional means (cookie-based sessions generated during username/password- or SAML-based login).
 - It creates a JWT, signed using a private key (RS256), containing information about:
+  - The installation ID, as the Issuer of the token.  
   - The ID of the user as Subject of the token. If the user is logged in, it has the shape of `login-123`. If not, a session-token like `anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN` will be used.
   - If the user has specific admin privileges (like to administer speech queues), a role is added to the payload. Currently, only ROLE_SPEECH_ADMIN is supported.
-  - The site and the consultation the token is valid for, as the payload of the token.
+  - The site and consultation the token is valid for, as the payload of the token.
 - We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
   - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
-  - The site and consultation association is checked when subscribing to topics - the site subdomain and consultation path has to be in the topic name and equal to information provided in the JWT.
+  - The installation, site and consultation association is checked when subscribing to topics - the installation, site subdomain and consultation path has to be in the topic name and equal to information provided in the JWT.
   - When subscribing to the speech admin topic, the SPEECH_ADMIN role is checked in the JWT.
   - SECURITY DISCLAIMER: the expiry date of the token is currently only checked when connecting. As long as the session is open, no expiry mechanism is in place, so revoking a user's access only has effect once that user reconnects.
 
+## ID Mapping
+
+The IDs referred to by this service can be found at the following places in the central Antragsgrün system:
+
+- Installation ID: This is the ID specified as `live.installationId` in `config.json`. One Installation ID can hold either a single- or multi-site installation.
+- Site: The subdomain used by a multi-site installation (field `subdomain` in the `site` database table). For single-site installations, this is typically `std`.
+- Consultation: The URL path component identifying the specific consultation within a site (field `urlPath` in the `consultation` database table).
+- User ID: The numerical ID of the user (field `id` in the `user` database table).
 
 ## RabbitMQ Setup
 
 The central Antragsgrün system publishes all its messages to one central exchange (by default: `antragsgruen-exchange`). Messages to all subdomains and consultations within a subdomain are published through that exchange, but are classified by a routing key pattern.
 
 The following routing key patterns are fixed, while its associated queues can be configured:
-- `user.[site].[consultation].[userid]`, e.g. `user.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [MQUserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQUserEvent.java)-DTO for deserialization.
-- `speech.[site].[consultation]`, e.g. `speech.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [MQSpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQSpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version.
+- `user.[installationid].[site].[consultation].[userid]`, e.g. `user.localdev.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [MQUserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQUserEvent.java)-DTO for deserialization.
+- `speech.[installationid].[site].[consultation]`, e.g. `speech.localdev.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [MQSpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQSpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version.
 
 In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead` and `antragsgruen-queue-user-dead`.
 
 ## Exposed Websocket STOMP Topics
 
-- `/user/[subdomain]/[consultation]/[userid]/speech`
-- `/admin/[subdomain]/[consultation]/[userid]/speech`
-- `/topic/[subdomain]/[consultation]/[...]` (currently not used)
+- `/user/[installationid]/[subdomain]/[consultation]/[userid]/speech`
+- `/admin/[installationid]/[subdomain]/[consultation]/[userid]/speech`
+- `/topic/[installationid]/[subdomain]/[consultation]/[...]` (currently not used)
 
 
 ## Installing, Running, Configuration
@@ -44,7 +53,7 @@ In case messages cannot be processed by this live server, they are rejected and,
 ### Prerequisites
 
 Before building the app, two steps have to be manually performed:
-- Creating a public/private RSA key for the JWT signing. This app only needs the public key, located at `src/main/resources/public.key`. If you are just testing, the keys from the test suite can be used (`cp src/test/resources/jwt-test-public.key src/main/resources/public.key`).
+- Creating a public/private RSA key for the JWT signing. This app only needs the public key, passed into the application along with the installation ID as an environment variable. If you are just testing, the keys from the test suite can be used.
 - Installing Stomp.JS. This can be done by calling `npm ci`. After this step, the file `src/main/resources/static/stomp.umd.min.js` should exist.
 
 ### Running
@@ -59,7 +68,15 @@ Hint: this is only meant for local development. On production, you want to secur
 
 ### Configuration via Environment Variables
 
-The following aspects can be configured through environment variables, expecially valuable when deploying it via docker (compose):
+One or multiple installations can be configured through environment variables. Each installation needs to have an ID and a public key. Mind that the numbering needs to be consecutive, starting with zero.
+
+| Environment Variable Name               | Explanation                                                  |
+| --------------------------------------- | ------------------------------------------------------------ |
+| ANTRAGSGRUEN_INSTALLATIONS_0_ID         | Unique ID of the Antragsgrün installation                    |
+| ANTRAGSGRUEN_INSTALLATIONS_0_PUBLIC_KEY | Public RSA Key. Refer to the [README in the Central System](https://github.com/CatoTH/antragsgruen?tab=readme-ov-file#jwt-key-signing) on how to generate one. |
+| ...                                     | ...                                                          |
+
+The following aspects can be configured through environment variables, especially valuable when deploying it via docker (compose):
 
 | Environment Variable Name | Default Value    | Explanation                                                  |
 | ------------------------- | ---------------- | ------------------------------------------------------------ |
@@ -98,7 +115,7 @@ Compiling and running:
 
 ### Running with Docker (JRE)
 
-A dummy docker-compose.yml is provided that builds and runs the application. Note that the the file `src/main/resources/public.key` mentioned in "Prerequisites" still needs to be created before building the docker images.
+A dummy docker-compose.yml is provided that builds and runs the application.
 
 ```shell
 docker compose -f docker-compose.jdk.yml build
@@ -107,10 +124,10 @@ docker compose -f docker-compose.jdk.yml up
 
 ## Testing
 
-### Running spotbugs
+### Running spotbugs && checkstyle
 
 ```shell
-./mvnw compile && ./mvnw spotbugs:check
+./mvnw compile && ./mvnw spotbugs:check && ./mvnw checkstyle:check
 ```
 
 ### Running the integration tests

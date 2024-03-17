@@ -1,5 +1,7 @@
 package de.antragsgruen.live.websocket;
 
+import de.antragsgruen.live.multisite.AntragsgruenInstallation;
+import de.antragsgruen.live.multisite.AntragsgruenInstallationProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +22,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public final class WebsocketChannelInterceptor implements ChannelInterceptor {
-    @NonNull private AntragsgruenJwtDecoder jwtDecoder;
-    @NonNull private TopicPermissionChecker topicPermissionChecker;
+    @NonNull private final TopicPermissionChecker topicPermissionChecker;
+    @NonNull private final AntragsgruenInstallationProvider installationProvider;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) throws MessagingException {
@@ -43,23 +45,42 @@ public final class WebsocketChannelInterceptor implements ChannelInterceptor {
     }
 
     public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-        log.warn("preReceive", message);
+        log.warn("postReceive", message);
 
         return message;
     }
 
-    private void onConnect(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException {
+    private AntragsgruenInstallation onConnectGetInstallation(StompHeaderAccessor headerAccessor) throws Exception {
+        List<String> jwtHeaders = headerAccessor.getNativeHeader("installation");
+        jwtHeaders = Optional.ofNullable(jwtHeaders).orElse(new ArrayList<>());
+
+        for (String head: jwtHeaders) {
+            return this.installationProvider.getInstallation(head);
+        }
+
+        throw new Exception("No installation header found");
+    }
+
+    private JwtAuthenticationToken onConnectGetAuthenticatedToken(AntragsgruenInstallation installation, StompHeaderAccessor headerAccessor) throws Exception {
         List<String> jwtHeaders = headerAccessor.getNativeHeader("jwt");
         jwtHeaders = Optional.ofNullable(jwtHeaders).orElse(new ArrayList<>());
 
         for (String head: jwtHeaders) {
-            try {
-                JwtAuthenticationToken token = this.jwtDecoder.getJwtAuthToken(head);
-                headerAccessor.setUser(token);
-                log.info("Connected Websocket: " + token.getName());
-            } catch (Exception e) {
-                throw new MessagingException("Could not authenticate JWT: " + e.getMessage());
-            }
+            return installation.getJwtDecoder().getJwtAuthToken(head);
+        }
+
+        throw new Exception("No jwt header found");
+    }
+
+    private void onConnect(Message<?> message, StompHeaderAccessor headerAccessor) throws MessagingException {
+        try {
+            AntragsgruenInstallation installation = this.onConnectGetInstallation(headerAccessor);
+            JwtAuthenticationToken token = this.onConnectGetAuthenticatedToken(installation, headerAccessor);
+            headerAccessor.setUser(token);
+            log.info("Connected Websocket: " + token.getName());
+        } catch (Exception e) {
+            log.warn("Could not authenticate JWT: " + e.getMessage());
+            throw new MessagingException("Could not authenticate JWT: " + e.getMessage());
         }
     }
 
