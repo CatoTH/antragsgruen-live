@@ -38,7 +38,7 @@ public class AntragsgruenInstallationProvider {
                 return;
             }
             if (installationId == null || publicKey == null || installationId.isEmpty() || publicKey.isEmpty()) {
-                throw new RuntimeException("ANTRAGSGRUEN_INSTALLATION_" + count + "_* is inconsistently filled");
+                throw new RuntimeException("ANTRAGSGRUEN_INSTALLATIONS_" + count + "_* is inconsistently filled");
             }
 
             try {
