@@ -26,6 +26,9 @@ antragsgruen:
 
 # Actuator
 management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
   endpoints:
     web:
       exposure:
@@ -44,3 +47,13 @@ spring.security.user:
   password: ${ACTUATOR_PASSWORD:admin}
   roles:
     - ADMIN
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      buffered: false
+      directory: /dev
+      prefix: stdout
+      suffix: ""
+      file-date-format: ""
