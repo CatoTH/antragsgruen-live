@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-record SubscriptionDimensions(String installationId, String siteId, String consultationId) { }
-
 @Service
 @RequiredArgsConstructor
 @Slf4j

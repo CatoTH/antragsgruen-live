@@ -5,10 +5,8 @@ services:
       dockerfile: docker/jdk/Dockerfile
       #target: build - enable this to use JDK image
     environment:
-      - ANTRAGSGRUEN_WS_ORIGINS=http://*.antragsgruen.test
       - RABBITMQ_HOST=rabbitmq
-      - ACTUATOR_USER=admin
-      - ACTUATOR_PASSWORD=admin
+    env_file: .env
     depends_on:
       rabbitmq:
         condition: service_healthy

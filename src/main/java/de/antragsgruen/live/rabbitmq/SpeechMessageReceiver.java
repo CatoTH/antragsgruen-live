@@ -1,6 +1,7 @@
 package de.antragsgruen.live.rabbitmq;
 
 import de.antragsgruen.live.SpeechAdminHandler;
+import de.antragsgruen.live.metrics.ReceivedRabbitMQMessagesMetric;
 import de.antragsgruen.live.multisite.ConsultationScope;
 import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
 import de.antragsgruen.live.SpeechUserHandler;
@@ -23,6 +24,7 @@ public final class SpeechMessageReceiver {
 
     @NonNull private SpeechUserHandler speechUserHandler;
     @NonNull private SpeechAdminHandler speechAdminHandler;
+    @NonNull private ReceivedRabbitMQMessagesMetric receivedRabbitMQMessagesMetric;
 
     @RabbitListener(queues = {"${antragsgruen.rabbitmq.queue.speech}"})
     public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
@@ -37,6 +39,7 @@ public final class SpeechMessageReceiver {
                 routingKeyParts[RK_PART_CONSULTATION]
         );
 
+        receivedRabbitMQMessagesMetric.onSpeechEvent(scope);
         speechUserHandler.onSpeechEvent(scope, event);
         speechAdminHandler.onSpeechEvent(scope, event);
     }
