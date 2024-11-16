@@ -23,9 +23,14 @@ antragsgruen:
     routing:
       user: user.*.*.*.*
       speech: speech.*.*.*
+  metrics:
+    interval.ms: 5000
 
 # Actuator
 management:
+  metrics:
+    tags:
+      application: antragsgruen_live
   endpoints:
     web:
       exposure:
@@ -44,3 +49,13 @@ spring.security.user:
   password: ${ACTUATOR_PASSWORD:admin}
   roles:
     - ADMIN
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      buffered: false
+      directory: /dev
+      prefix: stdout
+      suffix: ""
+      file-date-format: ""

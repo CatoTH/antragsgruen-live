@@ -1,5 +1,6 @@
 package de.antragsgruen.live.rabbitmq;
 
+import de.antragsgruen.live.metrics.ReceivedRabbitMQMessagesMetric;
 import de.antragsgruen.live.multisite.ConsultationScope;
 import de.antragsgruen.live.rabbitmq.dto.MQUserEvent;
 import de.antragsgruen.live.websocket.Sender;
@@ -23,6 +24,7 @@ public final class UserMessageReceiver {
     private static final int RK_PART_USER = 4;
 
     @NonNull private Sender sender;
+    @NonNull private ReceivedRabbitMQMessagesMetric receivedRabbitMQMessagesMetric;
 
     @RabbitListener(queues = {"${antragsgruen.rabbitmq.queue.user}"})
     public void receiveMessage(MQUserEvent event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
@@ -37,8 +39,9 @@ public final class UserMessageReceiver {
                 routingKeyParts[RK_PART_CONSULTATION]
         );
 
-        log.warn("Received user message: " + routingKey + " => " + event.username());
+        log.debug("Received user message: " + routingKey + " => " + event.username());
 
+        receivedRabbitMQMessagesMetric.onUserEvent(scope);
         sender.sendToUser(scope, routingKeyParts[RK_PART_USER], Sender.ROLE_USER, Sender.USER_CHANNEL_DEFAULT, event.username());
     }
 }

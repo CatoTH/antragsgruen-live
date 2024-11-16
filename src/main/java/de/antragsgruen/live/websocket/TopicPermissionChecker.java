@@ -14,7 +14,7 @@ import java.util.Map;
 public class TopicPermissionChecker {
     private static final String ROLE_SPEECH_ADMIN = "ROLE_SPEECH_ADMIN";
 
-    public static final int USER_PARTS_LENGTH = 7;
+    public static final int USER_PARTS_LENGTH = 7; // Also used for /admin/ topics
     public static final int USER_PART_ROLE = 1;
     public static final int USER_PART_INSTALLATION = 2;
     public static final int USER_PART_SITE = 3;
@@ -44,23 +44,31 @@ public class TopicPermissionChecker {
             return false;
         }
 
-        ConsultationScope scope = null;
-        boolean additionalPermissionsPassed = true;
+        ConsultationScope scope = TopicPermissionChecker.consultationScopeFromPathParts(pathParts);
 
-        if ("topic".equals(pathParts[TOPIC_PART_TOPIC]) && pathParts.length == TOPIC_PARTS_LENGTH) {
-            scope = new ConsultationScope(pathParts[TOPIC_PART_INSTALLATION], pathParts[TOPIC_PART_SITE], pathParts[TOPIC_PART_CONSULTATION]);
-        }
+        boolean additionalPermissionsPassed = true;
         if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
-            scope = new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
             additionalPermissionsPassed = pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
         if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
-            scope = new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
             additionalPermissionsPassed = jwtHasRoleForTopic(jwtToken, pathParts[USER_PART_MODULE])
                     && pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
 
         return (scope != null && jwtIsForCorrectConsultation(jwtToken, scope) && additionalPermissionsPassed);
+    }
+
+    public static ConsultationScope consultationScopeFromPathParts(String[] pathParts) {
+        if ("topic".equals(pathParts[TOPIC_PART_TOPIC]) && pathParts.length == TOPIC_PARTS_LENGTH) {
+            return new ConsultationScope(pathParts[TOPIC_PART_INSTALLATION], pathParts[TOPIC_PART_SITE], pathParts[TOPIC_PART_CONSULTATION]);
+        }
+        if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+            return new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
+        }
+        if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+            return new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
+        }
+        return null;
     }
 
     private boolean jwtIsForCorrectConsultation(JwtAuthenticationToken jwtToken, ConsultationScope scope) {

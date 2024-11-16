@@ -115,12 +115,19 @@ Compiling and running:
 
 ### Running with Docker (JRE)
 
-A dummy docker-compose.yml is provided that builds and runs the application.
+A dummy docker-compose.yml is provided that builds and runs the application. To set it up:
+- copy [.env.tpl](.env.tpl) to `.env` and modify environment variables to your needs. In particular, enter the JWT private key.
+- copy [prometheus.demo.yml](docker/prometheus/prometheus.demo.yml) to `prometheus.yml`. Set the credentials in there to the same as `ACTUATOR_USER` / `ACTUATOR_PASSWORD` in `.env`.
 
 ```shell
 docker compose -f docker-compose.jdk.yml build
 docker compose -f docker-compose.jdk.yml up
 ```
+
+This will expose services:
+- http://localhost:8080/ : The main webservice application (not meant to be accessed directly)
+- http://localhost:3000/ : Grafana, to access Prometheus logs. (Grafana will not be configured at all. So to access the metrics, it will be necessary to set up a Prometheus datasource pointing at `http://prometheus:9090`.)
+
 
 ## Testing
 

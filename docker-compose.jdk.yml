@@ -5,15 +5,14 @@ services:
       dockerfile: docker/jdk/Dockerfile
       #target: build - enable this to use JDK image
     environment:
-      - ANTRAGSGRUEN_WS_ORIGINS=http://*.antragsgruen.test
       - RABBITMQ_HOST=rabbitmq
-      - ACTUATOR_USER=admin
-      - ACTUATOR_PASSWORD=admin
+    env_file: .env
     depends_on:
       rabbitmq:
         condition: service_healthy
     ports:
       - 127.0.0.1:8080:8080
+
   rabbitmq:
     image: 'rabbitmq:3-management-alpine'
     environment:
@@ -27,3 +26,30 @@ services:
       interval: 5s
       timeout: 10s
       retries: 3
+
+  prometheus:
+    image: prom/prometheus:v2.26.1
+    #ports:
+    #  - 9090:9090
+    volumes:
+      - prometheus-data:/prometheus
+      - ./docker/prometheus:/etc/prometheus
+    environment:
+      - ACTUATOR_USER=admin
+      - ACTUATOR_PASSWORD=admin
+    command: --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+      - live
+
+  grafana:
+    image: grafana/grafana:7.5.6
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus-data:
+  grafana-data:
