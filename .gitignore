@@ -4,7 +4,10 @@ target/
 !**/src/test/**/target/
 
 src/main/resources/static/stomp.umd.min.js
+src/main/resources/public.key
+docker/prometheus/prometheus.yml
 node_modules/
+.env
 
 ### IntelliJ IDEA ###
 .idea

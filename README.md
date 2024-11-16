@@ -115,12 +115,16 @@ Compiling and running:
 
 ### Running with Docker (JRE)
 
-A dummy docker-compose.yml is provided that builds and runs the application.
+A dummy docker-compose.yml is provided that builds and runs the application. This docker compose setup also sets up Metrics collection via Prometheus and Grafana.
+
+To enable Grafana, copy [prometheus.demo.yml](docker/prometheus/prometheus.demo.yml) to `prometheus.yml`, and set the same credentials as configured through `ACTUATOR_USER` / `ACTUATOR_PASSWORD`.
 
 ```shell
 docker compose -f docker-compose.jdk.yml build
 docker compose -f docker-compose.jdk.yml up
 ```
+
+
 
 ## Testing
 
