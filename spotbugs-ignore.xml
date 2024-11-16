@@ -10,6 +10,7 @@
         <Or>
             <Package name="~de\.antragsgruen\.live\.rabbitmq\.dto.*"/>
             <Package name="~de\.antragsgruen\.live\.websocket\.dto.*"/>
+            <Package name="~de\.antragsgruen\.live\.metrics.*"/>
         </Or>
     </Match>
 

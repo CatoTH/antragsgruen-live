@@ -23,12 +23,14 @@ antragsgruen:
     routing:
       user: user.*.*.*.*
       speech: speech.*.*.*
+  metrics:
+    interval.ms: 5000
 
 # Actuator
 management:
   metrics:
     tags:
-      application: ${spring.application.name}
+      application: antragsgruen_live
   endpoints:
     web:
       exposure:
