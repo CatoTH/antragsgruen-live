@@ -1,11 +1,8 @@
 package de.antragsgruen.live.websocket.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.lang.Nullable;
-
-import java.math.BigInteger;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record WSAgendaItem(
@@ -15,7 +12,7 @@ public record WSAgendaItem(
         String title,
         @Nullable String time,
         @Nullable String date,
-        MQAgendaItemSettings settings,
-        MQAgendaItem[] children
+        WSAgendaItemSettings settings,
+        WSAgendaItem[] children
 ) {
 }
