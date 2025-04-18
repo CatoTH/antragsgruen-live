@@ -24,7 +24,7 @@ public final class AgendaHandler extends LiveHandlerBase {
         log.info("Sending agenda event to " + users.length + " (out of " + userRegistry.getUserCount() + ") user(s)");
 
         for (String userId : users) {
-            WSAgendaItem[] wsAgendaItems = AgendaItemMapper.convertQueue(mqAgendaItems);
+            WSAgendaItem[] wsAgendaItems = AgendaItemMapper.convertAgendaItems(mqAgendaItems);
 
             sender.sendToUser(scope, userId, Sender.ROLE_USER, Sender.USER_CHANNEL_AGENDA, wsAgendaItems);
         }
