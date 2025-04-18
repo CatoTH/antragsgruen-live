@@ -15,6 +15,7 @@ public class Sender {
 
     public static final String USER_CHANNEL_DEFAULT = "default";
     public static final String USER_CHANNEL_SPEECH = "speech";
+    public static final String USER_CHANNEL_AGENDA = "agenda";
 
     public static final String ROLE_USER = "user";
     public static final String ROLE_ADMIN = "admin";
