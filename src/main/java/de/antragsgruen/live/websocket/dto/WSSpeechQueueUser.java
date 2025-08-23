@@ -10,6 +10,7 @@ import java.math.BigInteger;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record WSSpeechQueueUser(
         Integer id,
+        boolean isActive,
         boolean isOpen,
         boolean haveApplied,
         boolean allowCustomNames,
@@ -20,6 +21,12 @@ public record WSSpeechQueueUser(
         BigInteger currentTime,
         @Nullable Integer speakingTime
 ) {
+    @Override
+    @JsonProperty("is_active")
+    public boolean isActive() {
+        return isActive;
+    }
+
     @Override
     @JsonProperty("is_open")
     public boolean isOpen() {

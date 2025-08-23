@@ -1,5 +1,6 @@
 {
   "id": 2,
+  "is_active": true,
   "is_open": true,
   "have_applied": true,
   "allow_custom_names": false,
