@@ -33,6 +33,7 @@ public final class SpeechUserMapper {
 
         return new WSSpeechQueueUser(
                 queue.id(),
+                queue.isActive(),
                 queue.settings().isOpen(),
                 haveApplied,
                 queue.settings().allowCustomNames(),
