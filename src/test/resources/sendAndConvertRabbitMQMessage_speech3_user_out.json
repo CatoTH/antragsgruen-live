@@ -28,9 +28,9 @@
       },
       "name": "Rede 1",
       "position": 1,
-      "date_started": "2023-08-14T16:55:55.000+00:00",
-      "date_stopped": "2023-08-14T16:55:58.000+00:00",
-      "date_applied": "2023-08-14T16:55:36.000+00:00"
+      "date_started": "2023-08-14T16:55:55.000Z",
+      "date_stopped": "2023-08-14T16:55:58.000Z",
+      "date_applied": "2023-08-14T16:55:36.000Z"
     },
     {
       "id": 10,
@@ -40,9 +40,9 @@
       },
       "name": "Speech 2",
       "position": 3,
-      "date_started": "2023-08-14T16:55:58.000+00:00",
-      "date_stopped": "2023-08-14T16:56:06.000+00:00",
-      "date_applied": "2023-08-14T16:55:41.000+00:00"
+      "date_started": "2023-08-14T16:55:58.000Z",
+      "date_stopped": "2023-08-14T16:56:06.000Z",
+      "date_applied": "2023-08-14T16:55:41.000Z"
     },
     {
       "id": 11,
@@ -52,9 +52,9 @@
       },
       "name": "Speech 3",
       "position": 4,
-      "date_started": "2023-08-14T16:56:06.000+00:00",
+      "date_started": "2023-08-14T16:56:06.000Z",
       "date_stopped": null,
-      "date_applied": "2023-08-14T16:55:44.000+00:00"
+      "date_applied": "2023-08-14T16:55:44.000Z"
     }
   ],
   "requires_login": true,
