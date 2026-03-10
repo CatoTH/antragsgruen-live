@@ -4,7 +4,6 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -25,10 +24,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +55,7 @@ public class StompTestConnection {
                 .replaceAll(System.lineSeparator(), "")
                 .replace("-----END PRIVATE KEY-----", "");
 
-        byte[] keyBytes = Base64.decodeBase64(privateKeyString);
+        byte[] keyBytes = Base64.getDecoder().decode(privateKeyString);
         EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
 
@@ -118,7 +114,7 @@ public class StompTestConnection {
         headers.set("installation", installation);
 
         StompTestSessionHandler sessionHandler = new StompTestSessionHandler();
-        stompClient.connect(url, handshakeHeaders, headers, sessionHandler);
+        stompClient.connectAsync(url, handshakeHeaders, headers, sessionHandler);
         this.onError = sessionHandler.onError();
 
         return sessionHandler.onConnect();
