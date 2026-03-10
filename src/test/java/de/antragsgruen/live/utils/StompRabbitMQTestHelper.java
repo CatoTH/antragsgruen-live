@@ -1,6 +1,7 @@
 package de.antragsgruen.live.utils;
 
 import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @Component
+@AutoConfigureTestRestTemplate
 public class StompRabbitMQTestHelper {
     @Autowired
     private TestRestTemplate restTemplate;

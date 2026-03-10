@@ -6,7 +6,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.converter.JacksonJsonMessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.socket.WebSocketHttpHeaders;
@@ -104,7 +104,7 @@ public class StompTestConnection {
     public FutureTask<StompSession> connect(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
         stompClient = new WebSocketStompClient(webSocketClient);
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        stompClient.setMessageConverter(new JacksonJsonMessageConverter());
         String url = "ws://localhost:" + port + "/websocket";
 
         WebSocketHttpHeaders handshakeHeaders = new WebSocketHttpHeaders();
