@@ -30,6 +30,7 @@ public class TopicPermissionChecker {
 
     /**
      * Supported destination patterns:
+     * - /user/[installation]/[subdomain]/[consultation]/[userid]/agenda
      * - /user/[installation]/[subdomain]/[consultation]/[userid]/speech
      * - /admin/[installation]/[subdomain]/[consultation]/[userid]/speech
      * - /topic/[installation]/[subdomain]/[consultation]/[...]
