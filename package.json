@@ -13,6 +13,6 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@stomp/stompjs": "^7.0.0"
+    "@stomp/stompjs": "^7.3.0"
   }
 }
