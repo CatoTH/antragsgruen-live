@@ -28,7 +28,7 @@ jobs:
         with:
           java-version: '25'
           distribution: 'temurin'
-          cache: maven
+          cache: maven-25
 
       - name: Set up Node.JS
         uses: actions/setup-node@v4

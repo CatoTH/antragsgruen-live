@@ -104,7 +104,7 @@ It is also possible, though hardly ever necessary, to configure the following as
 Setup on macOS:
 ```shell
 brew install --cask graalvm/tap/graalvm-jdk25
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-21/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-jdk-25/Contents/Home
 ```
 
 Compiling and running:
