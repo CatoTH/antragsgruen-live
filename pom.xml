@@ -14,7 +14,7 @@
 	<name>live</name>
 	<description>Live Proxy for Antragsgrün</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>25</java.version>
 		<start-class>de.antragsgruen.live.LiveApplication</start-class>
 	</properties>
 	<dependencies>
@@ -83,6 +83,20 @@
 				<version>2.21.0</version>
 				<configuration>
 					<rulesUri>file:///${project.basedir}/versions-rules.xml</rulesUri>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.38</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 
