@@ -9,11 +9,13 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
         --mount=target=/var/cache/apt,type=cache,sharing=locked \
         rm -f /etc/apt/apt.conf.d/docker-clean \
         && apt-get update \
-        && apt-get install -y npm
+        && apt-get install -y npm \
+        && npm install -g pnpm \
+        && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY . /src
 WORKDIR /src
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 RUN --mount=type=cache,target=/root/.m2 ./mvnw package -Dmaven.test.skip
 
 RUN cp target/*.jar /srv/app.jar
