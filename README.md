@@ -54,7 +54,7 @@ In case messages cannot be processed by this live server, they are rejected and,
 
 Before building the app, two steps have to be manually performed:
 - Creating a public/private RSA key for the JWT signing. This app only needs the public key, passed into the application along with the installation ID as an environment variable. If you are just testing, the keys from the test suite can be used.
-- Installing Stomp.JS. This can be done by calling `npm ci`. After this step, the file `src/main/resources/static/stomp.umd.min.js` should exist.
+- Installing Stomp.JS. This can be done by calling `pnpm ci`. After this step, the file `src/main/resources/static/stomp.umd.min.js` should exist.
 
 ### Running
 
@@ -145,7 +145,7 @@ The test case is located in [LiveApplicationTests.java](src/test/java/de/antrags
 
 To run the tests, call:
 ```shell
-npm ci # Only needed once
+pnpm ci # Only needed once
 ./mvnw test
 ```
 
