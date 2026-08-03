@@ -18,10 +18,15 @@ public class ReceivedRabbitMQMessagesMetric {
     private static final String METRIC_NAME = "antragsgruen_live.rabbitmq.msg_count";
 
     private static final String TYPE_SPEECH = "speech";
+    private static final String TYPE_DEBATE = "debate";
     private static final String TYPE_USER = "user";
 
     public void onSpeechEvent(ConsultationScope scope) {
         this.receivedMessage(scope, TYPE_SPEECH);
+    }
+
+    public void onDebateEvent(ConsultationScope scope) {
+        this.receivedMessage(scope, TYPE_DEBATE);
     }
 
     public void onUserEvent(ConsultationScope scope) {

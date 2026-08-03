@@ -20,9 +20,12 @@ antragsgruen:
       user_dead: ${RABBITMQ_QUEUE_USER_DEAD:antragsgruen-queue-user-dead}
       speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-speech}
       speech_dead: ${RABBITMQ_QUEUE_SPEECH_DEAD:antragsgruen-queue-speech-dead}
+      debate: ${RABBITMQ_QUEUE_DEBATE:antragsgruen-queue-debate}
+      debate_dead: ${RABBITMQ_QUEUE_DEBATE_DEAD:antragsgruen-queue-debate-dead}
     routing:
       user: user.*.*.*.*
       speech: speech.*.*.*
+      debate: debate.*.*.*
   metrics:
     interval.ms: 5000
 
