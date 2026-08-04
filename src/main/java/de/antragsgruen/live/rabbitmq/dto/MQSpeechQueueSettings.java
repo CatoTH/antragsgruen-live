@@ -1,9 +1,11 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.lang.Nullable;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MQSpeechQueueSettings(
         boolean isOpen,
         boolean isOpenPoo,
@@ -13,19 +15,6 @@ public record MQSpeechQueueSettings(
         @Nullable Integer speakingTime
 ) {
     @JsonCreator
-    public MQSpeechQueueSettings(
-            @JsonProperty("isOpen") boolean isOpen,
-            @JsonProperty("isOpenPoo") boolean isOpenPoo,
-            @JsonProperty("allowCustomNames") boolean allowCustomNames,
-            @JsonProperty("preferNonspeaker") boolean preferNonspeaker,
-            @JsonProperty("showNames") boolean showNames,
-            @JsonProperty("speakingTime") @Nullable Integer speakingTime
-    ) {
-        this.isOpen = isOpen;
-        this.isOpenPoo = isOpenPoo;
-        this.allowCustomNames = allowCustomNames;
-        this.preferNonspeaker = preferNonspeaker;
-        this.showNames = showNames;
-        this.speakingTime = speakingTime;
+    public MQSpeechQueueSettings {
     }
 }

@@ -1,10 +1,12 @@
 package de.antragsgruen.live.rabbitmq.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import java.math.BigInteger;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MQSpeechQueue(
         int id,
         boolean isActive,
@@ -16,23 +18,6 @@ public record MQSpeechQueue(
         BigInteger currentTime
 ) {
     @JsonCreator
-    public MQSpeechQueue(
-            int id,
-            @JsonProperty("isActive") boolean isActive,
-            MQSpeechQueueSettings settings,
-            MQSpeechSubqueue[] subqueues,
-            MQSpeechQueueActiveSlot[] slots,
-            @JsonProperty("requiresLogin") boolean requiresLogin,
-            String otherActiveName,
-            BigInteger currentTime
-    ) {
-        this.id = id;
-        this.isActive = isActive;
-        this.settings = settings;
-        this.subqueues = subqueues;
-        this.slots = slots;
-        this.requiresLogin = requiresLogin;
-        this.otherActiveName = otherActiveName;
-        this.currentTime = currentTime;
+    public MQSpeechQueue {
     }
 }
