@@ -31,6 +31,17 @@ class SpeechUserTests {
 	}
 
 	@Test
+	public void sendAndConvertRabbitMQMessage_speech1_v4_16() throws IOException {
+		StompTestConnection stompConnection = testHelper.getStompConnection(port);
+
+		stompConnection.connectAndWait("installation", "site", "con", "login-1", null);
+		stompConnection.subscribe("/user/installation/site/con/login-1/speech");
+
+		testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in_4.16.json", "speech.installation.site.con");
+		testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_user_out.json");
+	}
+
+	@Test
 	public void sendAndConvertRabbitMQMessage_speech2() throws IOException {
 		StompTestConnection stompConnection = testHelper.getStompConnection(port);
 

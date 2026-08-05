@@ -5,7 +5,11 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record MQSpeechSubqueue(Integer id, String name, MQSpeechSubqueueItem[] items) {
+public record MQSpeechSubqueue(
+        Integer id,
+        String name,
+        MQSpeechSubqueueItem[] items
+) {
     @JsonCreator
     public MQSpeechSubqueue {
     }

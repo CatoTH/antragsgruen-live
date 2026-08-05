@@ -52,6 +52,17 @@ class SpeechAdminTests {
         testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_admin_out.json");
     }
 
+    @Test
+    public void sendAndConvertRabbitMQMessage_speech1_v4_16() throws IOException {
+        StompTestConnection stompConnection = testHelper.getStompConnection(port);
+
+        stompConnection.connectAndWait("installation", "site", "con", "login-1", getRoles("ROLE_SPEECH_ADMIN"));
+        stompConnection.subscribe("/admin/installation/site/con/login-1/speech");
+
+        testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in_4.16.json", "speech.installation.site.con");
+        testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_admin_out.json");
+    }
+
     private List<String> getRoles(String role) {
         List<String> roles = new ArrayList<>();
         roles.add(role);
