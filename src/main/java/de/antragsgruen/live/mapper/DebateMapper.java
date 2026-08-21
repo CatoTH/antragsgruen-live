@@ -2,7 +2,10 @@ package de.antragsgruen.live.mapper;
 
 import de.antragsgruen.live.rabbitmq.dto.*;
 import de.antragsgruen.live.websocket.dto.WSDebateItem;
+import de.antragsgruen.live.websocket.dto.WSDebateItemSpeechQueue;
+import de.antragsgruen.live.websocket.dto.WSDebateItemVotingBlock;
 import de.antragsgruen.live.websocket.dto.WSDebateState;
+import org.springframework.lang.Nullable;
 
 public final class DebateMapper {
     private DebateMapper() {
@@ -28,8 +31,24 @@ public final class DebateMapper {
                 mqItem.initiatorsHtml(),
                 mqItem.urlJson(),
                 mqItem.urlHtml(),
-                mqItem.speechQueueId(),
-                mqItem.votingBlockId()
+                DebateMapper.convertSpeechQueue(mqItem.speechQueue()),
+                DebateMapper.convertVotingBlock(mqItem.votingBlock())
         );
+    }
+
+    private static @Nullable WSDebateItemSpeechQueue convertSpeechQueue(@Nullable MQDebateItemSpeechQueue mqQueue) {
+        if (mqQueue == null) {
+            return null;
+        }
+
+        return new WSDebateItemSpeechQueue(mqQueue.id(), mqQueue.isActive(), mqQueue.title());
+    }
+
+    private static @Nullable WSDebateItemVotingBlock convertVotingBlock(@Nullable MQDebateItemVotingBlock mqBlock) {
+        if (mqBlock == null) {
+            return null;
+        }
+
+        return new WSDebateItemVotingBlock(mqBlock.id(), mqBlock.status(), mqBlock.title());
     }
 }

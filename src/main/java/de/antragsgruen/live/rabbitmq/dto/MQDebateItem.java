@@ -16,8 +16,8 @@ public record MQDebateItem(
         @Nullable String initiatorsHtml,
         @Nullable String urlJson,
         @Nullable String urlHtml,
-        @Nullable Integer speechQueueId,
-        @Nullable Integer votingBlockId
+        @Nullable MQDebateItemSpeechQueue speechQueue,
+        @Nullable MQDebateItemVotingBlock votingBlock
 ) {
     @JsonCreator
     public MQDebateItem {

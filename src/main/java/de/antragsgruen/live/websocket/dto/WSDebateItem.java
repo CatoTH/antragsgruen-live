@@ -16,7 +16,7 @@ public record WSDebateItem(
         @Getter @Nullable String initiatorsHtml,
         @Getter @Nullable String urlJson,
         @Getter @Nullable String urlHtml,
-        @Getter @Nullable Integer speechQueueId,
-        @Getter @Nullable Integer votingBlockId
+        @Getter @Nullable WSDebateItemSpeechQueue speechQueue,
+        @Getter @Nullable WSDebateItemVotingBlock votingBlock
 ) {
 }

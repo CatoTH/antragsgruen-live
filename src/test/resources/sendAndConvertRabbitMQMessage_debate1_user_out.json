@@ -9,7 +9,7 @@
     "initiators_html": "Testuser",
     "url_json": "http:\/\/stdparteitag.antragsgruen.test\/rest\/std-parteitag\/motion\/115",
     "url_html": "http:\/\/stdparteitag.antragsgruen.test\/std-parteitag\/motion\/115",
-    "speech_queue_id": null,
-    "voting_block_id": null
+    "speech_queue": null,
+    "voting_block": null
   }
 }

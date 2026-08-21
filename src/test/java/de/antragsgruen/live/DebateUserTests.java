@@ -29,4 +29,19 @@ class DebateUserTests {
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_debate1_in.json", "debate.installation.site.con");
         testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_debate1_user_out.json");
     }
+
+    /**
+     * A debated item with an attached speaking list and voting. Both are objects, not IDs - the widgets
+     * need to be able to use them the same way as the ones the REST API delivers.
+     */
+    @Test
+    public void sendAndConvertRabbitMQMessage_debate2() throws IOException {
+        StompTestConnection stompConnection = testHelper.getStompConnection(port);
+
+        stompConnection.connectAndWait("installation", "site", "con", "login-1", null);
+        stompConnection.subscribe("/user/installation/site/con/login-1/debate");
+
+        testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_debate2_in.json", "debate.installation.site.con");
+        testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_debate2_user_out.json");
+    }
 }
