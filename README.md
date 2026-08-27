@@ -38,11 +38,13 @@ The central Antragsgrün system publishes all its messages to one central exchan
 The following routing key patterns are fixed, while its associated queues can be configured:
 - `user.[installationid].[site].[consultation].[userid]`, e.g. `user.localdev.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [MQUserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQUserEvent.java)-DTO for deserialization.
 - `speech.[installationid].[site].[consultation]`, e.g. `speech.localdev.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [MQSpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQSpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version.
+- `agenda.[installationid].[site].[consultation]`, e.g. `agenda.localdev.stdparteitag.std-parteitag` contains messages updating an agenda speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [MQAgendaItem](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQAgendaItem.java)-DTO for deserialization.
 
 In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead` and `antragsgruen-queue-user-dead`.
 
 ## Exposed Websocket STOMP Topics
 
+- `/user/[installationid]/[subdomain]/[consultation]/[userid]/agenda`
 - `/user/[installationid]/[subdomain]/[consultation]/[userid]/speech`
 - `/admin/[installationid]/[subdomain]/[consultation]/[userid]/speech`
 - `/topic/[installationid]/[subdomain]/[consultation]/[...]` (currently not used)
@@ -91,13 +93,15 @@ The following aspects can be configured through environment variables, especiall
 It is also possible, though hardly ever necessary, to configure the following aspects of the RabbitMQ setup:
 
 | Environment Variable Name  | Default Value                  | Explanation                                              |
-| -------------------------- | ------------------------------ | -------------------------------------------------------- |
+|----------------------------|--------------------------------|----------------------------------------------------------|
 | RABBITMQ_EXCHANGE          | antragsgruen-exchange          | The exchange that Antragsgrün is supposed to publish to  |
 | RABBITMQ_EXCHANGE_DEAD     | antragsgruen-exchange-dead     | The exchange that failed messages are published to       |
 | RABBITMQ_QUEUE_USER        | antragsgruen-queue-user        | The queue for user-targeted messages                     |
 | RABBITMQ_QUEUE_USER_DEAD   | antragsgruen-queue-user-dead   | The dead letter queue for user-targeted messages         |
 | RABBITMQ_QUEUE_SPEECH      | antragsgruen-queue-speech      | The queue for speaking-list related messages             |
 | RABBITMQ_QUEUE_SPEECH_DEAD | antragsgruen-queue-speech-dead | The dead letter queue for speaking-list related messages |
+| RABBITMQ_QUEUE_AGENDA      | antragsgruen-queue-agenda      | The queue for agenda related messages                    |
+| RABBITMQ_QUEUE_AGENDA_DEAD | antragsgruen-queue-agenda-dead | The dead letter queue for agenda related messages        |
 
 ### Compiling for GraalVM
 
