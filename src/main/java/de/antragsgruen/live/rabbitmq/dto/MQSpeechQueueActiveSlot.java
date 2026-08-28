@@ -12,7 +12,7 @@ import java.util.Date;
 public record MQSpeechQueueActiveSlot(
         Integer id,
         @Nullable Integer subqueueId,
-        String subqueueName,
+        MQLocalizedText subqueueName,
         String name,
         @Nullable Integer userId,
         @Nullable String userToken,
@@ -28,7 +28,7 @@ public record MQSpeechQueueActiveSlot(
     public MQSpeechQueueActiveSlot(
             Integer id,
             @JsonAlias("subqueueId") @Nullable Integer subqueueId,
-            @JsonAlias("subqueueName") String subqueueName,
+            @JsonAlias("subqueueName") MQLocalizedText subqueueName,
             String name,
             @JsonAlias("userId") @Nullable Integer userId,
             @JsonAlias("userToken") @Nullable String userToken,

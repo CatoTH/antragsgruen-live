@@ -2,6 +2,7 @@ package de.antragsgruen.live.mapper;
 
 import de.antragsgruen.live.rabbitmq.dto.*;
 import de.antragsgruen.live.websocket.dto.*;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +14,16 @@ public final class SpeechAdminMapper {
         throw new UnsupportedOperationException();
     }
 
-    public static WSSpeechQueueAdmin convertQueue(MQSpeechQueue queue) {
+    public static WSSpeechQueueAdmin convertQueue(MQSpeechQueue queue, @Nullable String language, @Nullable String defaultLanguage) {
         WSSpeechSubqueueAdmin[] wsSubqueues = Stream
                 .of(queue.subqueues())
-                .map(SpeechAdminMapper::convertSubqueue)
+                .map(subqueue -> convertSubqueue(subqueue, language, defaultLanguage))
                 .toArray(WSSpeechSubqueueAdmin[]::new);
 
         WSSpeechActiveSlot[] wsActiveSlots = Stream
                 .of(queue.slots())
                 .filter(slot -> slot.dateStarted() != null)
-                .map(SpeechAdminMapper::convertActiveSlot)
+                .map(slot -> convertActiveSlot(slot, language, defaultLanguage))
                 .toArray(WSSpeechActiveSlot[]::new);
 
         WSSpeechQueueSettingsAdmin settings = SpeechAdminMapper.convertSettings(queue.settings());
@@ -33,7 +34,7 @@ public final class SpeechAdminMapper {
                 settings,
                 wsSubqueues,
                 wsActiveSlots,
-                queue.otherActiveName(),
+                queue.otherActiveName().resolve(language, defaultLanguage),
                 queue.currentTime()
         );
     }
@@ -49,7 +50,11 @@ public final class SpeechAdminMapper {
         );
     }
 
-    private static WSSpeechSubqueueAdmin convertSubqueue(MQSpeechSubqueue subqueue) {
+    private static WSSpeechSubqueueAdmin convertSubqueue(
+            MQSpeechSubqueue subqueue,
+            @Nullable String language,
+            @Nullable String defaultLanguage
+    ) {
         List<WSSpeechSubqueueAdminItem> onlist = new ArrayList<>();
         List<WSSpeechSubqueueAdminItem> applied = new ArrayList<>();
 
@@ -66,7 +71,7 @@ public final class SpeechAdminMapper {
 
         return new WSSpeechSubqueueAdmin(
                 subqueue.id(),
-                subqueue.name(),
+                subqueue.name().resolve(language, defaultLanguage),
                 onlist.toArray(WSSpeechSubqueueAdminItem[]::new),
                 applied.toArray(WSSpeechSubqueueAdminItem[]::new)
         );
@@ -83,11 +88,15 @@ public final class SpeechAdminMapper {
         );
     }
 
-    private static WSSpeechActiveSlot convertActiveSlot(MQSpeechQueueActiveSlot activeSlot) {
+    private static WSSpeechActiveSlot convertActiveSlot(
+            MQSpeechQueueActiveSlot activeSlot,
+            @Nullable String language,
+            @Nullable String defaultLanguage
+    ) {
         return new WSSpeechActiveSlot(
                 activeSlot.id(),
                 activeSlot.subqueueId(),
-                activeSlot.subqueueName(),
+                activeSlot.subqueueName().resolve(language, defaultLanguage),
                 activeSlot.name(),
                 activeSlot.position(),
                 activeSlot.dateStarted(),

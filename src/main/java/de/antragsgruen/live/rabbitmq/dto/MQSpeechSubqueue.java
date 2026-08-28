@@ -7,7 +7,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MQSpeechSubqueue(
         Integer id,
-        String name,
+        MQLocalizedText name,
         MQSpeechSubqueueItem[] items
 ) {
     @JsonCreator

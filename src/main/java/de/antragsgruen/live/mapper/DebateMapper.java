@@ -12,36 +12,50 @@ public final class DebateMapper {
         throw new UnsupportedOperationException();
     }
 
-    public static WSDebateState convertState(MQDebateState mqState, String userId) {
+    /**
+     * @param language the language the receiving user is reading Antragsgrün in
+     * @param defaultLanguage the language to fall back to, as stated by the message
+     */
+    public static WSDebateState convertState(MQDebateState mqState, @Nullable String language, @Nullable String defaultLanguage) {
         if (mqState.current() == null) {
             return new WSDebateState(null);
         } else {
-            return new WSDebateState(DebateMapper.convertItem(mqState.current()));
+            return new WSDebateState(DebateMapper.convertItem(mqState.current(), language, defaultLanguage));
         }
     }
 
-    public static WSDebateItem convertItem(MQDebateItem mqItem) {
+    public static WSDebateItem convertItem(MQDebateItem mqItem, @Nullable String language, @Nullable String defaultLanguage) {
         return new WSDebateItem(
                 mqItem.id(),
                 mqItem.targetType(),
                 mqItem.targetId(),
-                mqItem.title(),
+                mqItem.title().resolve(language, defaultLanguage),
                 mqItem.dateStarted(),
-                mqItem.titleWithPrefix(),
-                mqItem.initiatorsHtml(),
+                DebateMapper.resolve(mqItem.titleWithPrefix(), language, defaultLanguage),
+                DebateMapper.resolve(mqItem.initiatorsHtml(), language, defaultLanguage),
                 mqItem.urlJson(),
                 mqItem.urlHtml(),
-                DebateMapper.convertSpeechQueue(mqItem.speechQueue()),
+                DebateMapper.convertSpeechQueue(mqItem.speechQueue(), language, defaultLanguage),
                 DebateMapper.convertVotingBlock(mqItem.votingBlock())
         );
     }
 
-    private static @Nullable WSDebateItemSpeechQueue convertSpeechQueue(@Nullable MQDebateItemSpeechQueue mqQueue) {
+    private static @Nullable String resolve(@Nullable MQLocalizedText text, @Nullable String language, @Nullable String defaultLanguage) {
+        return (text != null ? text.resolve(language, defaultLanguage) : null);
+    }
+
+    private static @Nullable WSDebateItemSpeechQueue convertSpeechQueue(
+            @Nullable MQDebateItemSpeechQueue mqQueue,
+            @Nullable String language,
+            @Nullable String defaultLanguage
+    ) {
         if (mqQueue == null) {
             return null;
         }
 
-        return new WSDebateItemSpeechQueue(mqQueue.id(), mqQueue.isActive(), mqQueue.title());
+        String title = mqQueue.title().resolve(language, defaultLanguage);
+
+        return new WSDebateItemSpeechQueue(mqQueue.id(), mqQueue.isActive(), title);
     }
 
     private static @Nullable WSDebateItemVotingBlock convertVotingBlock(@Nullable MQDebateItemVotingBlock mqBlock) {

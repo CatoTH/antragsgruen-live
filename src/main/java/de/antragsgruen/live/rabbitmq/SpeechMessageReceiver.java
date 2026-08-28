@@ -21,13 +21,22 @@ public final class SpeechMessageReceiver {
     private static final int RK_PART_INSTALLATION = 1;
     private static final int RK_PART_SITE = 2;
     private static final int RK_PART_CONSULTATION = 3;
+    private static final String HEADER_DEFAULT_LANGUAGE = "default_language";
 
     @NonNull private SpeechUserHandler speechUserHandler;
     @NonNull private SpeechAdminHandler speechAdminHandler;
     @NonNull private ReceivedRabbitMQMessagesMetric receivedRabbitMQMessagesMetric;
 
+    /**
+     * @param defaultLanguage the language to deliver to users whose own language the event does not
+     *                        contain. Not sent by Antragsgrün <= 4.17.
+     */
     @RabbitListener(queues = {"${antragsgruen.rabbitmq.queue.speech}"})
-    public void receiveMessage(MQSpeechQueue event, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
+    public void receiveMessage(
+            MQSpeechQueue event,
+            @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey,
+            @Header(name = HEADER_DEFAULT_LANGUAGE, required = false) String defaultLanguage
+    ) {
         String[] routingKeyParts = routingKey.split("\\.");
         if (routingKeyParts.length != RK_PARTS_LENGTH || !"speech".equals(routingKeyParts[RK_PART_TOPIC])) {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
@@ -40,7 +49,7 @@ public final class SpeechMessageReceiver {
         );
 
         receivedRabbitMQMessagesMetric.onSpeechEvent(scope);
-        speechUserHandler.onSpeechEvent(scope, event);
-        speechAdminHandler.onSpeechEvent(scope, event);
+        speechUserHandler.onSpeechEvent(scope, event, defaultLanguage);
+        speechAdminHandler.onSpeechEvent(scope, event, defaultLanguage);
     }
 }

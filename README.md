@@ -15,6 +15,7 @@ Users are connecting to the Live Server via Websocket/STOMP when using an intera
   - The installation ID, as the Issuer of the token.  
   - The ID of the user as Subject of the token. If the user is logged in, it has the shape of `login-123`. If not, a session-token like `anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN` will be used.
   - If the user has specific admin privileges (like to administer speech queues), a role is added to the payload. Currently, only ROLE_SPEECH_ADMIN is supported.
+  - The language the user is reading Antragsgrün in, as `language` in the payload (see "Reader languages" below). This is not used for authorization.
   - The site and consultation the token is valid for, as the payload of the token.
 - We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
   - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
@@ -39,6 +40,20 @@ The following routing key patterns are fixed, while its associated queues can be
 - `user.[installationid].[site].[consultation].[userid]`, e.g. `user.localdev.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [MQUserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQUserEvent.java)-DTO for deserialization.
 - `speech.[installationid].[site].[consultation]`, e.g. `speech.localdev.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [MQSpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQSpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version.
 - `debate.[installationid].[site].[consultation]`, e.g. `debate.localdev.stdparteitag.std-parteitag` contains messages updating the debate state, by default being bound to the queue `antragsgruen-debate-queue` and using the [MQDebateState](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQDebateState.java)-DTO for deserialization.
+
+## Reader languages
+
+An event is published once per consultation, but delivered to users who may be reading Antragsgrün in different languages. Antragsgrün therefore sends every language the consultation is held in for those strings that depend on the reader (a motion title, the title of a speaking list, …), and this server delivers each user the one matching the `language` claim of their JWT:
+
+```json
+{"current": {"title": {"de": "Testantrag", "en": "Test motion"}, "…": "…"}}
+```
+
+The websocket payload contains a plain string again, so it stays identical to what the polling HTTP endpoint returns. Users whose language an event does not contain - or who did not state one - are served the language given in the message's `default_language` header. See [MQLocalizedText](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQLocalizedText.java).
+
+Antragsgrün <= 4.17 sends plain strings and no `default_language` header; such messages keep working unchanged.
+
+Hint: messages are addressed to a user, not to a single connection, so a user reading the same consultation in two languages at once (two browser tabs) is served one language in both.
 
 In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead`, `antragsgruen-queue-debate-dead` and `antragsgruen-queue-user-dead`.
 

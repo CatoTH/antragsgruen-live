@@ -8,7 +8,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 public record MQDebateItemSpeechQueue(
         Integer id,
         boolean isActive,
-        String title
+        MQLocalizedText title
 ) {
     @JsonCreator
     public MQDebateItemSpeechQueue {

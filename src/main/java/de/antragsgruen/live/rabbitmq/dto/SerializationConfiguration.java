@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration("rabbitmqSerializationConfiguration")
 @RegisterReflectionForBinding({
         MQDebateItem.class,
+        MQLocalizedText.class,
         MQDebateItemSpeechQueue.class,
         MQDebateItemVotingBlock.class,
         MQDebateState.class,

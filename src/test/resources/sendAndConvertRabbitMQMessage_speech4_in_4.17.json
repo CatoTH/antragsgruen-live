@@ -1,0 +1,133 @@
+{
+  "id": 1,
+  "is_active": true,
+  "settings": {
+    "is_open": true,
+    "is_open_poo": true,
+    "allow_custom_names": true,
+    "prefer_nonspeaker": false,
+    "show_names": true,
+    "speaking_time": 120
+  },
+  "subqueues": [
+    {
+      "id": 1,
+      "name": "Frauen",
+      "items": [
+        {
+          "on_list": true,
+          "application": false,
+          "id": 7,
+          "name": "Application 2",
+          "user_id": null,
+          "user_token": null,
+          "is_point_of_order": false,
+          "date_applied": "2023-08-13T08:17:59+02:00",
+          "date_started": "2023-08-13T08:40:49+02:00",
+          "position": 3
+        },
+        {
+          "on_list": true,
+          "application": false,
+          "id": 6,
+          "name": "Application 1",
+          "user_id": null,
+          "user_token": null,
+          "is_point_of_order": false,
+          "date_applied": "2023-08-13T08:17:18+02:00",
+          "date_started": "2023-08-13T08:18:55+02:00",
+          "position": 2
+        },
+        {
+          "on_list": false,
+          "application": true,
+          "id": 8,
+          "name": "Application 3",
+          "user_id": null,
+          "user_token": null,
+          "is_point_of_order": false,
+          "date_applied": "2023-08-13T08:40:46+02:00",
+          "date_started": null,
+          "position": -4
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Offen \/ M\u00e4nner",
+      "items": [
+        {
+          "on_list": false,
+          "application": true,
+          "id": 5,
+          "name": "[[GO-Antrag]] GO-Antrag (m)",
+          "user_id": null,
+          "user_token": "qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN",
+          "is_point_of_order": true,
+          "date_applied": "2023-08-13T08:17:02+02:00",
+          "date_started": null,
+          "position": -3
+        },
+        {
+          "on_list": false,
+          "application": true,
+          "id": 3,
+          "name": "Testadmin (m)",
+          "user_id": 1,
+          "user_token": null,
+          "is_point_of_order": false,
+          "date_applied": "2023-08-13T08:04:14+02:00",
+          "date_started": null,
+          "position": -2
+        }
+      ]
+    },
+    {
+      "id": -1,
+      "name": "default",
+      "items": [
+        {
+          "on_list": false,
+          "application": true,
+          "id": 1,
+          "name": "Test",
+          "user_id": null,
+          "user_token": null,
+          "is_point_of_order": false,
+          "date_applied": "2023-08-12T22:45:15+02:00",
+          "date_started": null,
+          "position": -1
+        }
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "id": 6,
+      "subqueue_id": 1,
+      "subqueue_name": "Frauen",
+      "name": "Application 1",
+      "user_id": null,
+      "user_token": null,
+      "position": 2,
+      "date_started": "2023-08-13T08:18:55+02:00",
+      "date_stopped": "2023-08-13T08:40:49+02:00",
+      "date_applied": "2023-08-13T08:17:18+02:00"
+    },
+    {
+      "id": 7,
+      "subqueue_id": 1,
+      "subqueue_name": "Frauen",
+      "name": "Application 2",
+      "user_id": null,
+      "user_token": null,
+      "position": 3,
+      "date_started": "2023-08-13T08:40:49+02:00",
+      "date_stopped": null,
+      "date_applied": "2023-08-13T08:17:59+02:00"
+    }
+  ],
+  "requires_login": false,
+  "other_active_name": "Redeliste zu A4",
+  "current_time": 1691908853506
+}

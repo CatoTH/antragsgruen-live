@@ -15,7 +15,7 @@ public record MQSpeechQueue(
         MQSpeechSubqueue[] subqueues,
         MQSpeechQueueActiveSlot[] slots,
         boolean requiresLogin,
-        String otherActiveName,
+        MQLocalizedText otherActiveName,
         BigInteger currentTime
 ) {
     /*
@@ -29,7 +29,7 @@ public record MQSpeechQueue(
             MQSpeechSubqueue[] subqueues,
             MQSpeechQueueActiveSlot[] slots,
             @JsonAlias("requiresLogin") boolean requiresLogin,
-            @JsonAlias("otherActiveName") String otherActiveName,
+            @JsonAlias("otherActiveName") MQLocalizedText otherActiveName,
             @JsonAlias("currentTime") BigInteger currentTime
     ) {
         this.id = id;

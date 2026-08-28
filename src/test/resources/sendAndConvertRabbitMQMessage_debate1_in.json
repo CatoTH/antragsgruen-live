@@ -3,10 +3,16 @@
     "id": 7,
     "target_type": "motion",
     "target_id": 115,
-    "title": "Listen-Test",
+    "title": {
+      "de": "Listen-Test"
+    },
     "date_started": "2026-08-03T00:51:49+00:00",
-    "title_with_prefix": "A6: Listen-Test",
-    "initiators_html": "Testuser",
+    "title_with_prefix": {
+      "de": "A6: Listen-Test"
+    },
+    "initiators_html": {
+      "de": "Testuser"
+    },
     "url_json": "http:\/\/stdparteitag.antragsgruen.test\/rest\/std-parteitag\/motion\/115",
     "url_html": "http:\/\/stdparteitag.antragsgruen.test\/std-parteitag\/motion\/115",
     "speech_queue": null,

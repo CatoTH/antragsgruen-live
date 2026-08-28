@@ -8,6 +8,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,13 +38,26 @@ public class StompRabbitMQTestHelper {
     }
 
     public void sendFileContentToRabbitMQ(String fileName, String routingKey) throws IOException {
+        this.sendFileContentToRabbitMQ(fileName, routingKey, null);
+    }
+
+    /**
+     * @param defaultLanguage the language to deliver to users whose own language the event does not
+     *                        contain, sent as a message header by Antragsgrün >= 4.18
+     */
+    public void sendFileContentToRabbitMQ(String fileName, String routingKey, @Nullable String defaultLanguage) throws IOException {
         Path path = Path.of("", "src/test/resources");
         String jsonIn = Files.readString(path.resolve(fileName));
 
         // Use the exact JSON that Antragsgrün sends
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> message = mapper.readValue(jsonIn, new TypeReference<>(){});
-        this.template.convertAndSend(exchangeName, routingKey, message);
+        this.template.convertAndSend(exchangeName, routingKey, message, amqpMessage -> {
+            if (defaultLanguage != null) {
+                amqpMessage.getMessageProperties().setHeader("default_language", defaultLanguage);
+            }
+            return amqpMessage;
+        });
     }
 
     public void expectStompToSendFileContent(StompTestConnection session, String fileName) throws IOException
