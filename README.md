@@ -15,7 +15,6 @@ Users are connecting to the Live Server via Websocket/STOMP when using an intera
   - The installation ID, as the Issuer of the token.  
   - The ID of the user as Subject of the token. If the user is logged in, it has the shape of `login-123`. If not, a session-token like `anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN` will be used.
   - If the user has specific admin privileges (like to administer speech queues), a role is added to the payload. Currently, only ROLE_SPEECH_ADMIN is supported.
-  - The language the user is reading Antragsgrün in, as `language` in the payload (see "Reader languages" below). This is not used for authorization.
   - The site and consultation the token is valid for, as the payload of the token.
 - We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
   - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
@@ -43,26 +42,28 @@ The following routing key patterns are fixed, while its associated queues can be
 
 ## Reader languages
 
-An event is published once per consultation, but delivered to users who may be reading Antragsgrün in different languages. Antragsgrün therefore sends every language the consultation is held in for those strings that depend on the reader (a motion title, the title of a speaking list, …), and this server delivers each user the one matching the `language` claim of their JWT:
+An event is published once per consultation, but delivered to users who may be reading Antragsgrün in different languages. Antragsgrün therefore sends every language the consultation is held in for those strings that depend on the reader (a motion title, the title of a speaking list, …), and this server delivers each subscriber the one named by the topic they subscribed to:
 
 ```json
 {"current": {"title": {"de": "Testantrag", "en": "Test motion"}, "…": "…"}}
 ```
 
-The websocket payload contains a plain string again, so it stays identical to what the polling HTTP endpoint returns. Users whose language an event does not contain - or who did not state one - are served the language given in the message's `default_language` header. See [MQLocalizedText](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQLocalizedText.java).
+The websocket payload contains a plain string again, so it stays identical to what the polling HTTP endpoint returns. Subscribers whose language an event does not contain - or who did not name one in their topic - are served the language given in the message's `default_language` header. See [MQLocalizedText](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQLocalizedText.java).
 
-Antragsgrün <= 4.17 sends plain strings and no `default_language` header; such messages keep working unchanged.
+Antragsgrün <= 4.17 sends plain strings and no `default_language` header, and subscribes to topics without a language; such messages and clients keep working unchanged.
 
-Hint: messages are addressed to a user, not to a single connection, so a user reading the same consultation in two languages at once (two browser tabs) is served one language in both.
+The language is part of the topic rather than of the JWT because a JWT identifies a person, while one person can read the same consultation in two browser tabs in two languages. Messages are addressed to topics: both tabs share a user ID, and the user registry only keeps the principal of whichever of their connections registered first, so a language taken from the token would serve both tabs the same one.
 
 In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead`, `antragsgruen-queue-debate-dead` and `antragsgruen-queue-user-dead`.
 
 ## Exposed Websocket STOMP Topics
 
-- `/user/[installationid]/[subdomain]/[consultation]/[userid]/debate`
-- `/user/[installationid]/[subdomain]/[consultation]/[userid]/speech`
-- `/admin/[installationid]/[subdomain]/[consultation]/[userid]/speech`
+- `/user/[installationid]/[subdomain]/[consultation]/[userid]/debate/[language]`
+- `/user/[installationid]/[subdomain]/[consultation]/[userid]/speech/[language]`
+- `/admin/[installationid]/[subdomain]/[consultation]/[userid]/speech/[language]`
 - `/topic/[installationid]/[subdomain]/[consultation]/[...]` (currently not used)
+
+The language is the last part of a topic and may be omitted (Antragsgrün <= 4.17 subscribes without it). It selects a wording, not access to data, and is therefore not authorized - any language may be asked for. See "Reader languages" above.
 
 
 ## Installing, Running, Configuration

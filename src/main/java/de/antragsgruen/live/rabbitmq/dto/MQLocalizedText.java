@@ -17,10 +17,10 @@ import java.util.Map;
  * <p>
  * An event is published once for the whole consultation, but delivered to users who may be reading
  * it in different languages. Antragsgrün therefore sends every language of the consultation and this
- * server picks the one matching each subscriber (from the "language" claim of their JWT), falling
- * back to the message's default language.
+ * server picks the one matching each subscriber - the language being the last part of the
+ * destination they subscribed to - falling back to the message's default language.
  * <p>
- * Antragsgrün &lt;= 4.17 sends a plain string instead of an object, which is why both shapes are
+ * Antragsgrün <= 4.17 sends a plain string instead of an object, which is why both shapes are
  * accepted here.
  */
 @JsonDeserialize(using = MQLocalizedText.Deserializer.class)

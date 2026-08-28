@@ -24,12 +24,13 @@ public final class DebateHandler extends LiveHandlerBase {
     public void onDebateEvent(ConsultationScope scope, MQDebateState mqQueue, @Nullable String defaultLanguage) {
         Collection<Subscriber> subscribers = findRelevantSubscribers(userRegistry, scope, Sender.ROLE_USER, Sender.USER_CHANNEL_DEBATE);
 
-        log.info("Sending debate user event to " + subscribers.size() + " (out of " + userRegistry.getUserCount() + ") user(s)");
+        log.info("Sending debate user event to " + subscribers.size() + " subscription(s) of " + userRegistry.getUserCount() + " user(s)");
 
         for (Subscriber subscriber : subscribers) {
+            log.info("Language: " + subscriber.language());
             WSDebateState wsState = DebateMapper.convertState(mqQueue, subscriber.language(), defaultLanguage);
 
-            sender.sendToUser(scope, subscriber.userId(), Sender.ROLE_USER, Sender.USER_CHANNEL_DEBATE, wsState);
+            sender.sendToUser(scope, subscriber.userId(), subscriber.language(), Sender.ROLE_USER, Sender.USER_CHANNEL_DEBATE, wsState);
         }
     }
 }

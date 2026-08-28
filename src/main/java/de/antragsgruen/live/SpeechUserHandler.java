@@ -24,12 +24,12 @@ public final class SpeechUserHandler extends LiveHandlerBase {
     public void onSpeechEvent(ConsultationScope scope, MQSpeechQueue mqQueue, @Nullable String defaultLanguage) {
         Collection<Subscriber> subscribers = findRelevantSubscribers(userRegistry, scope, Sender.ROLE_USER, Sender.USER_CHANNEL_SPEECH);
 
-        log.info("Sending speech user event to " + subscribers.size() + " (out of " + userRegistry.getUserCount() + ") user(s)");
+        log.info("Sending speech user event to " + subscribers.size() + " subscription(s) of " + userRegistry.getUserCount() + " user(s)");
 
         for (Subscriber subscriber : subscribers) {
             WSSpeechQueueUser wsQueue = SpeechUserMapper.convertQueue(mqQueue, subscriber.userId(), subscriber.language(), defaultLanguage);
 
-            sender.sendToUser(scope, subscriber.userId(), Sender.ROLE_USER, Sender.USER_CHANNEL_SPEECH, wsQueue);
+            sender.sendToUser(scope, subscriber.userId(), subscriber.language(), Sender.ROLE_USER, Sender.USER_CHANNEL_SPEECH, wsQueue);
         }
     }
 }

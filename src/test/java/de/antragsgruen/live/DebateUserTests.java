@@ -24,7 +24,7 @@ class DebateUserTests {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
         stompConnection.connectAndWait("installation", "site", "con", "login-1", null);
-        stompConnection.subscribe("/user/installation/site/con/login-1/debate");
+        stompConnection.subscribe("/user/installation/site/con/login-1/debate/de");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_debate1_in.json", "debate.installation.site.con");
         testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_debate1_user_out.json");
@@ -39,29 +39,26 @@ class DebateUserTests {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
         stompConnection.connectAndWait("installation", "site", "con", "login-1", null);
-        stompConnection.subscribe("/user/installation/site/con/login-1/debate");
+        stompConnection.subscribe("/user/installation/site/con/login-1/debate/de");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_debate2_in.json", "debate.installation.site.con", "de");
         testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_debate2_user_out.json");
     }
 
     /**
-     * Hint on the user IDs: connections are never closed and the Spring context is shared by all
-     * tests, so a user whose language is stated here must not be used by any other test - the user
-     * registry keeps the principal of the session that connected first.
-     *
      * An event of a multi-language consultation carries every language it is held in; each user gets
-     * the one they are reading Antragsgrün in, as stated by their JWT.
+     * the one they are reading Antragsgrün in, as stated by the destination they subscribed to.
+     * The two readers here are one person with two browser tabs open in two languages.
      */
     @Test
     public void sendAndConvertRabbitMQMessage_debate3_readerLanguage() throws IOException {
         StompTestConnection germanReader = testHelper.getStompConnection(port);
-        germanReader.connectAndWait("installation", "site", "con", "login-101", null, "de");
-        germanReader.subscribe("/user/installation/site/con/login-101/debate");
+        germanReader.connectAndWait("installation", "site", "con", "login-101", null);
+        germanReader.subscribe("/user/installation/site/con/login-101/debate/de");
 
         StompTestConnection englishReader = testHelper.getStompConnection(port);
-        englishReader.connectAndWait("installation", "site", "con", "login-102", null, "en");
-        englishReader.subscribe("/user/installation/site/con/login-102/debate");
+        englishReader.connectAndWait("installation", "site", "con", "login-101", null);
+        englishReader.subscribe("/user/installation/site/con/login-101/debate/en");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_debate3_in.json", "debate.installation.site.con", "de");
 
@@ -70,16 +67,22 @@ class DebateUserTests {
     }
 
     /**
-     * A user whose language the event does not contain - or who did not state one at all - gets the
-     * message's default language.
+     * A user whose language the event does not contain - or whose client did not state one at all
+     * (Antragsgrün <= 4.17) - gets the message's default language.
      */
     @Test
     public void sendAndConvertRabbitMQMessage_debate3_fallsBackToDefaultLanguage() throws IOException {
         StompTestConnection frenchReader = testHelper.getStompConnection(port);
-        frenchReader.connectAndWait("installation", "site", "con", "login-103", null, "fr");
-        frenchReader.subscribe("/user/installation/site/con/login-103/debate");
+        frenchReader.connectAndWait("installation", "site", "con", "login-103", null);
+        frenchReader.subscribe("/user/installation/site/con/login-103/debate/fr");
+
+        StompTestConnection unstatedReader = testHelper.getStompConnection(port);
+        unstatedReader.connectAndWait("installation", "site", "con", "login-104", null);
+        unstatedReader.subscribe("/user/installation/site/con/login-104/debate");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_debate3_in.json", "debate.installation.site.con", "en");
+
         testHelper.expectStompToSendFileContent(frenchReader, "sendAndConvertRabbitMQMessage_debate3_user_en_out.json");
+        testHelper.expectStompToSendFileContent(unstatedReader, "sendAndConvertRabbitMQMessage_debate3_user_en_out.json");
     }
 }

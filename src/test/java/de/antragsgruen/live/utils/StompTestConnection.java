@@ -62,7 +62,7 @@ public class StompTestConnection {
         return (RSAPrivateKey) kf.generatePrivate(keySpec);
     }
 
-    private String generateJwt(String installation, String site, String consultation, String userId, @Nullable List<String> roles, @Nullable String language) {
+    private String generateJwt(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
         RSAPrivateKey privateKey;
         try {
             privateKey = this.getJwtPrivateKey();
@@ -76,9 +76,6 @@ public class StompTestConnection {
 
         if (roles != null) {
             payload.put("roles", roles);
-        }
-        if (language != null) {
-            payload.put("language", language);
         }
 
         Date now = new Date();
@@ -104,15 +101,11 @@ public class StompTestConnection {
         return signedJwt.serialize();
     }
 
-    public FutureTask<StompSession> connect(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
-        return this.connect(installation, site, consultation, userId, roles, null);
-    }
-
     /**
-     * @param language the language the user is reading Antragsgrün in, as the web frontend states it
-     *                 in the JWT
+     * Hint: the language a user reads in is not part of the token - it is the last part of the
+     * destination they subscribe to, so that two connections of one user can read in two languages.
      */
-    public FutureTask<StompSession> connect(String installation, String site, String consultation, String userId, @Nullable List<String> roles, @Nullable String language) {
+    public FutureTask<StompSession> connect(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
         stompClient = new WebSocketStompClient(webSocketClient);
         stompClient.setMessageConverter(new JacksonJsonMessageConverter());
@@ -121,7 +114,7 @@ public class StompTestConnection {
         WebSocketHttpHeaders handshakeHeaders = new WebSocketHttpHeaders();
 
         StompHeaders headers = new StompHeaders();
-        headers.set("jwt", generateJwt(installation, site, consultation, userId, roles, language));
+        headers.set("jwt", generateJwt(installation, site, consultation, userId, roles));
         headers.set("installation", installation);
 
         StompTestSessionHandler sessionHandler = new StompTestSessionHandler();
@@ -132,12 +125,8 @@ public class StompTestConnection {
     }
 
     public void connectAndWait(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
-        this.connectAndWait(installation, site, consultation, userId, roles, null);
-    }
-
-    public void connectAndWait(String installation, String site, String consultation, String userId, @Nullable List<String> roles, @Nullable String language) {
         try {
-            this.stompSession = this.connect(installation, site, consultation, userId, roles, language).get(5, TimeUnit.SECONDS);
+            this.stompSession = this.connect(installation, site, consultation, userId, roles).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {

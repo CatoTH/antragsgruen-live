@@ -32,7 +32,7 @@ class SpeechAdminTests {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
         stompConnection.connectAndWait("installation", "site", "con", "login-1", getRoles("WRONG_ROLE"));
-        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/admin/installation/site/con/login-1/speech");
+        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/admin/installation/site/con/login-1/speech/de");
         try {
             String message = onError.get(5, TimeUnit.SECONDS);
             assertThat(message).isEqualTo("Forbidden to subscribe to this destination");
@@ -46,7 +46,7 @@ class SpeechAdminTests {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
         stompConnection.connectAndWait("installation", "site", "con", "login-1", getRoles("ROLE_SPEECH_ADMIN"));
-        stompConnection.subscribe("/admin/installation/site/con/login-1/speech");
+        stompConnection.subscribe("/admin/installation/site/con/login-1/speech/de");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in.json", "speech.installation.site.con");
         testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_admin_out.json");
@@ -57,30 +57,27 @@ class SpeechAdminTests {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
         stompConnection.connectAndWait("installation", "site", "con", "login-1", getRoles("ROLE_SPEECH_ADMIN"));
-        stompConnection.subscribe("/admin/installation/site/con/login-1/speech");
+        stompConnection.subscribe("/admin/installation/site/con/login-1/speech/de");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech1_in_4.16.json", "speech.installation.site.con");
         testHelper.expectStompToSendFileContent(stompConnection, "sendAndConvertRabbitMQMessage_speech1_admin_out.json");
     }
 
     /**
-     * Hint on the user IDs: connections are never closed and the Spring context is shared by all
-     * tests, so a user whose language is stated here must not be used by any other test - the user
-     * registry keeps the principal of the session that connected first.
-     *
      * The speaking list has one reader-dependent string so far - the name of the list that would be
      * deactivated by activating this one. Antragsgrün sends every language of the consultation and
-     * each moderator gets the one they are reading it in.
+     * each moderator gets the one they are reading it in - including one moderator with two browser
+     * tabs open in two languages, which is what these two connections of one user ID are.
      */
     @Test
     public void sendAndConvertRabbitMQMessage_speech4_readerLanguage() throws IOException {
         StompTestConnection germanAdmin = testHelper.getStompConnection(port);
-        germanAdmin.connectAndWait("installation", "site", "con", "login-111", getRoles("ROLE_SPEECH_ADMIN"), "de");
-        germanAdmin.subscribe("/admin/installation/site/con/login-111/speech");
+        germanAdmin.connectAndWait("installation", "site", "con", "login-111", getRoles("ROLE_SPEECH_ADMIN"));
+        germanAdmin.subscribe("/admin/installation/site/con/login-111/speech/de");
 
         StompTestConnection englishAdmin = testHelper.getStompConnection(port);
-        englishAdmin.connectAndWait("installation", "site", "con", "login-112", getRoles("ROLE_SPEECH_ADMIN"), "en");
-        englishAdmin.subscribe("/admin/installation/site/con/login-112/speech");
+        englishAdmin.connectAndWait("installation", "site", "con", "login-111", getRoles("ROLE_SPEECH_ADMIN"));
+        englishAdmin.subscribe("/admin/installation/site/con/login-111/speech/en");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech4_in.json", "speech.installation.site.con", "de");
 
@@ -95,8 +92,8 @@ class SpeechAdminTests {
     @Test
     public void sendAndConvertRabbitMQMessage_speech4_v4_17() throws IOException {
         StompTestConnection englishAdmin = testHelper.getStompConnection(port);
-        englishAdmin.connectAndWait("installation", "site", "con", "login-113", getRoles("ROLE_SPEECH_ADMIN"), "en");
-        englishAdmin.subscribe("/admin/installation/site/con/login-113/speech");
+        englishAdmin.connectAndWait("installation", "site", "con", "login-113", getRoles("ROLE_SPEECH_ADMIN"));
+        englishAdmin.subscribe("/admin/installation/site/con/login-113/speech/en");
 
         testHelper.sendFileContentToRabbitMQ("sendAndConvertRabbitMQMessage_speech4_in_4.17.json", "speech.installation.site.con");
         testHelper.expectStompToSendFileContent(englishAdmin, "sendAndConvertRabbitMQMessage_speech4_admin_de_out.json");

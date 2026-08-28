@@ -30,7 +30,7 @@ class AuthenticationErrorTests {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
         stompConnection.connectAndWait("installation", "site", "con", "login-1", null);
-        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/installation/site/othercon/login-1/speech");
+        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/installation/site/othercon/login-1/speech/de");
         try {
             String message = onError.get(5, TimeUnit.SECONDS);
             assertThat(message).isEqualTo("Forbidden to subscribe to this destination");
@@ -44,7 +44,7 @@ class AuthenticationErrorTests {
         StompTestConnection stompConnection = testHelper.getStompConnection(port);
 
         stompConnection.connectAndWait("installation", "site", "con", "login-2", null);
-        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/installation/site/con/login-1/speech");
+        FutureTask<String> onError = stompConnection.subscribeAndExpectError("/user/installation/site/con/login-1/speech/de");
         try {
             String message = onError.get(5, TimeUnit.SECONDS);
             assertThat(message).isEqualTo("Forbidden to subscribe to this destination");

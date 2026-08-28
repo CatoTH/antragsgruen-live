@@ -14,13 +14,17 @@ import java.util.Map;
 public class TopicPermissionChecker {
     private static final String ROLE_SPEECH_ADMIN = "ROLE_SPEECH_ADMIN";
 
-    public static final int USER_PARTS_LENGTH = 7; // Also used for /admin/ topics
+    // Also used for /admin/ topics. The language is the last part and may be missing: Antragsgrün
+    // <= 4.17 subscribes without it.
+    public static final int USER_PARTS_LENGTH = 7;
+    public static final int USER_PARTS_LENGTH_WITH_LANGUAGE = 8;
     public static final int USER_PART_ROLE = 1;
     public static final int USER_PART_INSTALLATION = 2;
     public static final int USER_PART_SITE = 3;
     public static final int USER_PART_CONSULTATION = 4;
     public static final int USER_PART_USER = 5;
     public static final int USER_PART_MODULE = 6;
+    public static final int USER_PART_LANGUAGE = 7;
 
     public static final int TOPIC_PARTS_LENGTH = 6;
     public static final int TOPIC_PART_TOPIC = 1;
@@ -30,9 +34,14 @@ public class TopicPermissionChecker {
 
     /**
      * Supported destination patterns:
-     * - /user/[installation]/[subdomain]/[consultation]/[userid]/speech
-     * - /admin/[installation]/[subdomain]/[consultation]/[userid]/speech
+     * - /user/[installation]/[subdomain]/[consultation]/[userid]/speech/[language]
+     * - /admin/[installation]/[subdomain]/[consultation]/[userid]/speech/[language]
      * - /topic/[installation]/[subdomain]/[consultation]/[...]
+     * <p>
+     * The language selects which wording of an event this subscription is delivered, and is not
+     * authorized: any language may be asked for. It is part of the destination rather than of the
+     * JWT because the JWT identifies a person, while one person can read the same consultation in
+     * two browser tabs in two languages - and events are addressed to destinations, not to people.
      */
     public boolean canSubscribeToDestination(JwtAuthenticationToken jwtToken, @Nullable String destination) {
         if (destination == null) {
@@ -47,10 +56,10 @@ public class TopicPermissionChecker {
         ConsultationScope scope = TopicPermissionChecker.consultationScopeFromPathParts(pathParts);
 
         boolean additionalPermissionsPassed = true;
-        if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+        if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && isUserDestination(pathParts)) {
             additionalPermissionsPassed = pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
-        if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+        if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && isUserDestination(pathParts)) {
             additionalPermissionsPassed = jwtHasRoleForTopic(jwtToken, pathParts[USER_PART_MODULE])
                     && pathParts[USER_PART_USER].equals(jwtToken.getName());
         }
@@ -62,13 +71,22 @@ public class TopicPermissionChecker {
         if ("topic".equals(pathParts[TOPIC_PART_TOPIC]) && pathParts.length == TOPIC_PARTS_LENGTH) {
             return new ConsultationScope(pathParts[TOPIC_PART_INSTALLATION], pathParts[TOPIC_PART_SITE], pathParts[TOPIC_PART_CONSULTATION]);
         }
-        if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+        if (Sender.ROLE_USER.equals(pathParts[USER_PART_ROLE]) && isUserDestination(pathParts)) {
             return new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
         }
-        if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && pathParts.length == USER_PARTS_LENGTH) {
+        if (Sender.ROLE_ADMIN.equals(pathParts[USER_PART_ROLE]) && isUserDestination(pathParts)) {
             return new ConsultationScope(pathParts[USER_PART_INSTALLATION], pathParts[USER_PART_SITE], pathParts[USER_PART_CONSULTATION]);
         }
         return null;
+    }
+
+    /** A destination addressing one subscriber, with or without the language they read in */
+    public static boolean isUserDestination(String[] pathParts) {
+        return pathParts.length == USER_PARTS_LENGTH || pathParts.length == USER_PARTS_LENGTH_WITH_LANGUAGE;
+    }
+
+    public static @Nullable String languageFromPathParts(String[] pathParts) {
+        return pathParts.length == USER_PARTS_LENGTH_WITH_LANGUAGE ? pathParts[USER_PART_LANGUAGE] : null;
     }
 
     private boolean jwtIsForCorrectConsultation(JwtAuthenticationToken jwtToken, ConsultationScope scope) {
