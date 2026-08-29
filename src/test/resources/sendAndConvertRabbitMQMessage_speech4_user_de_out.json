@@ -1,0 +1,87 @@
+{
+  "id": 1,
+  "is_active": true,
+  "is_open": true,
+  "have_applied": false,
+  "allow_custom_names": true,
+  "is_open_poo": true,
+  "subqueues": [
+    {
+      "id": 1,
+      "name": "Frauen",
+      "num_applied": 1,
+      "have_applied": false,
+      "applied": [
+        {
+          "id": 8,
+          "name": "Application 3",
+          "is_point_of_order": false,
+          "applied_at": "2023-08-13T06:40:46.000Z"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Offen / Männer",
+      "num_applied": 2,
+      "have_applied": false,
+      "applied": [
+        {
+          "id": 5,
+          "name": "[[GO-Antrag]] GO-Antrag (m)",
+          "is_point_of_order": true,
+          "applied_at": "2023-08-13T06:17:02.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Testadmin (m)",
+          "is_point_of_order": false,
+          "applied_at": "2023-08-13T06:04:14.000Z"
+        }
+      ]
+    },
+    {
+      "id": -1,
+      "name": "default",
+      "num_applied": 1,
+      "have_applied": false,
+      "applied": [
+        {
+          "id": 1,
+          "name": "Test",
+          "is_point_of_order": false,
+          "applied_at": "2023-08-12T20:45:15.000Z"
+        }
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "id": 6,
+      "subqueue": {
+        "id": 1,
+        "name": "Frauen"
+      },
+      "name": "Application 1",
+      "position": 2,
+      "date_started": "2023-08-13T06:18:55.000Z",
+      "date_stopped": "2023-08-13T06:40:49.000Z",
+      "date_applied": "2023-08-13T06:17:18.000Z"
+    },
+    {
+      "id": 7,
+      "subqueue": {
+        "id": 1,
+        "name": "Frauen"
+      },
+      "name": "Application 2",
+      "position": 3,
+      "date_started": "2023-08-13T06:40:49.000Z",
+      "date_stopped": null,
+      "date_applied": "2023-08-13T06:17:59.000Z"
+    }
+  ],
+  "requires_login": false,
+  "current_time": 1691908853506,
+  "speaking_time": 120
+}

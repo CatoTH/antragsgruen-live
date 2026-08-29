@@ -8,8 +8,11 @@ import de.antragsgruen.live.websocket.dto.WSSpeechQueueAdmin;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -18,15 +21,15 @@ public final class SpeechAdminHandler extends LiveHandlerBase {
     private @NonNull Sender sender;
     private @NonNull SimpUserRegistry userRegistry;
 
-    public void onSpeechEvent(ConsultationScope scope, MQSpeechQueue mqQueue) {
-        String[] users = findRelevantUserIds(userRegistry, scope, Sender.ROLE_ADMIN, Sender.USER_CHANNEL_SPEECH);
+    public void onSpeechEvent(ConsultationScope scope, MQSpeechQueue mqQueue, @Nullable String defaultLanguage) {
+        Collection<Subscriber> subscribers = findRelevantSubscribers(userRegistry, scope, Sender.ROLE_ADMIN, Sender.USER_CHANNEL_SPEECH);
 
-        log.info("Sending speech admin event to " + users.length + " (out of " + userRegistry.getUserCount() + ") user(s)");
+        log.info("Sending speech admin event to " + subscribers.size() + " subscription(s) of " + userRegistry.getUserCount() + " user(s)");
 
-        for (String userId : users) {
-            WSSpeechQueueAdmin wsQueue = SpeechAdminMapper.convertQueue(mqQueue);
+        for (Subscriber subscriber : subscribers) {
+            WSSpeechQueueAdmin wsQueue = SpeechAdminMapper.convertQueue(mqQueue, subscriber.language(), defaultLanguage);
 
-            sender.sendToUser(scope, userId, Sender.ROLE_ADMIN, Sender.USER_CHANNEL_SPEECH, wsQueue);
+            sender.sendToUser(scope, subscriber.userId(), subscriber.language(), Sender.ROLE_ADMIN, Sender.USER_CHANNEL_SPEECH, wsQueue);
         }
     }
 }

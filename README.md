@@ -38,14 +38,32 @@ The central Antragsgrün system publishes all its messages to one central exchan
 The following routing key patterns are fixed, while its associated queues can be configured:
 - `user.[installationid].[site].[consultation].[userid]`, e.g. `user.localdev.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [MQUserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQUserEvent.java)-DTO for deserialization.
 - `speech.[installationid].[site].[consultation]`, e.g. `speech.localdev.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [MQSpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQSpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version.
+- `debate.[installationid].[site].[consultation]`, e.g. `debate.localdev.stdparteitag.std-parteitag` contains messages updating the debate state, by default being bound to the queue `antragsgruen-debate-queue` and using the [MQDebateState](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQDebateState.java)-DTO for deserialization.
 
-In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead` and `antragsgruen-queue-user-dead`.
+## Reader languages
+
+An event is published once per consultation, but delivered to users who may be reading Antragsgrün in different languages. Antragsgrün therefore sends every language the consultation is held in for those strings that depend on the reader (a motion title, the title of a speaking list, …), and this server delivers each subscriber the one named by the topic they subscribed to:
+
+```json
+{"current": {"title": {"de": "Testantrag", "en": "Test motion"}, "…": "…"}}
+```
+
+The websocket payload contains a plain string again, so it stays identical to what the polling HTTP endpoint returns. Subscribers whose language an event does not contain - or who did not name one in their topic - are served the language given in the message's `default_language` header. See [MQLocalizedText](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQLocalizedText.java).
+
+Antragsgrün <= 4.17 sends plain strings and no `default_language` header, and subscribes to topics without a language; such messages and clients keep working unchanged.
+
+The language is part of the topic rather than of the JWT because a JWT identifies a person, while one person can read the same consultation in two browser tabs in two languages. Messages are addressed to topics: both tabs share a user ID, and the user registry only keeps the principal of whichever of their connections registered first, so a language taken from the token would serve both tabs the same one.
+
+In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead`, `antragsgruen-queue-debate-dead` and `antragsgruen-queue-user-dead`.
 
 ## Exposed Websocket STOMP Topics
 
-- `/user/[installationid]/[subdomain]/[consultation]/[userid]/speech`
-- `/admin/[installationid]/[subdomain]/[consultation]/[userid]/speech`
+- `/user/[installationid]/[subdomain]/[consultation]/[userid]/debate/[language]`
+- `/user/[installationid]/[subdomain]/[consultation]/[userid]/speech/[language]`
+- `/admin/[installationid]/[subdomain]/[consultation]/[userid]/speech/[language]`
 - `/topic/[installationid]/[subdomain]/[consultation]/[...]` (currently not used)
+
+The language is the last part of a topic and may be omitted (Antragsgrün <= 4.17 subscribes without it). It selects a wording, not access to data, and is therefore not authorized - any language may be asked for. See "Reader languages" above.
 
 
 ## Installing, Running, Configuration
@@ -91,13 +109,15 @@ The following aspects can be configured through environment variables, especiall
 It is also possible, though hardly ever necessary, to configure the following aspects of the RabbitMQ setup:
 
 | Environment Variable Name  | Default Value                  | Explanation                                              |
-| -------------------------- | ------------------------------ | -------------------------------------------------------- |
+|----------------------------|--------------------------------|----------------------------------------------------------|
 | RABBITMQ_EXCHANGE          | antragsgruen-exchange          | The exchange that Antragsgrün is supposed to publish to  |
 | RABBITMQ_EXCHANGE_DEAD     | antragsgruen-exchange-dead     | The exchange that failed messages are published to       |
 | RABBITMQ_QUEUE_USER        | antragsgruen-queue-user        | The queue for user-targeted messages                     |
 | RABBITMQ_QUEUE_USER_DEAD   | antragsgruen-queue-user-dead   | The dead letter queue for user-targeted messages         |
 | RABBITMQ_QUEUE_SPEECH      | antragsgruen-queue-speech      | The queue for speaking-list related messages             |
 | RABBITMQ_QUEUE_SPEECH_DEAD | antragsgruen-queue-speech-dead | The dead letter queue for speaking-list related messages |
+| RABBITMQ_QUEUE_DEBATE      | antragsgruen-queue-debate      | The queue for debae related messages                     |
+| RABBITMQ_QUEUE_DEBATE_DEAD | antragsgruen-queue-debate-dead | The dead letter queue for debate related messages        |
 
 ### Compiling for GraalVM
 

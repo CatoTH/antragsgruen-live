@@ -5,10 +5,12 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record MQUserEvent(
-        String username
+public record MQDebateItemSpeechQueue(
+        Integer id,
+        boolean isActive,
+        MQLocalizedText title
 ) {
     @JsonCreator
-    public MQUserEvent {
+    public MQDebateItemSpeechQueue {
     }
 }

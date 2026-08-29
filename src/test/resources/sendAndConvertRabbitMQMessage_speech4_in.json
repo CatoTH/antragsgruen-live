@@ -12,7 +12,10 @@
   "subqueues": [
     {
       "id": 1,
-      "name": "Frauen",
+      "name": {
+        "de": "Frauen",
+        "en": "Women"
+      },
       "items": [
         {
           "on_list": true,
@@ -54,7 +57,10 @@
     },
     {
       "id": 2,
-      "name": "Offen \/ M\u00e4nner",
+      "name": {
+        "de": "Offen / Männer",
+        "en": "Open / men"
+      },
       "items": [
         {
           "on_list": false,
@@ -84,7 +90,10 @@
     },
     {
       "id": -1,
-      "name": "default",
+      "name": {
+        "de": "default",
+        "en": "default"
+      },
       "items": [
         {
           "on_list": false,
@@ -105,7 +114,10 @@
     {
       "id": 6,
       "subqueue_id": 1,
-      "subqueue_name": "Frauen",
+      "subqueue_name": {
+        "de": "Frauen",
+        "en": "Women"
+      },
       "name": "Application 1",
       "user_id": null,
       "user_token": null,
@@ -117,7 +129,10 @@
     {
       "id": 7,
       "subqueue_id": 1,
-      "subqueue_name": "Frauen",
+      "subqueue_name": {
+        "de": "Frauen",
+        "en": "Women"
+      },
       "name": "Application 2",
       "user_id": null,
       "user_token": null,
@@ -128,6 +143,9 @@
     }
   ],
   "requires_login": false,
-  "other_active_name": null,
+  "other_active_name": {
+    "de": "Redeliste zu A4",
+    "en": "Speaking list for A4"
+  },
   "current_time": 1691908853506
 }

@@ -11,6 +11,8 @@ antragsgruen:
       user_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-user-dead}
       speech: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech}
       speech_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-speech-dead}
+      debate: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-debate}
+      debate_dead: ${RABBITMQ_QUEUE_SPEECH:antragsgruen-queue-test-debate-dead}
   installations:
     -
       id: installation

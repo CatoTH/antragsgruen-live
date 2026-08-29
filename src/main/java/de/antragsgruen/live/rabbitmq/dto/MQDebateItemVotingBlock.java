@@ -5,10 +5,12 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record MQUserEvent(
-        String username
+public record MQDebateItemVotingBlock(
+        Integer id,
+        Integer status,
+        String title
 ) {
     @JsonCreator
-    public MQUserEvent {
+    public MQDebateItemVotingBlock {
     }
 }

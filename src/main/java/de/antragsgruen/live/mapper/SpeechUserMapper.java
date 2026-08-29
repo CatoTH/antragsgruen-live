@@ -8,6 +8,7 @@ import de.antragsgruen.live.websocket.dto.WSSpeechActiveSlot;
 import de.antragsgruen.live.websocket.dto.WSSpeechQueueUser;
 import de.antragsgruen.live.websocket.dto.WSSpeechSubqueueUser;
 import de.antragsgruen.live.websocket.dto.WSSpeechSubqueueUserItem;
+import org.springframework.lang.Nullable;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -17,16 +18,20 @@ public final class SpeechUserMapper {
         throw new UnsupportedOperationException();
     }
 
-    public static WSSpeechQueueUser convertQueue(MQSpeechQueue queue, String userId) {
+    /**
+     * @param language the language the receiving user is reading Antragsgrün in
+     * @param defaultLanguage the language to fall back to, as stated by the message
+     */
+    public static WSSpeechQueueUser convertQueue(MQSpeechQueue queue, String userId, @Nullable String language, @Nullable String defaultLanguage) {
         WSSpeechSubqueueUser[] wsSubqueues = Stream
                 .of(queue.subqueues())
-                .map(subqueue -> convertSubqueue(subqueue, userId, queue.settings().showNames()))
+                .map(subqueue -> convertSubqueue(subqueue, userId, queue.settings().showNames(), language, defaultLanguage))
                 .toArray(WSSpeechSubqueueUser[]::new);
 
         WSSpeechActiveSlot[] wsActiveSlots = Stream
                 .of(queue.slots())
                 .filter(slot -> slot.dateStarted() != null)
-                .map(SpeechUserMapper::convertActiveSlot)
+                .map(slot -> convertActiveSlot(slot, language, defaultLanguage))
                 .toArray(WSSpeechActiveSlot[]::new);
 
         boolean haveApplied = Stream.of(wsSubqueues).anyMatch(WSSpeechSubqueueUser::haveApplied);
@@ -46,7 +51,13 @@ public final class SpeechUserMapper {
         );
     }
 
-    private static WSSpeechSubqueueUser convertSubqueue(MQSpeechSubqueue subqueue, String userId, boolean showNames) {
+    private static WSSpeechSubqueueUser convertSubqueue(
+            MQSpeechSubqueue subqueue,
+            String userId,
+            boolean showNames,
+            @Nullable String language,
+            @Nullable String defaultLanguage
+    ) {
         boolean haveApplied = false;
         int numApplied = 0;
 
@@ -73,7 +84,7 @@ public final class SpeechUserMapper {
 
         return new WSSpeechSubqueueUser(
                 subqueue.id(),
-                subqueue.name(),
+                subqueue.name().resolve(language, defaultLanguage),
                 numApplied,
                 haveApplied,
                 items
@@ -89,11 +100,15 @@ public final class SpeechUserMapper {
         );
     }
 
-    private static WSSpeechActiveSlot convertActiveSlot(MQSpeechQueueActiveSlot activeSlot) {
+    private static WSSpeechActiveSlot convertActiveSlot(
+            MQSpeechQueueActiveSlot activeSlot,
+            @Nullable String language,
+            @Nullable String defaultLanguage
+    ) {
         return new WSSpeechActiveSlot(
                 activeSlot.id(),
                 activeSlot.subqueueId(),
-                activeSlot.subqueueName(),
+                activeSlot.subqueueName().resolve(language, defaultLanguage),
                 activeSlot.name(),
                 activeSlot.position(),
                 activeSlot.dateStarted(),

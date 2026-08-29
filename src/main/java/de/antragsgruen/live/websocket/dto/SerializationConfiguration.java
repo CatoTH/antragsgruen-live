@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Configuration;
 // Hint: this configuration is needed for GraalVM
 @Configuration("wsSerializationConfiguration")
 @RegisterReflectionForBinding({
+        WSDebateItem.class,
+        WSDebateItemSpeechQueue.class,
+        WSDebateItemVotingBlock.class,
+        WSDebateState.class,
         WSGreeting.class,
         WSHelloMessage.class,
         WSSpeechActiveSlot.class,

@@ -6,6 +6,11 @@ import org.springframework.context.annotation.Configuration;
 // Hint: this configuration is needed for GraalVM
 @Configuration("rabbitmqSerializationConfiguration")
 @RegisterReflectionForBinding({
+        MQDebateItem.class,
+        MQLocalizedText.class,
+        MQDebateItemSpeechQueue.class,
+        MQDebateItemVotingBlock.class,
+        MQDebateState.class,
         MQSpeechQueue.class,
         MQSpeechQueueActiveSlot.class,
         MQSpeechQueueSettings.class,

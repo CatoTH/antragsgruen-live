@@ -101,6 +101,10 @@ public class StompTestConnection {
         return signedJwt.serialize();
     }
 
+    /**
+     * Hint: the language a user reads in is not part of the token - it is the last part of the
+     * destination they subscribe to, so that two connections of one user can read in two languages.
+     */
     public FutureTask<StompSession> connect(String installation, String site, String consultation, String userId, @Nullable List<String> roles) {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
         stompClient = new WebSocketStompClient(webSocketClient);

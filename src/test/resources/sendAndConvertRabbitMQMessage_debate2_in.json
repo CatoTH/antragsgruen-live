@@ -1,0 +1,31 @@
+{
+  "current": {
+    "id": 17,
+    "target_type": "motion",
+    "target_id": 58,
+    "title": {
+      "de": "Testantrag"
+    },
+    "date_started": "2026-08-21T00:36:25+00:00",
+    "title_with_prefix": {
+      "de": "A4: Testantrag"
+    },
+    "initiators_html": {
+      "de": "Testuser"
+    },
+    "url_json": "http:\/\/stdparteitag.antragsgruen.test\/rest\/std-parteitag\/motion\/58",
+    "url_html": "http:\/\/stdparteitag.antragsgruen.test\/std-parteitag\/motion\/58",
+    "speech_queue": {
+      "id": 7,
+      "is_active": true,
+      "title": {
+        "de": "Redeliste zu A4"
+      }
+    },
+    "voting_block": {
+      "id": 3,
+      "status": 1,
+      "title": "Abstimmung zu A4"
+    }
+  }
+}

@@ -1,10 +1,9 @@
 package de.antragsgruen.live.rabbitmq;
 
-import de.antragsgruen.live.SpeechAdminHandler;
+import de.antragsgruen.live.DebateHandler;
 import de.antragsgruen.live.metrics.ReceivedRabbitMQMessagesMetric;
 import de.antragsgruen.live.multisite.ConsultationScope;
-import de.antragsgruen.live.rabbitmq.dto.MQSpeechQueue;
-import de.antragsgruen.live.SpeechUserHandler;
+import de.antragsgruen.live.rabbitmq.dto.MQDebateState;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public final class SpeechMessageReceiver {
+public final class DebateMessageReceiver {
     private static final int RK_PARTS_LENGTH = 4;
     private static final int RK_PART_TOPIC = 0;
     private static final int RK_PART_INSTALLATION = 1;
@@ -23,22 +22,21 @@ public final class SpeechMessageReceiver {
     private static final int RK_PART_CONSULTATION = 3;
     private static final String HEADER_DEFAULT_LANGUAGE = "default_language";
 
-    @NonNull private SpeechUserHandler speechUserHandler;
-    @NonNull private SpeechAdminHandler speechAdminHandler;
+    @NonNull private DebateHandler debateHandler;
     @NonNull private ReceivedRabbitMQMessagesMetric receivedRabbitMQMessagesMetric;
 
     /**
      * @param defaultLanguage the language to deliver to users whose own language the event does not
      *                        contain. Not sent by Antragsgrün <= 4.17.
      */
-    @RabbitListener(queues = {"${antragsgruen.rabbitmq.queue.speech}"})
+    @RabbitListener(queues = {"${antragsgruen.rabbitmq.queue.debate}"})
     public void receiveMessage(
-            MQSpeechQueue event,
+            MQDebateState event,
             @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey,
             @Header(name = HEADER_DEFAULT_LANGUAGE, required = false) String defaultLanguage
     ) {
         String[] routingKeyParts = routingKey.split("\\.");
-        if (routingKeyParts.length != RK_PARTS_LENGTH || !"speech".equals(routingKeyParts[RK_PART_TOPIC])) {
+        if (routingKeyParts.length != RK_PARTS_LENGTH || !"debate".equals(routingKeyParts[RK_PART_TOPIC])) {
             throw new AmqpRejectAndDontRequeueException("Invalid routing key: " + routingKey);
         }
 
@@ -49,7 +47,6 @@ public final class SpeechMessageReceiver {
         );
 
         receivedRabbitMQMessagesMetric.onSpeechEvent(scope);
-        speechUserHandler.onSpeechEvent(scope, event, defaultLanguage);
-        speechAdminHandler.onSpeechEvent(scope, event, defaultLanguage);
+        debateHandler.onDebateEvent(scope, event, defaultLanguage);
     }
 }
