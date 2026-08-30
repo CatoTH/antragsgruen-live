@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
         MQSpeechQueueSettings.class,
         MQSpeechSubqueue.class,
         MQSpeechSubqueueItem.class,
+        MQVotingEvent.class,
 })
 public class SerializationConfiguration {
 }

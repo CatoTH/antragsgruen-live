@@ -1,0 +1,249 @@
+{
+    "kind": "full",
+    "block_id": 1,
+    "languages": [
+        "de",
+        "en"
+    ],
+    "state_version": 1788117465805,
+    "current_time": 1788117465805,
+    "everyone": {
+        "id": 1,
+        "title": "Ä2 or Ä3",
+        "status": "open",
+        "current_time": 1788117465805,
+        "answers": [
+            {
+                "api_id": "yes",
+                "title": {
+                    "de": "Ja",
+                    "en": "Yes"
+                },
+                "result": "accepted"
+            },
+            {
+                "api_id": "no",
+                "title": {
+                    "de": "Nein",
+                    "en": "No"
+                },
+                "result": "rejected"
+            },
+            {
+                "api_id": "abstention",
+                "title": {
+                    "de": "Enthaltung",
+                    "en": "Abstention"
+                },
+                "result": null
+            }
+        ],
+        "has_majority": true,
+        "is_presence_call": false,
+        "publicity": {
+            "single_votes": "admins",
+            "results": "everybody"
+        },
+        "statistics": {
+            "votes": 2,
+            "voters": 2
+        },
+        "item_groups": [
+            {
+                "id": "single:amendment:3",
+                "items": [
+                    {
+                        "type": "amendment",
+                        "id": 3
+                    }
+                ],
+                "name": null,
+                "results": null,
+                "single_votes": null
+            }
+        ],
+        "items": [
+            {
+                "type": "amendment",
+                "id": 3,
+                "group_id": "single:amendment:3",
+                "title_with_prefix": {
+                    "de": "Ä2 zu A2: O’zapft is!",
+                    "en": "Am2 to A2: O’zapft is!"
+                },
+                "prefix": "Ä2",
+                "initiators_html": {
+                    "de": "Testadmin",
+                    "en": "Test admin"
+                },
+                "url_html": "http://test.antragsgruen.test/stdparteitag/std-parteitag/motion/321-o-zapft-is/amendment/3",
+                "url_json": "http://test.antragsgruen.test/stdparteitag/rest/std-parteitag/motion/321-o-zapft-is/amendment/3",
+                "procedure_html": {
+                    "de": "<p>Abstimmung</p>",
+                    "en": "<p>Vote</p>"
+                },
+                "result": null
+            }
+        ],
+        "assigned_motion_id": null,
+        "opened_at": 1788117465000,
+        "voting_time": null,
+        "quorum": null,
+        "abstention": {
+            "enabled": false,
+            "count": null,
+            "users": null
+        },
+        "policy": {
+            "id": 2,
+            "description": {
+                "de": "Eingeloggte",
+                "en": "Logged in users"
+            },
+            "user_groups": null
+        },
+        "user_groups": [
+            {
+                "id": 1,
+                "title": {
+                    "de": "Seiten-Admin",
+                    "en": "Site admin"
+                },
+                "member_count": 2
+            },
+            {
+                "id": 2,
+                "title": {
+                    "de": "Veranstaltungs-Admin",
+                    "en": "Consultation admin"
+                },
+                "member_count": 1
+            }
+        ]
+    },
+    "admin_only": {
+        "item_groups": [
+            {
+                "id": "single:amendment:3",
+                "items": [
+                    {
+                        "type": "amendment",
+                        "id": 3
+                    }
+                ],
+                "name": null,
+                "results": {
+                    "counts": [
+                        {
+                            "answers": [
+                                {
+                                    "answer": "yes",
+                                    "votes": 1
+                                },
+                                {
+                                    "answer": "no",
+                                    "votes": 1
+                                },
+                                {
+                                    "answer": "abstention",
+                                    "votes": 0
+                                }
+                            ],
+                            "organization": null
+                        }
+                    ],
+                    "quorum": null
+                },
+                "single_votes": [
+                    {
+                        "answer": "yes",
+                        "weight": 1,
+                        "voter": {
+                            "user_id": 2,
+                            "user_group_ids": [],
+                            "user_name": "testuser@example.org"
+                        }
+                    },
+                    {
+                        "answer": "no",
+                        "weight": 1,
+                        "voter": {
+                            "user_id": 5,
+                            "user_group_ids": [],
+                            "user_name": "fixeddata@example.org"
+                        }
+                    }
+                ]
+            }
+        ],
+        "settings": {
+            "votes_public": 1,
+            "results_public": 1,
+            "votes_names": 0,
+            "answers_template": 0,
+            "majority_type": 1,
+            "quorum_type": 0,
+            "voting_time": null,
+            "assigned_motion_id": null,
+            "policy": {
+                "id": 2,
+                "description": {
+                    "de": "Eingeloggte",
+                    "en": "Logged in users"
+                },
+                "user_groups": null
+            },
+            "max_votes_by_group": null
+        },
+        "log": [
+            {
+                "type": "opened",
+                "date": "2026-08-30T19:17:45+00:00"
+            }
+        ],
+        "editable": {
+            "items_can_be_added": false,
+            "items_can_be_removed": false,
+            "settings_can_be_changed": false
+        },
+        "eligibility": null
+    },
+    "default_user_state": {
+        "eligible": true,
+        "vote_weight": 1,
+        "abstained": false,
+        "votes": [],
+        "can_vote_group_ids": [
+            "single:amendment:3"
+        ],
+        "votes_remaining": null
+    },
+    "per_user": {
+        "login-2": {
+            "eligible": true,
+            "vote_weight": 1,
+            "abstained": false,
+            "votes": [
+                {
+                    "group_id": "single:amendment:3",
+                    "answer": "yes"
+                }
+            ],
+            "can_vote_group_ids": [],
+            "votes_remaining": null
+        },
+        "login-5": {
+            "eligible": true,
+            "vote_weight": 1,
+            "abstained": false,
+            "votes": [
+                {
+                    "group_id": "single:amendment:3",
+                    "answer": "no"
+                }
+            ],
+            "can_vote_group_ids": [],
+            "votes_remaining": null
+        }
+    }
+}
