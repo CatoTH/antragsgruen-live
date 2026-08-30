@@ -1,0 +1,91 @@
+{
+    "kind": "tally",
+    "block_id": 1,
+    "languages": [
+        "de",
+        "en"
+    ],
+    "state_version": 1788117465996,
+    "current_time": 1788117465996,
+    "everyone": {
+        "statistics": {
+            "votes": 2,
+            "voters": 2
+        },
+        "item_groups": [
+            {
+                "id": "single:amendment:3",
+                "items": [
+                    {
+                        "type": "amendment",
+                        "id": 3
+                    }
+                ],
+                "name": null,
+                "results": null,
+                "single_votes": null
+            }
+        ],
+        "abstention": {
+            "enabled": false,
+            "count": null,
+            "users": null
+        }
+    },
+    "admin_only": {
+        "item_groups": [
+            {
+                "id": "single:amendment:3",
+                "items": [
+                    {
+                        "type": "amendment",
+                        "id": 3
+                    }
+                ],
+                "name": null,
+                "results": {
+                    "counts": [
+                        {
+                            "answers": [
+                                {
+                                    "answer": "yes",
+                                    "votes": 1
+                                },
+                                {
+                                    "answer": "no",
+                                    "votes": 1
+                                },
+                                {
+                                    "answer": "abstention",
+                                    "votes": 0
+                                }
+                            ],
+                            "organization": null
+                        }
+                    ],
+                    "quorum": null
+                },
+                "single_votes": [
+                    {
+                        "answer": "yes",
+                        "weight": 1,
+                        "voter": {
+                            "user_id": 2,
+                            "user_group_ids": [],
+                            "user_name": "testuser@example.org"
+                        }
+                    },
+                    {
+                        "answer": "no",
+                        "weight": 1,
+                        "voter": {
+                            "user_id": 5,
+                            "user_group_ids": [],
+                            "user_name": "fixeddata@example.org"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

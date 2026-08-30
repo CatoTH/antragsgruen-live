@@ -1,0 +1,166 @@
+{
+    "id": 1,
+    "title": "Ä2 or Ä3",
+    "status": "open",
+    "current_time": 1788117465805,
+    "answers": [
+        {
+            "api_id": "yes",
+            "title": "Ja",
+            "result": "accepted"
+        },
+        {
+            "api_id": "no",
+            "title": "Nein",
+            "result": "rejected"
+        },
+        {
+            "api_id": "abstention",
+            "title": "Enthaltung",
+            "result": null
+        }
+    ],
+    "has_majority": true,
+    "is_presence_call": false,
+    "publicity": {
+        "single_votes": "admins",
+        "results": "everybody"
+    },
+    "statistics": {
+        "votes": 2,
+        "voters": 2
+    },
+    "item_groups": [
+        {
+            "id": "single:amendment:3",
+            "items": [
+                {
+                    "type": "amendment",
+                    "id": 3
+                }
+            ],
+            "name": null,
+            "results": null,
+            "single_votes": null
+        },
+        {
+            "id": "single:amendment:270",
+            "items": [
+                {
+                    "type": "amendment",
+                    "id": 270
+                }
+            ],
+            "name": null,
+            "results": null,
+            "single_votes": null
+        },
+        {
+            "id": "single:amendment:274",
+            "items": [
+                {
+                    "type": "amendment",
+                    "id": 274
+                }
+            ],
+            "name": null,
+            "results": null,
+            "single_votes": null
+        }
+    ],
+    "items": [
+        {
+            "type": "amendment",
+            "id": 3,
+            "group_id": "single:amendment:3",
+            "title_with_prefix": "Ä2 zu A2: O’zapft is!",
+            "prefix": "Ä2",
+            "initiators_html": "Testadmin",
+            "url_html": "http://test.antragsgruen.test/stdparteitag/std-parteitag/motion/321-o-zapft-is/amendment/3",
+            "url_json": "http://test.antragsgruen.test/stdparteitag/rest/std-parteitag/motion/321-o-zapft-is/amendment/3",
+            "procedure_html": "<p>Abstimmung</p>",
+            "result": null
+        },
+        {
+            "type": "amendment",
+            "id": 270,
+            "group_id": "single:amendment:270",
+            "title_with_prefix": "Ä3 zu A2: O’zapft is!",
+            "prefix": "Ä3",
+            "initiators_html": "Tester",
+            "url_html": "http://test.antragsgruen.test/stdparteitag/std-parteitag/motion/321-o-zapft-is/amendment/270",
+            "url_json": "http://test.antragsgruen.test/stdparteitag/rest/std-parteitag/motion/321-o-zapft-is/amendment/270",
+            "procedure_html": "<p>Abstimmung</p>",
+            "result": null
+        },
+        {
+            "type": "amendment",
+            "id": 274,
+            "group_id": "single:amendment:274",
+            "title_with_prefix": "Ä6 zu A2: O’zapft is!",
+            "prefix": "Ä6",
+            "initiators_html": "Tester",
+            "url_html": "http://test.antragsgruen.test/stdparteitag/std-parteitag/motion/321-o-zapft-is/amendment/274",
+            "url_json": "http://test.antragsgruen.test/stdparteitag/rest/std-parteitag/motion/321-o-zapft-is/amendment/274",
+            "procedure_html": "<p>Erledigt durch: <a href=\"/stdparteitag/std-parteitag/motion/321-o-zapft-is/amendment/270\">Ä3 zu A2</a></p>",
+            "result": null
+        }
+    ],
+    "assigned_motion_id": null,
+    "opened_at": 1788117465000,
+    "voting_time": null,
+    "quorum": null,
+    "abstention": {
+        "enabled": false,
+        "count": null,
+        "users": null
+    },
+    "policy": {
+        "id": 2,
+        "description": "Eingeloggte",
+        "user_groups": null
+    },
+    "user_groups": [
+        {
+            "id": 1,
+            "title": "Seiten-Admin",
+            "member_count": 2
+        },
+        {
+            "id": 2,
+            "title": "Veranstaltungs-Admin",
+            "member_count": 1
+        },
+        {
+            "id": 3,
+            "title": "Antragskommission",
+            "member_count": 1
+        },
+        {
+            "id": 4,
+            "title": "Teilnehmer*in",
+            "member_count": 0
+        },
+        {
+            "id": 39,
+            "title": "Sachstände bearbeiten",
+            "member_count": 1
+        }
+    ],
+    "me": {
+        "eligible": true,
+        "vote_weight": 1,
+        "abstained": false,
+        "votes": [
+            {
+                "group_id": "single:amendment:3",
+                "answer": "no"
+            }
+        ],
+        "can_vote_group_ids": [
+            "single:amendment:270",
+            "single:amendment:274"
+        ],
+        "votes_remaining": null
+    }
+}
