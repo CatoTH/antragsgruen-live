@@ -19,6 +19,7 @@ public class ReceivedRabbitMQMessagesMetric {
 
     private static final String TYPE_SPEECH = "speech";
     private static final String TYPE_DEBATE = "debate";
+    private static final String TYPE_VOTING = "voting";
     private static final String TYPE_USER = "user";
 
     public void onSpeechEvent(ConsultationScope scope) {
@@ -27,6 +28,10 @@ public class ReceivedRabbitMQMessagesMetric {
 
     public void onDebateEvent(ConsultationScope scope) {
         this.receivedMessage(scope, TYPE_DEBATE);
+    }
+
+    public void onVotingEvent(ConsultationScope scope) {
+        this.receivedMessage(scope, TYPE_VOTING);
     }
 
     public void onUserEvent(ConsultationScope scope) {

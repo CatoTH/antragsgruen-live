@@ -14,7 +14,7 @@ Users are connecting to the Live Server via Websocket/STOMP when using an intera
 - It creates a JWT, signed using a private key (RS256), containing information about:
   - The installation ID, as the Issuer of the token.  
   - The ID of the user as Subject of the token. If the user is logged in, it has the shape of `login-123`. If not, a session-token like `anonymous-qVnRU4NFICsBGtnWfi0dzGgWcKGlQoiN` will be used.
-  - If the user has specific admin privileges (like to administer speech queues), a role is added to the payload. Currently, only ROLE_SPEECH_ADMIN is supported.
+  - If the user has specific admin privileges (like to administer speech queues), a role is added to the payload. Currently, ROLE_SPEECH_ADMIN and ROLE_VOTING_ADMIN are supported.
   - The site and consultation the token is valid for, as the payload of the token.
 - We web browser connects to the websocket / STOMP server of this Live Server. The authentication and authorization is checked at the following places:
   - When connecting, the validity of the JWT is checked on a protocol level (as part of [WebsocketChannelInterceptor](src/main/java/de/antragsgruen/live/websocket/WebsocketChannelInterceptor.java)).
@@ -39,6 +39,28 @@ The following routing key patterns are fixed, while its associated queues can be
 - `user.[installationid].[site].[consultation].[userid]`, e.g. `user.localdev.stdparteitag.std-parteitag.1` contains messages directed to one particular user, by default being bound to the queue `antragsgruen-user-queue` and using the [MQUserEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQUserEvent.java)-DTO for deserialization.
 - `speech.[installationid].[site].[consultation]`, e.g. `speech.localdev.stdparteitag.std-parteitag` contains messages updating a speech queue, by default being bound to the queue `antragsgruen-speech-queue` and using the [MQSpeechQueue](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQSpeechQueue.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version.
 - `debate.[installationid].[site].[consultation]`, e.g. `debate.localdev.stdparteitag.std-parteitag` contains messages updating the debate state, by default being bound to the queue `antragsgruen-debate-queue` and using the [MQDebateState](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQDebateState.java)-DTO for deserialization.
+- `voting.[installationid].[site].[consultation]`, e.g. `voting.localdev.stdparteitag.std-parteitag` contains messages updating one voting, by default being bound to the queue `antragsgruen-voting-queue` and using the [MQVotingEvent](src/main/java/de/antragsgruen/live/rabbitmq/dto/MQVotingEvent.java)-DTO for deserialization. All users in the consultation receive this event, but in a personalized version - see "Votings" below.
+
+## Votings
+
+A voting differs from the other topics in that this server does not map its payload field by field. Antragsgrün publishes a voting in sections - what everybody may see, what only the administration may see, and one entry per user for their own state - and this server only decides *which* sections a subscriber is given:
+
+```json
+{
+  "kind": "full",
+  "block_id": 42,
+  "everyone": {"…": "…"},
+  "admin_only": {"…": "…"},
+  "default_user_state": {"…": "…"},
+  "per_user": {"login-42": {"…": "…"}}
+}
+```
+
+A subscriber of a `/user/` topic receives `everyone` plus their own state as `me`; a subscriber of an `/admin/` topic, which takes `ROLE_VOTING_ADMIN`, additionally receives `admin_only` merged on top. Votes of a voting that nobody may see are in no section at all, as Antragsgrün never serializes them.
+
+Keeping the sections opaque means a voting payload can grow or change in Antragsgrün without this server having to be taught about it, and that no field can end up in the wrong section here because a DTO fell out of step. The one thing this server does look into them for is the reader's language (see below); which strings those are is recognized by their shape, namely an object whose members are all strings named after one of the languages the event states it was rendered in.
+
+An event of the kind `tally` reports a cast vote and carries the counting alone, without the configuration of the voting or anybody's own state. It is delivered with `"partial": true`, and clients merge it into the voting they already have.
 
 ## Reader languages
 
@@ -54,13 +76,15 @@ Antragsgrün <= 4.17 sends plain strings and no `default_language` header, and s
 
 The language is part of the topic rather than of the JWT because a JWT identifies a person, while one person can read the same consultation in two browser tabs in two languages. Messages are addressed to topics: both tabs share a user ID, and the user registry only keeps the principal of whichever of their connections registered first, so a language taken from the token would serve both tabs the same one.
 
-In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead`, `antragsgruen-queue-debate-dead` and `antragsgruen-queue-user-dead`.
+In case messages cannot be processed by this live server, they are rejected and, through the `antragsgruen-exchange-dead`, end up in the dead letter queues `antragsgruen-queue-speech-dead`, `antragsgruen-queue-debate-dead`, `antragsgruen-queue-voting-dead` and `antragsgruen-queue-user-dead`.
 
 ## Exposed Websocket STOMP Topics
 
 - `/user/[installationid]/[subdomain]/[consultation]/[userid]/debate/[language]`
 - `/user/[installationid]/[subdomain]/[consultation]/[userid]/speech/[language]`
 - `/admin/[installationid]/[subdomain]/[consultation]/[userid]/speech/[language]`
+- `/user/[installationid]/[subdomain]/[consultation]/[userid]/voting/[language]`
+- `/admin/[installationid]/[subdomain]/[consultation]/[userid]/voting/[language]`
 - `/topic/[installationid]/[subdomain]/[consultation]/[...]` (currently not used)
 
 The language is the last part of a topic and may be omitted (Antragsgrün <= 4.17 subscribes without it). It selects a wording, not access to data, and is therefore not authorized - any language may be asked for. See "Reader languages" above.
@@ -118,6 +142,8 @@ It is also possible, though hardly ever necessary, to configure the following as
 | RABBITMQ_QUEUE_SPEECH_DEAD | antragsgruen-queue-speech-dead | The dead letter queue for speaking-list related messages |
 | RABBITMQ_QUEUE_DEBATE      | antragsgruen-queue-debate      | The queue for debae related messages                     |
 | RABBITMQ_QUEUE_DEBATE_DEAD | antragsgruen-queue-debate-dead | The dead letter queue for debate related messages        |
+| RABBITMQ_QUEUE_VOTING      | antragsgruen-queue-voting      | The queue for voting related messages                    |
+| RABBITMQ_QUEUE_VOTING_DEAD | antragsgruen-queue-voting-dead | The dead letter queue for voting related messages        |
 
 ### Compiling for GraalVM
 

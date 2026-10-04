@@ -1,0 +1,100 @@
+{
+    "id": 1,
+    "title": "Ä2 or Ä3",
+    "status": "open",
+    "current_time": 1788117465805,
+    "answers": [
+        {
+            "api_id": "yes",
+            "title": "Yes",
+            "result": "accepted"
+        },
+        {
+            "api_id": "no",
+            "title": "No",
+            "result": "rejected"
+        },
+        {
+            "api_id": "abstention",
+            "title": "Abstention",
+            "result": null
+        }
+    ],
+    "has_majority": true,
+    "is_presence_call": false,
+    "publicity": {
+        "single_votes": "admins",
+        "results": "everybody"
+    },
+    "statistics": {
+        "votes": 2,
+        "voters": 2
+    },
+    "item_groups": [
+        {
+            "id": "single:amendment:3",
+            "items": [
+                {
+                    "type": "amendment",
+                    "id": 3
+                }
+            ],
+            "name": null,
+            "results": null,
+            "single_votes": null
+        }
+    ],
+    "items": [
+        {
+            "type": "amendment",
+            "id": 3,
+            "group_id": "single:amendment:3",
+            "title_with_prefix": "Am2 to A2: O’zapft is!",
+            "prefix": "Ä2",
+            "initiators_html": "Test admin",
+            "url_html": "http://test.antragsgruen.test/stdparteitag/std-parteitag/motion/321-o-zapft-is/amendment/3",
+            "url_json": "http://test.antragsgruen.test/stdparteitag/rest/std-parteitag/motion/321-o-zapft-is/amendment/3",
+            "procedure_html": "<p>Vote</p>",
+            "result": null
+        }
+    ],
+    "assigned_motion_id": null,
+    "opened_at": 1788117465000,
+    "voting_time": null,
+    "quorum": null,
+    "abstention": {
+        "enabled": false,
+        "count": null,
+        "users": null
+    },
+    "policy": {
+        "id": 2,
+        "description": "Logged in users",
+        "user_groups": null
+    },
+    "user_groups": [
+        {
+            "id": 1,
+            "title": "Site admin",
+            "member_count": 2
+        },
+        {
+            "id": 2,
+            "title": "Consultation admin",
+            "member_count": 1
+        }
+    ],
+    "me": {
+        "eligible": true,
+        "vote_weight": 1,
+        "abstained": false,
+        "votes": [
+            {
+                "group_id": "single:amendment:3",
+                "answer": "yes"
+            }
+        ],
+        "can_vote_group_ids": [],
+        "votes_remaining": null
+    }
+}

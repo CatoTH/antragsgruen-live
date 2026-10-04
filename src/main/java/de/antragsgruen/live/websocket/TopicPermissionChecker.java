@@ -13,6 +13,7 @@ import java.util.Map;
 @Slf4j
 public class TopicPermissionChecker {
     private static final String ROLE_SPEECH_ADMIN = "ROLE_SPEECH_ADMIN";
+    private static final String ROLE_VOTING_ADMIN = "ROLE_VOTING_ADMIN";
 
     // Also used for /admin/ topics. The language is the last part and may be missing: Antragsgrün
     // <= 4.17 subscribes without it.
@@ -140,6 +141,9 @@ public class TopicPermissionChecker {
     private @Nullable String getNecessaryRoleForTopic(String topic) {
         if (Sender.USER_CHANNEL_SPEECH.equals(topic)) {
             return TopicPermissionChecker.ROLE_SPEECH_ADMIN;
+        }
+        if (Sender.USER_CHANNEL_VOTING.equals(topic)) {
+            return TopicPermissionChecker.ROLE_VOTING_ADMIN;
         }
         return null;
     }

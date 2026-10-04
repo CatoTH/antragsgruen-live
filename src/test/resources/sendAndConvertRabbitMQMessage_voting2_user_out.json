@@ -1,0 +1,28 @@
+{
+    "statistics": {
+        "votes": 2,
+        "voters": 2
+    },
+    "item_groups": [
+        {
+            "id": "single:amendment:3",
+            "items": [
+                {
+                    "type": "amendment",
+                    "id": 3
+                }
+            ],
+            "name": null,
+            "results": null,
+            "single_votes": null
+        }
+    ],
+    "abstention": {
+        "enabled": false,
+        "count": null,
+        "users": null
+    },
+    "id": 1,
+    "current_time": 1788117465996,
+    "partial": true
+}
