@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@stomp/stompjs':
-        specifier: ^7.3.0
-        version: 7.3.0
+        specifier: ^7.5.0
+        version: 7.5.0
 
 packages:
 
-  '@stomp/stompjs@7.3.0':
-    resolution: {integrity: sha512-nKMLoFfJhrQAqkvvKd1vLq/cVBGCMwPRCD0LqW7UT1fecRx9C3GoKEIR2CYwVuErGeZu8w0kFkl2rlhPlqHVgQ==}
+  '@stomp/stompjs@7.5.0':
+    resolution: {integrity: sha512-xh3sdzEYH8M+krQGBOgj+U0BLBHd7ccTj8YM3mVxaULMTW/wx2QBWf448pilRiWZKjglhDmNILxM3W+j/Ch9uw==}
 
 snapshots:
 
-  '@stomp/stompjs@7.3.0': {}
+  '@stomp/stompjs@7.5.0': {}
